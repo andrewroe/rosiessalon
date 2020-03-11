@@ -175,8 +175,10 @@ public class UserApp
 	
 	/**		     	
 		This method is for login handling of the user.
-   		@param data which is an EmpData object to be updated when user successfully
+		
+   		@param user which is an EmpData object to be updated when user successfully
    		can be found in the Database.
+   		@throws SQLException if there is an error with some SQL command
    		@return UserID of user or 0, if not found.  		
 	*/
 		  
@@ -224,8 +226,10 @@ public class UserApp
 	
 	/**		     	
 		This method is for create new employee.
+		
    		@param data which is an EmpData object to be updated when employee successfully
    		added to the Database.
+   		@throws SQLException if there is an error with some SQL command
    		@return boolean of either success or failure.  		
 	*/
 		  
@@ -302,8 +306,10 @@ public class UserApp
 	
 	/**		     	
 		This method is for finding an existing employee.
+		
    		@param data which is an EmpData object to be updated when employee successfully
    		found in the Database.
+   		@throws SQLException if there is an error with some SQL command
    		@return boolean of either success or failure.  		
 	*/
 		  
@@ -366,8 +372,10 @@ public class UserApp
 	
 	/**		     	
 		This method is for updating an existing employee.
+		
    		@param data which is an EmpData object to be updated when employee successfully
    		updated in the Database.
+   		@throws SQLException if there is an error with some SQL command
    		@return boolean of either success or failure.  		
 	*/
 		  
@@ -441,200 +449,31 @@ public class UserApp
 			userresponse = keyboard.nextLine();
 			if ((userresponse.charAt(0) == 'Y') || (userresponse.charAt(0) == 'y'))
 			{
-				System.out.println("Change first name, which was " +
-					originalData.getFname() + " (y or n)?");
-				userresponse = keyboard.nextLine();
-				if ((userresponse.charAt(0) == 'Y') || (userresponse.charAt(0) == 'y'))
-				{
-					System.out.print("new First name? ");
-					name = keyboard.nextLine();
-					data.setFname(name);
-				}
-				
-				System.out.println("Change Middle Initial or Name, which was " +
-					originalData.getMinit() + " (y or n)?");
-				userresponse = keyboard.nextLine();
-				if ((userresponse.charAt(0) == 'Y') || (userresponse.charAt(0) == 'y'))
-				{
-					System.out.print("new Middle name/initial? ");
-					name = keyboard.nextLine();
-					data.setMinit(name);
-				}
-			
-				System.out.println("Change Last Name, which was " +
-					originalData.getLname() + " (y or n)?");
-				userresponse = keyboard.nextLine();
-				if ((userresponse.charAt(0) == 'Y') || (userresponse.charAt(0) == 'y'))
-				{
-					System.out.print("new Last name? ");
-					name = keyboard.nextLine();
-					data.setLname(name);
-					rvalue = dbaccess.updateEmployeeLname(data);
-				}
-			} // End of name fields
+				rvalue = setNewNameEmpInfo(data, originalData);							
+			} // End of change name fields
 			
 			System.out.println("Did you want to update job, salary, or commission " +
 				"(y or n)?");
 			userresponse = keyboard.nextLine();
 			if ((userresponse.charAt(0) == 'Y') || (userresponse.charAt(0) == 'y'))
 			{
-				System.out.println("Change job description, which was " +
-					originalData.getJob() + " (y or n)?");
-				userresponse = keyboard.nextLine();
-				if ((userresponse.charAt(0) == 'Y') || (userresponse.charAt(0) == 'y'))
-				{
-					System.out.print("new Job? ");
-					name = keyboard.nextLine();
-					data.setJob(name);
-				}
-				
-				System.out.println("Change salary, which was " +
-					originalData.getSalary() + " (y or n)?");
-				userresponse = keyboard.nextLine();
-				if ((userresponse.charAt(0) == 'Y') || (userresponse.charAt(0) == 'y'))
-				{
-					System.out.print("new salary? ");
-					doubleResponse = keyboard.nextDouble();
-					data.setSalary(doubleResponse);
-				}
-				
-				System.out.println("Change commission, which was " +
-					originalData.getCommission() + " (y or n)?");
-				userresponse = keyboard.nextLine();
-				if ((userresponse.charAt(0) == 'Y') || (userresponse.charAt(0) == 'y'))
-				{
-					System.out.print("new commission? ");
-					doubleResponse = keyboard.nextDouble();
-					data.setCommission(doubleResponse);
-				}
-				
-			} // End of job, salary, or commission  fields
+				rvalue = setNewProfessionalEmpInfo(data, originalData);		
+			} // End of job, salary, or commission fields changes
 					
-			name = originalData.getEmail(0);
-			if (name != null)
-			{
-				System.out.println("Current Primary Email is " +
-				originalData.getEmail(0));
-			}	
-			name = originalData.getEmail(1);
-			if (name != null)
-			{
-				System.out.println("Current Secondary Email is " +
-				originalData.getEmail(1));
-			}	
-			name = originalData.getEmail(2);
-			if (name != null)
-			{
-				System.out.println("Current Tertiary Email is " +
-				originalData.getEmail(2));
-			}	
-			name = originalData.getEmail(3);
-			if (name != null)
-			{
-				System.out.println("Current Fourth Email is " +
-				originalData.getEmail(3));
-			}	
-			name = originalData.getEmail(4);
-			if (name != null)
-			{
-				System.out.println("Current Fifth Email is " +
-				originalData.getEmail(4));
-			}	
 			
 			System.out.println("Change any email addresses (y or n)?");
 			userresponse = keyboard.nextLine();
 			if ((userresponse.charAt(0) == 'Y') || (userresponse.charAt(0) == 'y'))
 			{
-				System.out.println(" You can update up to 5 Email addresses, " +
-					"starting with the new primary email, etc.");
-				rvalue = true;
-				another = true;
-				i = 0;
-				do
-				{
-					System.out.print("Email address " + (i + 1) + " ? ");
-					name = keyboard.nextLine();
-					rvalue = data.setEmail(name,i++);
-					if (rvalue)
-					{
-						System.out.println("another Email?");
-						if ((userresponse.charAt(0) == 'Y') || 
-							(userresponse.charAt(0) == 'y'))
-						{
-							another = true;
-						}
-					}
-					else
-					{
-						System.out.println("Email address can not be added, full.");
-						another = false;
-					}
-						
-				} while (rvalue && another && (i < 5));
-					 
-			} // End of Email info
-
-				
+				rvalue = setNewEmailEmpInfo(data, originalData);		 
+			} // End of Email changes
+			
 			System.out.println("Change phone numbers (y or n)?");
 			userresponse = keyboard.nextLine();
 			if ((userresponse.charAt(0) == 'Y') || (userresponse.charAt(0) == 'y'))
 			{
-				System.out.println(" You can update up to 5 Phone numbers, " +
-					"starting with the new primary phone, etc.");
-				rvalue = true;
-				another = true;
-				i = 0;
-				do
-				{
-					System.out.print("Another Phone number (y or n)? ");
-					userresponse = keyboard.nextLine();
-					if ((userresponse.charAt(0) == 'Y') || (userresponse.charAt(0) == 'y'))
-					{
-						System.out.print("Next Phone number? ");
-						name = keyboard.nextLine();
-						rvalue = data.setPhone(name,i);
-					
-						// deactivate any old phone for this slot
-						if ((phone = originalData.getPhone(i)) != null)
-						{
-							System.out.println("old phone # to be deactivated " + phone);
-							rvalue = dbaccess.deactivateEmpPhone(originalData, i);
-							System.out.println("deactivate old phone # rvalue " + rvalue);
-						}
-					
-						// then add new phone number for this slot
-						if ((phone = data.getPhone(i)) != null)
-						{
-							System.out.println("new phone # to be added " + phone);
-							rvalue = dbaccess.addEmpPhone(data, i);
-							System.out.println("add new phone # rvalue " + rvalue);
-						}
-						
-						i++;
-						
-						if (rvalue)
-						{
-							System.out.println("another Phone number?");
-							if ((userresponse.charAt(0) == 'Y') || 
-								(userresponse.charAt(0) == 'y'))
-							{
-							another = true;
-							}
-						}
-						else
-						{
-							System.out.println("more Phone numbers can not be added, full.");
-							another = false;
-						}
-					}
-					else
-					{
-						another = false;
-					}
-						
-				} while (rvalue && another && (i < 5));
-					 
-			} // End of Email info
+				rvalue = setNewPhoneEmpInfo(data, originalData);
+			} // End of Phone changes
 			
 			
 			return true;
@@ -647,10 +486,226 @@ public class UserApp
 					"and failed to find employee.");
 			return false;
 		}
-		
-		
+			
 	}
 	
+	/**		     	
+		This method is a helper for updating an existing employee name info.
+		
+   		@param data an EmpData object to be updated
+   		@param originalData an EmpData object of existing Employee
+   		@throws SQLException if there is an error with some SQL command
+   		@return boolean of either success or failure.  		
+	*/
+		  
+	public static boolean setNewNameEmpInfo(EmpData data, EmpData originalData) 
+		throws SQLException
+	{		
+		boolean rvalue = false;
+		String response = null;
+		
+		Scanner keyboard = new Scanner(System.in);
+			
+		System.out.println("Change first name, which was " +
+			originalData.getFname() + " (y or n)?");
+		response = keyboard.nextLine();
+		if ((response.charAt(0) == 'Y') || (response.charAt(0) == 'y'))
+		{
+			System.out.print("new First name? ");
+			response = keyboard.nextLine();
+			data.setFname(response);
+			// to do
+		}
+				
+		System.out.println("Change Middle Initial or Name, which was " +
+			originalData.getMinit() + " (y or n)?");
+		response = keyboard.nextLine();
+		if ((response.charAt(0) == 'Y') || (response.charAt(0) == 'y'))
+		{
+			System.out.print("new Middle name/initial? ");
+			response = keyboard.nextLine();
+			data.setMinit(response);
+			// to do
+		}
+			
+		System.out.println("Change Last Name, which was " +
+			originalData.getLname() + " (y or n)?");
+		response = keyboard.nextLine();
+		if ((response.charAt(0) == 'Y') || (response.charAt(0) == 'y'))
+		{
+			System.out.print("new Last name? ");
+			response = keyboard.nextLine();
+			data.setLname(response);
+			rvalue = dbaccess.updateEmployeeLname(data);
+		}
+		
+		return rvalue;	
+	} // End of setNewNameEmpInfo
+	
+	
+	/**		     	
+		This method is a helper for updating an existing employee professional info.
+		
+   		@param data an EmpData object to be updated
+   		@param originalData an EmpData object of existing Employee
+   		@throws SQLException if there is an error with some SQL command
+   		@return boolean of either success or failure.  		
+	*/
+		  
+	public static boolean setNewProfessionalEmpInfo(EmpData data, EmpData originalData) 
+		throws SQLException
+	{		
+		boolean rvalue = false;
+		String response = null;
+		double doubleResponse = 0.0;
+		Scanner keyboard = new Scanner(System.in);
+					
+		System.out.println("Change job description, which was " +
+			originalData.getJob() + " (y or n)?");
+		response = keyboard.nextLine();
+		if ((response.charAt(0) == 'Y') || (response.charAt(0) == 'y'))
+		{
+			System.out.print("new Job? ");
+			response = keyboard.nextLine();
+			data.setJob(response);
+			// to do
+		}
+				
+		System.out.println("Change salary, which was " +
+			originalData.getSalary() + " (y or n)?");
+		response = keyboard.nextLine();
+		if ((response.charAt(0) == 'Y') || (response.charAt(0) == 'y'))
+		{
+			System.out.print("new salary? ");
+			doubleResponse = keyboard.nextDouble();
+			data.setSalary(doubleResponse);
+		}
+				
+		System.out.println("Change commission, which was " +
+			originalData.getCommission() + " (y or n)?");
+		response = keyboard.nextLine();
+		if ((response.charAt(0) == 'Y') || (response.charAt(0) == 'y'))
+		{
+			System.out.print("new commission? ");
+			doubleResponse = keyboard.nextDouble();
+			data.setCommission(doubleResponse);
+		}		
+		
+		return rvalue;	
+	} // End of setNewProfessionalEmpInfo
+	
+	
+	/**		     	
+		This method is a helper for updating an existing employee Email info.
+		
+   		@param data an EmpData object to be updated
+   		@param originalData an EmpData object of existing Employee
+   		@throws SQLException if there is an error with some SQL command
+   		@return boolean of either success or failure.  		
+	*/
+		  
+	public static boolean setNewEmailEmpInfo(EmpData data, EmpData originalData) 
+		throws SQLException
+	{		
+		boolean rvalue = false;
+		String response = null;
+		String name = null;
+		int i;
+		
+		Scanner keyboard = new Scanner(System.in);
+			
+		System.out.println();
+						
+		for (i = 0; i < 5; i++)
+		{
+			name = originalData.getEmail(i);
+			if (name != null)
+			{
+				System.out.println("Current Email at index " + i + " is " + name);
+			}	
+		}
+				
+		System.out.println(" You can update up to 5 Email addresses, " +
+			"starting with the new primary email, etc.");
+		System.out.println("Enter no to exit making Email changes");
+		i = 0;
+		do
+		{
+			System.out.print("Email address at index " + i + "? ");
+			name = keyboard.nextLine();
+			if (name.equals("No") || name.equals("no") || name.equals("no"))
+			{
+				return rvalue;
+			}
+			
+			data.setEmail(name,i);
+			// to do dall rvalue = email update in DBaccess 		
+			
+		} while (i++ < 5);
+			
+		return rvalue;	
+	} // End of setNewEmailEmpInfo
+	
+
+	/**		     	
+		This method is a helper for updating an existing employee Email info.
+		
+   		@param data an EmpData object to be updated
+   		@param originalData an EmpData object of existing Employee
+   		@throws SQLException if there is an error with some SQL command
+   		@return boolean of either success or failure.  		
+	*/
+		  
+	public static boolean setNewPhoneEmpInfo(EmpData data, EmpData originalData) 
+		throws SQLException
+	{		
+		boolean rvalue = false;
+		String response = null;
+		String name = null;
+		int i;
+		
+		Scanner keyboard = new Scanner(System.in);
+			
+		System.out.println();	
+				
+		for (i = 0; i < 5; i++)
+		{
+			name = originalData.getPhone(i);
+			if (name != null)
+			{
+				System.out.println("Current Phone at index =  " + i + " is " + name);
+			}	
+		}
+									 
+		System.out.println(" You can update up to 5 Phone numbers, " +
+			"starting with the new primary phone, etc.");
+		System.out.println("Enter no to exit making Phone number changes");		
+		i = 0;
+		do
+		{
+			System.out.print("New Phone number: ");
+			name = keyboard.nextLine();
+			if (name.equals("No") || name.equals("no") || name.equals("no"))
+			{
+				return rvalue;
+			}
+			
+			data.setPhone(name,i);
+					
+			// deactivate any old phone for this slot
+			if ((name = originalData.getPhone(i)) != null)
+			{		
+				System.out.println("old phone # to be deactivated " + name);
+				rvalue = dbaccess.deactivateEmpPhone(originalData, i);
+			}
+				
+			System.out.println("new phone # to be added " + name);
+			rvalue = dbaccess.addEmpPhone(data, i);
+		} while (i++ < 5);
+			
+		return rvalue;	
+	} // End of setNewPhoneEmpInfo
+
 	
 }
 	

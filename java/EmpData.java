@@ -42,37 +42,18 @@ public class EmpData
 
 	public boolean setDateTime(String datetime)
 	{
-		String tempString = "YYYYMMDDhhmmss";
-		if (datetime.length() != tempString.length())
-		{
-			System.out.println("setDateTime() - string size of input incorrect!");
-			return false;
-		}
-
 		DateTimeData = datetime;
 		return true;
 	}
 
 	public boolean setFname(String fname)
 	{
-		if (fname.length() > 32)
-		{
-			System.out.println("setFname() - string size of input too big!");
-			return(false);
-		}
-
 		FnameData = fname;	
 		return(true);
 	}
 
 	public boolean setLname(String lname)
 	{
-		if (lname.length() > 32)
-		{
-			System.out.println("setLname() - string size of input too big!");
-			return false;
-		}
-
 		LnameData = lname;	
 		return true;
 	}
@@ -85,13 +66,6 @@ public class EmpData
 
 	public boolean setDob(String dob)
 	{
-		String tempString = "yyyymmdd";
-		if (dob.length() != tempString.length())
-		{
-			System.out.println("setDob() - string size of input incorrect!");
-			return false;
-		}
-
 		DobData = dob;
 		return true;
 	}
@@ -114,110 +88,8 @@ public class EmpData
 		return true;
 	}
 
-
-/*
-	public boolean addPhone(String phone) 
-	{
-		System.out.println("addPhone() - entry, input = :" + phone + ":");
-
-		String tempString = "ccaaalllnnnn"; // country code, area code, local exchange, number
-		if (phone.length() != tempString.length())
-		{
-			System.out.println("addPhone() - string size of input incorrect!");
-			return false;
-		}
-
-		// System.out.println("addPhone() - arraySize of PhoneDate = " + PhoneData.length);
-
-		int i = 0;
-		while ((i < PhoneData.length) && PhoneData[i] != null)
-		{
-			i++;
-		}
-
-		if (i > 4)
-		{
-			System.out.println("addPhone() - no more room for phone numbers!");
-			return false;
-		}
-		else
-		{
-			PhoneData[i] = phone;
-		}
-
-		System.out.println("addPhone() - about to exit ");
-		return true;
-	}
-
-	public boolean addEmail(String email)
-	{
-		if (email.length() > 32)
-		{
-			System.out.println("addEmail() - string size of input too big!");
-			return false;
-		}
-
-		int i = 0;
-		while ((i < EmailData.length) && EmailData[i] != null)
-		{
-			i++;
-		}
-
-		if (i > 4)
-		{
-			System.out.println("addEmail() - no more room for any email addresses!");
-			return false;
-		}
-		else
-		{
-			EmailData[i] = email;
-			return true;
-		}
-	}
-
-
-	public boolean addAddressLine(String address)
-	{
-		if (address.length() > 32)
-		{
-			System.out.println("addAddressLine() - string size of input too big!");
-			return false;
-		}
-
-		int i = 0;
-		while ((i < AddrData.length) && AddrData[i] != null)
-		{
-			i++;
-		}
-
-		if (i > 4)
-		{
-			System.out.println("addAddressLine() - no more room for any address lines!");
-			return false;
-		}
-		else
-		{
-			AddrData[i] = address;
-			return true;
-		}
-
-	}
-
-*/
-
 	public boolean setPhone(String phone, int index) 
 	{
-		System.out.println("addPhone() - entry, input = :" + 
-			phone + ": at index " + index);
-			
-		// country code, area code, local exchange, number
-		String tempString = "ccaaalllnnnn"; 
-		if (phone.length() > tempString.length())
-		{
-			System.out.println("addPhone() - string size of input incorrect!");
-			return false;
-		}
-		
 		if (index > 4)
 		{
 			System.out.println("addPhone() - index too big!");
@@ -226,18 +98,12 @@ public class EmpData
 		
 		PhoneData[index] = phone;
 		
-		System.out.println("addPhone() - about to exit ");
+		// System.out.println("addPhone() - about to exit ");
 		return true;
 	}
 
 	public boolean setEmail(String email, int index)
 	{
-		if (email.length() > 64)
-		{
-			System.out.println("addEmail() - string size of input too big!");
-			return false;
-		}
-
 		if (index > 4)
 		{
 			System.out.println("addEmail() - index too big!");
@@ -251,12 +117,6 @@ public class EmpData
 
 	public boolean setAddress(String address, int index)
 	{
-		if (address.length() > 64)
-		{
-			System.out.println("addAddress() - string size of input too big!");
-			return false;
-		}
-
 		if (index > 4)
 		{
 			System.out.println("addAddress() - index too big!");
@@ -266,155 +126,6 @@ public class EmpData
 		AddrData[index] = address;
 		return true;
 	}
-
-
-/*
-	All the clear data field's methods.
-*/
-
-	public boolean clearEmpID()
-	{
-		EmpIDData = 0;
-		return true;
-	}
-
-	public boolean clearUserID()
-	{
-		UserIDData = 0;
-		return true;
-	}
-
-	public boolean clearDateTime()
-	{
-		DateTimeData = null;
-		return true;
-	}
-
-	public boolean clearFname()
-	{
-		FnameData = null;	
-		return true;
-	}
-
-	public boolean clearLname()
-	{
-		LnameData = null;	
-		return true;
-	}
-
-	public boolean clearMinit()
-	{
-		MinitData = null;	
-		return true;
-	}
-	
-	public boolean clearJob()
-	{
-		Job = null;
-		return true;
-	}
-	
-	public boolean clearSalary()
-	{
-		Salary = 0.0;
-		return true;
-	}
-	
-		public boolean clearCommission()
-	{
-		Commission = 0.0;
-		return true;
-	}
-
-	public boolean clearDob()
-	{
-		DobData = null;
-		return true;
-	}
-
-/*
-	public boolean clearPhone()
-	{
-		int arraySize = PhoneData.length;
-		while (arraySize > 0)
-		{
-			PhoneData[--arraySize] = null;
-		}
-
-		return true;
-	}
-
-	public boolean clearEmail()
-	{
-		int arraySize = EmailData.length;
-		while (arraySize > 0)
-		{
-			EmailData[--arraySize] = null;
-		}
-
-		return true;
-	}
-
-	public boolean clearAddress()
-	{
-		int arraySize = AddrData.length;
-		while (arraySize > 0)
-		{
-			AddrData[--arraySize] = null;
-		}
-
-		return true;
-	}
-*/
-
-	public boolean clearPhone()
-	{
-		for (int i = 0; i < 5; i++)
-		{
-			PhoneData[i] = null;
-		}
-
-		return true;
-	}
-
-	public boolean clearEmail()
-	{
-		for (int i = 0; i < 5; i++)
-		{
-			EmailData[i] = null;
-		}
-		
-		return true;
-	}
-
-	public boolean clearAddress()
-	{
-		for (int i = 0; i < 5; i++)
-		{
-			AddrData[i] = null;
-		}		
-		
-		return true;
-	}
-
-	public boolean clearAll()
-	{
-		if (!clearEmpID()) return(false);
-		if (!clearUserID()) return(false);
-		if (!clearDateTime()) return(false);
-		if (!clearFname()) return(false);
-		if (!clearLname()) return(false);
-		if (!clearMinit()) return(false);
-		if (!clearJob()) return(false);
-		if (!clearSalary()) return(false);
-		if (!clearCommission()) return(false);
-		if (!clearDob()) return(false);
-		if (!clearPhone()) return(false);
-		if (!clearAddress()) return(false);
-
-		return true;
-	}
-
 
 
 /*
@@ -473,18 +184,17 @@ public class EmpData
 
 	public String getPhone(int index)
 	{
-		System.out.println("getPhone() - entry, index = " + index);
+		// System.out.println("getPhone() - entry, index = " + index);
 		if (index > 4)
 		{
 			System.out.println("getPhone() - can't read past the maximum phone index!");
 			return(null);
 		}
-		else
-		{
-			System.out.println("getPhone() - exit, phone # = " + 
-				PhoneData[index] + " at index = " + index);
-			return(PhoneData[index]);
-		}
+		
+		//System.out.println("getPhone() - exit, phone # = " + 
+		//		PhoneData[index] + " at index = " + index);
+		return(PhoneData[index]);
+		
 	}
 
 	public String getEmail(int index)
@@ -512,4 +222,43 @@ public class EmpData
 			return(this.EmailData[index]);
 		}
 	}
+	
+/*
+	All the clear data field's methods.
+*/
+
+	public boolean clearAll()
+	{
+		if (!setEmpID(0)) return(false);
+		if (!setUserID(0)) return(false);
+		if (!setDateTime(null)) return(false);
+		if (!setFname(null)) return(false);
+		if (!setLname(null)) return(false);
+		if (!setMinit(null)) return(false);
+		if (!setJob(null)) return(false);
+		if (!setSalary(0.0)) return(false);
+		if (!setCommission(0.0)) return(false);
+		if (!setDob(null)) return(false);
+		
+		if (!setEmail(null,0)) return(false);
+		if (!setEmail(null,1)) return(false);
+		if (!setEmail(null,2)) return(false);
+		if (!setEmail(null,3)) return(false);
+		if (!setEmail(null,4)) return(false);
+		
+		if (!setPhone(null,0)) return(false);
+		if (!setPhone(null,1)) return(false);
+		if (!setPhone(null,2)) return(false);
+		if (!setPhone(null,3)) return(false);
+		if (!setPhone(null,4)) return(false);
+		
+		if (!setAddress(null,0)) return(false);
+		if (!setAddress(null,1)) return(false);
+		if (!setAddress(null,2)) return(false);
+		if (!setAddress(null,3)) return(false);
+		if (!setAddress(null,4)) return(false);
+
+		return true;
+	}
+	
 } 

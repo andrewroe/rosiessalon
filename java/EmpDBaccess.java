@@ -23,7 +23,8 @@ public class EmpDBaccess extends RosiesSalon
 	that is VERY unusual?!
 	Else, when no match found, 0 is returned and EmpID is left untouched.
 	
-	@param EmpData object 
+	@param data EmpData object 
+	@throws SQLException if there is an error with some SQL command
 	@return Returns an integer 1, 0, or -1 and may update EmpID in EmpData object
 */
 	public int searchEmployeeByFullName(EmpData data) throws SQLException 
@@ -84,7 +85,8 @@ public class EmpDBaccess extends RosiesSalon
 	addEmployee method
 	Expects a completed EmpData class as input
 	
-	@param EmpData object 
+	@param data EmpData object 
+	@throws SQLException if there is an error with some SQL command
 	@return Returns a boolean true for success, else false
 */
 	public boolean addEmployee(EmpData data) throws SQLException 
@@ -152,8 +154,9 @@ public class EmpDBaccess extends RosiesSalon
 	addEmpPhone method
 	Expects a completed EmpData class as input
 	
-	@param EmpData object 
-	@param index for which phone primary - fifth (1 - 5) to be added
+	@param data EmpData object 
+	@param index which phone slot primary - fifth (1 - 5) to be added
+	@throws SQLException if there is an error with some SQL command
 	@return Returns a boolean true for success, else false
 */
 	public boolean addEmpPhone(EmpData data, int index) throws SQLException 
@@ -210,8 +213,9 @@ public class EmpDBaccess extends RosiesSalon
 	deactivateEmpPhone method
 	Expects a completed EmpData class as input
 	
-	@param EmpData object 
+	@param data EmpData object 
 	@param index for which phone primary - fifth (1 - 5) to be added
+	@throws SQLException if there is an error with some SQL command
 	@return Returns a boolean true for success, else false
 */
 	public boolean deactivateEmpPhone(EmpData data, int index) throws SQLException 
@@ -267,7 +271,8 @@ public class EmpDBaccess extends RosiesSalon
 	other data within the EmmData class will be 
 	overlayed into it upon return.
 	
-	@param EmpData object 
+	@param data EmpData object 
+	@throws SQLException if there is an error with some SQL command
 	@return Returns a boolean for success or not and updated the supplied EmpData,
 	 
 */
@@ -419,6 +424,87 @@ public class EmpDBaccess extends RosiesSalon
 		return true;	
 		
 	} // End of fetchAllEmployeeInfo()
+
+/** 	
+	fetchUser method
+	Expects an user name, e.g. admin, or joe@myemail.com, etc.
+	
+	@param user a string object
+	@throws SQLException if there is an error with some SQL command 
+	@return Returns a integer of EmpID if successful, else 0 
+	 
+*/
+	public int fetchUser(String user) throws SQLException 
+	{ 
+		int empid = 0;
+		ResultSet result;
+				
+		// Ensure there is a DB record for Employee
+		System.out.println("findUser() - searching for UserName");
+		
+		String sqlcmd = "SELECT EmpID, Validity " +
+				"FROM EmpInfo " +
+				"WHERE InfoType = 0 AND InfoSubType = 0 AND Validity <> 0 " +
+				"AND CharBig = '" + user + "'";
+			
+		result = doCmd(sqlcmd); 
+		if (result != null)
+		{
+			if (!result.next())
+				return 0; // not found	
+					
+			empid = Integer.parseInt(result.getString("EmpID"));
+			return empid;
+		}
+		
+		else
+		{ 
+			System.out.println("Can not find UserName");
+			return 0;
+		} 	
+		
+	} // End of fetchUser()
+ 
+  	   
+/** 	
+	fetchPassword method
+	Expects a EmpID and searches for Password of that user.
+	
+	@param empid the employee primary key
+	@throws SQLException if there is an error with some SQL command
+	@return Returns a String of the password for that user, if successful else null 
+	 
+*/
+	public String fetchPassword(int empid) throws SQLException 
+	{ 
+		String password = null;
+		String sqlcmd = null;
+		ResultSet result;
+		
+		System.out.println("in EmpDBaccess - fetchPassword");
+			
+		sqlcmd = "SELECT Validity, CharBig ";
+		sqlcmd += "FROM EmpInfo ";
+		sqlcmd += "WHERE EmpID = " + empid; 
+		sqlcmd += " AND InfoType = 0 AND InfoSubType = 1 AND Validity <> 0";
+	
+		result = doCmd(sqlcmd);
+		if (result != null)
+		{		 
+			if (!result.next())
+				return password; // not found, leave as null
+						
+			password = result.getString("CharBig");
+			return password;
+		}
+		
+		else
+		{ 
+			System.out.println("An error occurred while finding UserName's password");
+			return null;
+		} 	
+		
+	} // End of fetchPassword()
  
  
  /** 	
@@ -427,8 +513,9 @@ public class EmpDBaccess extends RosiesSalon
 	available in the EmpData object.
 	For each possible match the EmpID is addded into the ArrayListsupplied by caller.
 	
-	@param EmpData object
-	@param ArrayList<Integer> 
+	@param data EmpData object
+	@param EmpIDlist an ArrayList
+	@throws SQLException if there is an error with some SQL command 
 	@return Returns boolean true if one or more Employees could match the criteria
 	and also updates the supplied Arraylist of EmpID values of possible matches.
 */
@@ -481,7 +568,8 @@ public class EmpDBaccess extends RosiesSalon
 	Expects an EmpData class as input, which should contain EmpID and
 	Fname, Lname and Minit.
 	
-	@param EmpData object 
+	@param data EmpData object
+	@throws SQLException if there is an error with some SQL command
 	@return Returns a boolean for success or not.
 	 
 */
@@ -496,7 +584,8 @@ public class EmpDBaccess extends RosiesSalon
 	Expects an EmpData class as input, which will have EmpID and other data
 	overlayed into it upon return.
 	
-	@param EmpData object 
+	@param data EmpData object
+	@throws SQLException if there is an error with some SQL command
 	@return Returns a boolean for success or not and updated supplied EmpData,
 	 
 */
@@ -512,7 +601,8 @@ public class EmpDBaccess extends RosiesSalon
 	Expects an EmpData class as input, which will have EmpID and other data
 	that is needed.
 	
-	@param EmpData object 
+	@param data EmpData object
+	@throws SQLException if there is an error with some SQL command
 	@return Returns a boolean for success or not
 	 
 */
@@ -630,7 +720,8 @@ public class EmpDBaccess extends RosiesSalon
 	Expects an EmpData class as input, which will have EmpID and other data
 	that is needed.
 	
-	@param EmpData object 
+	@param data EmpData object
+	@throws SQLException if there is an error with some SQL command 
 	@return Returns a boolean for success or not
 	 
 */
@@ -646,7 +737,8 @@ public class EmpDBaccess extends RosiesSalon
 	Expects an EmpData class as input, which will have EmpID and other data
 	needed data.
 	
-	@param EmpData object 
+	@param data EmpData object
+	@throws SQLException if there is an error with some SQL command 
 	@return Returns a boolean for success or not 
 	 
 */
@@ -656,85 +748,6 @@ public class EmpDBaccess extends RosiesSalon
 	}
  
    
-/** 	
-	fetchUser method
-	Expects an user name, e.g. admin, or joe@myemail.com, etc.
-	
-	@param user a string object 
-	@return Returns a integer of EmpID if successful, else 0 
-	 
-*/
-	public int fetchUser(String user) throws SQLException 
-	{ 
-		int empid = 0;
-		ResultSet result;
-				
-		// Ensure there is a DB record for Employee
-		System.out.println("findUser() - searching for UserName");
-		
-		String sqlcmd = "SELECT EmpID, Validity " +
-				"FROM EmpInfo " +
-				"WHERE InfoType = 0 AND InfoSubType = 0 AND Validity <> 0 " +
-				"AND CharBig = '" + user + "'";
-			
-		result = doCmd(sqlcmd); 
-		if (result != null)
-		{
-			if (!result.next())
-				return 0; // not found	
-					
-			empid = Integer.parseInt(result.getString("EmpID"));
-			return empid;
-		}
-		
-		else
-		{ 
-			System.out.println("Can not find UserName");
-			return 0;
-		} 	
-		
-	} // End of fetchUser()
- 
- 
- 	   
-/** 	
-	fetchPassword method
-	Expects a EmpID and searches for Password of that user.
-	
-	@param empid the employee primary key
-	@return Returns a String of the password for that user, if successful else null 
-	 
-*/
-	public String fetchPassword(int empid) throws SQLException 
-	{ 
-		String password = null;
-		String sqlcmd = null;
-		ResultSet result;
-		
-		System.out.println("in EmpDBaccess - fetchPassword");
-			
-		sqlcmd = "SELECT Validity, CharBig ";
-		sqlcmd += "FROM EmpInfo ";
-		sqlcmd += "WHERE EmpID = " + empid; 
-		sqlcmd += " AND InfoType = 0 AND InfoSubType = 1 AND Validity <> 0";
-	
-		result = doCmd(sqlcmd);
-		if (result != null)
-		{		 
-			if (!result.next())
-				return password; // not found, leave as null
-						
-			password = result.getString("CharBig");
-			return password;
-		}
-		
-		else
-		{ 
-			System.out.println("An error occurred while finding UserName's password");
-			return null;
-		} 	
-		
-	} // End of fetchPassword()
  
  
 }  // End of class

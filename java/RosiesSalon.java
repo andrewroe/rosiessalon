@@ -69,9 +69,11 @@ public abstract class RosiesSalon
 	Establishes a connection to a Database.
 	This could be expanded to allow for multiple DB connections,
 	but for now only ONE allowed.
+	
 	@param dbname The name of the DB to connect with (probably rosiessalon).
 	@param user The user name to use when connecting with the DB.
 	@param password The SQL password for that user.
+	@throws SQLException if there is an error with some SQL command
 	@return Returns a boolean, true if connection successful, else false.
 */
 	public boolean ConnectToDB(String dbname, String user, String password) 
@@ -119,6 +121,7 @@ public abstract class RosiesSalon
 	method DisconnectFromDB
 	Close connection to Database.
 	
+	@throws SQLException if there is an error with some SQL command
 	@return Returns a boolean, true if connection successful, else false.
 */
 	public boolean DisconnectFromDB() throws SQLException
@@ -146,9 +149,7 @@ public abstract class RosiesSalon
 /** 	
 	method DBconnected
 	Checks if connected to DB
-	@param dbname The name of the DB to connect with (probably rosiessalon).
-	@param user The user name to use when connecting with the DB.
-	@param password The SQL password for that user.
+	
 	@return Returns a boolean, true if connection successful, else false.
 */
 	public boolean DBconnected()
@@ -233,7 +234,7 @@ public abstract class RosiesSalon
 	Executes SQL command - does the detail processing
 	
 	@param sqlcmd a string object containing SQL Command
-	
+	@throws SQLException if there is an error with some SQL command
 	@return Returns a reference to Results or null
 */	
 	
@@ -273,6 +274,7 @@ public abstract class RosiesSalon
 	Executes SQL command - does the detail processing
 	
 	@param sqlcmd a string object containing SQL Command
+	@throws SQLException if there is an error with some SQL command
 	@return Returns an integer of number of rows inserted
 */	
 	
