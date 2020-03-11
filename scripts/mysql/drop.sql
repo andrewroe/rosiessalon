@@ -1,0 +1,12 @@
+use rosiessalon;
+drop table EmpInfo;
+drop table CustInfo;
+drop table SupplierInfo;
+drop table ProductInfo;
+drop table TransactionDetails;
+drop table Supplier;
+drop table Product;
+drop table Service;
+drop table Transaction;
+drop table Customer;
+drop table Employee;
