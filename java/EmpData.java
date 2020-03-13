@@ -23,6 +23,8 @@ public class EmpData
 	protected String[] PhoneData = new String[5]; 
 	protected String[] EmailData = new String[5]; 
 	protected String[] AddrData = new String[5];	
+	protected String UserName = null;
+	protected String Password = null;
 
 /*
 	All the set data field's methods.
@@ -126,7 +128,18 @@ public class EmpData
 		AddrData[index] = address;
 		return true;
 	}
+	
+	public boolean setUname(String username)
+	{
+		UserName = username;
+		return true;
+	}
 
+	public boolean setPassword(String password)
+	{
+		Password = password;
+		return true;
+	}
 
 /*
 	All of the get data field's methods.
@@ -223,6 +236,16 @@ public class EmpData
 		}
 	}
 	
+	public String getUname()
+	{
+		return UserName;
+	}
+
+	public String getPassword()
+	{
+		return Password;
+	}
+	
 /*
 	All the clear data field's methods.
 */
@@ -239,6 +262,8 @@ public class EmpData
 		if (!setSalary(0.0)) return(false);
 		if (!setCommission(0.0)) return(false);
 		if (!setDob(null)) return(false);
+		if (!setUname(null)) return(false);
+		if (!setPassword(null)) return(false);
 		
 		if (!setEmail(null,0)) return(false);
 		if (!setEmail(null,1)) return(false);

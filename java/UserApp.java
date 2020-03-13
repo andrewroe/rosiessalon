@@ -1,4 +1,5 @@
-import java.util.Scanner;  
+import java.util.Scanner; 
+import javax.swing.JOptionPane; 
 import java.sql.*;  	
 
 /**		     	
@@ -41,8 +42,9 @@ public class UserApp
 		invalidChoice
 	}
 	
-	static EmpDBaccess dbaccess = new EmpDBaccess();
-		
+	private static Scanner keyboard = new Scanner(System.in);
+	private static EmpDBaccess dbaccess = new EmpDBaccess();
+	
 	public static void main(String[] args) throws SQLException
 	{
     	  
@@ -54,7 +56,7 @@ public class UserApp
         boolean validEmployeeData = false;
         
         dbaccess.ConnectToDB("rosiessalon","andrewroe","andysql");
-        
+        // keyboard.nextLine(); // flush newline, this is necessary??
         
         userid = handlelogin(userData);
         if (userid == 0)
@@ -127,8 +129,7 @@ public class UserApp
 	public static UsersChoice menu()
 	{
 		int userchoice = 0;
-		Scanner keyboard = new Scanner (System.in);	
-		
+			
 		do
 		{	
 			System.out.println("Enter a task choice.");
@@ -154,6 +155,9 @@ public class UserApp
 			}
 			
 		} while ((userchoice < 0) || (userchoice > 12));
+		
+		// flush newline, this is necessary, when only one Scanner of keyboard
+		keyboard.nextLine(); 
 		
 		switch (userchoice)
 		{
@@ -186,7 +190,6 @@ public class UserApp
 	{
 		int trycount = 0;
 		String username = null;
-		Scanner userinput = new Scanner (System.in);
 		int empid = 0;
 		String password = null;
 		String userpassword = null;
@@ -195,7 +198,7 @@ public class UserApp
 		{
 			// add JOption later
 			System.out.print("enter user name: ");
-			username = userinput.nextLine();
+			username = keyboard.nextLine();
 			// going to need findUser(user) into EmpDBaccess
 			/*
 			if we find user, then check user password
@@ -207,7 +210,7 @@ public class UserApp
 				if (password != null)
 				{
 					System.out.print("enter password: ");
-					userpassword = userinput.nextLine();
+					userpassword = keyboard.nextLine();
 					if (userpassword.compareTo(password) == 0)
 					{
 						// NEED to fill in all the EmpDater of user !!!
@@ -244,8 +247,6 @@ public class UserApp
 		double dParm = 0.0;
 		
 		// protected ArrayList<Integer> EmpIDlist = new ArrayList<>();
-
-		Scanner keyboard = new Scanner(System.in);
 		
 		data.clearAll();
 		data.setUserID(callingUser);
@@ -319,8 +320,6 @@ public class UserApp
 		String name = null;
 		int gotback = 0;
 		
-		Scanner keyboard = new Scanner(System.in);
-		
 		data.clearAll();
 		data.setUserID(callingUser);
 
@@ -343,11 +342,52 @@ public class UserApp
 		
 		if (gotback == 1)
 		{
-			System.out.println("Successfully found employee.");
+			System.out.println("\nSuccessfully found employee.");
 
-			System.out.println("Employee Job: " + data.getJob());
-			System.out.println("Employee Salary: "+	data.getSalary());
-			System.out.println("Employee Commission: " + data.getCommission());
+			System.out.println("\tName: " + data.getFname() + 
+				" " + data.getMinit() + " " + data.getLname());
+			System.out.println("\tJob: " + data.getJob());
+			System.out.println("\tSalary: " +	data.getSalary());
+			System.out.println("\tCommission: " + data.getCommission());
+			
+			dbaccess.fetchAllEmployeeInfo(data);
+			
+			if (data.getDob() != null)
+				System.out.println("\tDate of Birth: " + data.getDob());
+			if (data.getEmail(0) != null)
+				System.out.println("\tPrimary Email: " + data.getEmail(0));
+			if (data.getEmail(1) != null)
+				System.out.println("\tSecondary Email: " + data.getEmail(1));
+			if (data.getEmail(2) != null)
+				System.out.println("\tTertiary Email: " + data.getEmail(2));
+			if (data.getEmail(3) != null)
+				System.out.println("\tFourth Email: " + data.getEmail(3));
+			if (data.getEmail(4) != null)
+				System.out.println("\tFifth Email: " + data.getEmail(4));
+				
+			if (data.getPhone(0) != null)
+				System.out.println("\tPrimary Phone: " + data.getPhone(0));
+			if (data.getPhone(1) != null)
+				System.out.println("\tSecondary Phone: " + data.getPhone(1));
+			if (data.getPhone(2) != null)
+				System.out.println("\tTertiary Phone: " + data.getPhone(2));
+			if (data.getPhone(3) != null)
+				System.out.println("\tFourth Phone: " + data.getPhone(3));
+			if (data.getPhone(4) != null)
+				System.out.println("\tFifth Phone: " + data.getPhone(4));
+				
+			if (data.getAddressLine(0) != null)
+				System.out.println("\tAddress: " + data.getAddressLine(0));
+			if (data.getAddressLine(1) != null)
+				System.out.println("\t         " + data.getAddressLine(1));
+			if (data.getAddressLine(2) != null)
+				System.out.println("\t         " + data.getAddressLine(2));
+			if (data.getAddressLine(3) != null)
+				System.out.println("\t         " + data.getAddressLine(3));
+			if (data.getAddressLine(4) != null)
+				System.out.println("\t         " + data.getAddressLine(4));
+															
+			System.out.println();
 			return true;
 		}
 		else if (gotback == -1)
@@ -393,24 +433,18 @@ public class UserApp
 		boolean another = false;
 		EmpData originalData = new EmpData();
 		
-		Scanner keyboard = new Scanner(System.in);
-		
 		data.clearAll();
 		data.setUserID(callingUser);
 
 		System.out.println("So you want to update an employee's information.");
 		System.out.println("First, who are we talking about?");
+		System.out.println("Watch for pop-ups.");
 
-		System.out.print("First name please: ");
-		name = keyboard.nextLine();
-		data.setFname(name);
-
-		System.out.print("Middle initial or name: ");
-		name = keyboard.nextLine();
+		name = JOptionPane.showInputDialog("First name: ");
+		data.setFname(name);		
+		name = JOptionPane.showInputDialog("Middle initial or name: ");
 		data.setMinit(name);
-		
-		System.out.print("Last name: ");
-		name = keyboard.nextLine();
+		name = JOptionPane.showInputDialog("Last name: ");
 		data.setLname(name);
 		
 		gotback = dbaccess.searchEmployeeByFullName(data);
@@ -503,18 +537,16 @@ public class UserApp
 	{		
 		boolean rvalue = false;
 		String response = null;
-		
-		Scanner keyboard = new Scanner(System.in);
 			
 		System.out.println("Change first name, which was " +
 			originalData.getFname() + " (y or n)?");
 		response = keyboard.nextLine();
 		if ((response.charAt(0) == 'Y') || (response.charAt(0) == 'y'))
 		{
-			System.out.print("new First name? ");
-			response = keyboard.nextLine();
+			System.out.print("Look for first name pop-up");
+			response = JOptionPane.showInputDialog("new First name?");
 			data.setFname(response);
-			// to do
+			rvalue = dbaccess.updateEmployeeFname(data);
 		}
 				
 		System.out.println("Change Middle Initial or Name, which was " +
@@ -522,10 +554,10 @@ public class UserApp
 		response = keyboard.nextLine();
 		if ((response.charAt(0) == 'Y') || (response.charAt(0) == 'y'))
 		{
-			System.out.print("new Middle name/initial? ");
-			response = keyboard.nextLine();
+			System.out.print("Look for Middle name pop-up");
+			response = JOptionPane.showInputDialog("new Middle name or initial?");
 			data.setMinit(response);
-			// to do
+			rvalue = dbaccess.updateEmployeeMinit(data);
 		}
 			
 		System.out.println("Change Last Name, which was " +
@@ -533,8 +565,8 @@ public class UserApp
 		response = keyboard.nextLine();
 		if ((response.charAt(0) == 'Y') || (response.charAt(0) == 'y'))
 		{
-			System.out.print("new Last name? ");
-			response = keyboard.nextLine();
+			System.out.print("Look for last name pop-up");
+			response = JOptionPane.showInputDialog("new Middle name or initial?");
 			data.setLname(response);
 			rvalue = dbaccess.updateEmployeeLname(data);
 		}
@@ -558,7 +590,6 @@ public class UserApp
 		boolean rvalue = false;
 		String response = null;
 		double doubleResponse = 0.0;
-		Scanner keyboard = new Scanner(System.in);
 					
 		System.out.println("Change job description, which was " +
 			originalData.getJob() + " (y or n)?");
@@ -568,7 +599,7 @@ public class UserApp
 			System.out.print("new Job? ");
 			response = keyboard.nextLine();
 			data.setJob(response);
-			// to do
+			rvalue = dbaccess.updateEmployeeJob(data);
 		}
 				
 		System.out.println("Change salary, which was " +
@@ -579,6 +610,7 @@ public class UserApp
 			System.out.print("new salary? ");
 			doubleResponse = keyboard.nextDouble();
 			data.setSalary(doubleResponse);
+			rvalue = dbaccess.updateEmployeeSalary(data);
 		}
 				
 		System.out.println("Change commission, which was " +
@@ -589,6 +621,7 @@ public class UserApp
 			System.out.print("new commission? ");
 			doubleResponse = keyboard.nextDouble();
 			data.setCommission(doubleResponse);
+			rvalue = dbaccess.updateEmployeeCommission(data);
 		}		
 		
 		return rvalue;	
@@ -611,8 +644,6 @@ public class UserApp
 		String response = null;
 		String name = null;
 		int i;
-		
-		Scanner keyboard = new Scanner(System.in);
 			
 		System.out.println();
 						
@@ -639,7 +670,7 @@ public class UserApp
 			}
 			
 			data.setEmail(name,i);
-			// to do dall rvalue = email update in DBaccess 		
+			rvalue = dbaccess.updateEmployeeEmail(data,i);		
 			
 		} while (i++ < 5);
 			
@@ -663,8 +694,6 @@ public class UserApp
 		String response = null;
 		String name = null;
 		int i;
-		
-		Scanner keyboard = new Scanner(System.in);
 			
 		System.out.println();	
 				
@@ -683,15 +712,26 @@ public class UserApp
 		i = 0;
 		do
 		{
-			System.out.print("New Phone number: ");
-			name = keyboard.nextLine();
+			/*	
+				JOptionPane.showMessageDialog(null, "Your grade is F !");
+	 			varString = JOptionPane.showInputDialog("Want to try this with pop-ups? Please answer Y or N: ");
+        		varAnswer = varString.charAt(0);
+        		
+        		System.out.print("New Phone number: ");
+        		name = keyboard.nextLine();
+
+        		if (varAnswer == 'Y' || varAnswer == 'y')
+        	*/
+			
+			name = JOptionPane.showInputDialog("New Phone number: ");
 			if (name.equals("No") || name.equals("no") || name.equals("no"))
 			{
 				return rvalue;
 			}
 			
 			data.setPhone(name,i);
-					
+			
+			//rvalue = dbaccess.updateEmployeePhone(data,i);		
 			// deactivate any old phone for this slot
 			if ((name = originalData.getPhone(i)) != null)
 			{		

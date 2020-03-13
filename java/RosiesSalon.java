@@ -154,8 +154,8 @@ public abstract class RosiesSalon
 */
 	public boolean DBconnected()
 	{
-		System.out.println("In the super class RosiesSalon and dbConnection = " + 
-				this.dbConnection);
+		//System.out.println("In the super class RosiesSalon and dbConnection = " + 
+		//		this.dbConnection);
 		if (this.dbConnection == null) 
 		{
 			return false;
@@ -206,7 +206,7 @@ public abstract class RosiesSalon
 		
 		rvalue = String.format("%4d%02d%02d",
 			cal.get(Calendar.YEAR), (cal.get(Calendar.MONTH) + 1), 
-			cal.get(Calendar.DAY_OF_WEEK));
+			cal.get(Calendar.DAY_OF_MONTH));
 			
 		// rvalue = String.format("%8", time);
 		System.out.println("local date is: " + rvalue);
@@ -248,9 +248,11 @@ public abstract class RosiesSalon
 		}
 		
 		Statement statement = dbConnection.createStatement();
-						
+		
+		/*				
 		System.out.println("SQL statement:");
 		System.out.println(sqlcmd);
+		*/
 				  
 		try 
 		{
@@ -287,9 +289,11 @@ public abstract class RosiesSalon
 		}
 		
 		Statement statement = dbConnection.createStatement();
-						
+		
+		/*				
 		System.out.println("SQL statement:");
 		System.out.println(sqlcmd);
+		*/
 									  
 		try 
 		{

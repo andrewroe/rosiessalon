@@ -45,8 +45,8 @@ public class EmpDBaccess extends RosiesSalon
 			"FROM Employee WHERE Lname = '" + lname + "' AND Fname = '" + 
 			fname + "' AND Minit = '" + minit + "'";
 			
-		System.out.println("searchEmployee() - search DB using user's " + 
-			"Fname, Lname, and Minit.");
+		//System.out.println("searchEmployee() - search DB using user's " + 
+		//	"Fname, Lname, and Minit.");
 						
 		result = doCmd(sqlcmd);
 			
@@ -58,7 +58,7 @@ public class EmpDBaccess extends RosiesSalon
 					
 		if (result.next())
 		{
-			System.out.println("searchEmployee() - it should get here");
+			//System.out.println("searchEmployee() - it should get here");
 			data.setEmpID(result.getInt("EmpID"));
 			data.setJob(result.getString("job"));
 			data.setSalary(result.getDouble("Salary"));
@@ -98,7 +98,7 @@ public class EmpDBaccess extends RosiesSalon
 		String minit = data.getMinit();
 		// int empid = data.getEmpID();
 		int userid = data.getUserID();
-		String createtime = super.readfullDateTime();
+		String createtime = readfullDateTime();
 		String updatetime = createtime;
 		// updatetime = data.getUpdateTime();
 		String job = data.getJob();
@@ -165,7 +165,7 @@ public class EmpDBaccess extends RosiesSalon
 		int userid = data.getUserID();
 		int rows;
 		String phone = data.getPhone(index);	
-		String updatetime = super.readfullDateTime();
+		String updatetime = readfullDateTime();
 		ResultSet result;
 		String sqlcmd;
 		boolean returnValue = false;
@@ -208,6 +208,190 @@ public class EmpDBaccess extends RosiesSalon
 				
 	} // End of addEmpPhone()
 
+ /** 	
+	addEmpPhone method
+	Expects a completed EmpData class as input
+	
+	@param data EmpData object 
+
+	@throws SQLException if there is an error with some SQL command
+	@return Returns a boolean true for success, else false
+*/
+	public boolean addEmpInfoRecord(int dtype, int subtype, EmpData data) 
+		throws SQLException 
+	{
+		int empid = data.getEmpID();
+		int userid = data.getUserID();
+		int rows;	
+		String updatetime = readfullDateTime();
+		ResultSet result;
+		String sqlcmd;
+		boolean returnValue = false;
+			
+		sqlcmd = "INSERT INTO EmpInfo (EmpID, UserID";
+		sqlcmd += ", UpdateTime";
+		sqlcmd += ", InfoType";
+		sqlcmd += ", InfoSubType";
+		sqlcmd += ", Validity";
+		sqlcmd += ", CharBig)";
+		sqlcmd += " VALUES (";
+		sqlcmd += empid;
+		sqlcmd += ", " + userid;
+		sqlcmd += ", '" + updatetime + "'";
+		sqlcmd += ", " + dtype;
+		sqlcmd += ", " + subtype;
+		switch (dtype)
+		{
+			case DtypeAdmin:
+				sqlcmd += ", " + ValidInfo3;
+				switch (subtype)
+				{
+					case SubTypeUserName:
+						sqlcmd += ", '" + data.getUname() + "'";
+						break;
+					case SubTypePassword:
+						sqlcmd += ", '" + data.getPassword() + "'";
+						break;
+					default:
+						return false;				
+				}
+				break;
+			case DtypePhone:
+				sqlcmd += ", " + ValidInfo3;
+				switch (subtype)
+				{
+					case SubTypePrimary:
+						sqlcmd += ", '" + data.getPhone(0) + "'";
+						break;
+					case SubTypeSecondary:
+						sqlcmd += ", '" + data.getPhone(1) + "'";
+						break;
+					case SubTypeTertiary:
+						sqlcmd += ", '" + data.getPhone(2) + "'";
+						break;
+					case SubTypeFourth:
+						sqlcmd += ", '" + data.getPhone(3) + "'";
+						break;
+					case SubTypeFifth:
+						sqlcmd += ", '" + data.getPhone(4) + "'";
+						break;
+					default:
+						return false;	
+				}
+				break;
+			case DtypeEmail:
+				sqlcmd += ", " + ValidInfo3;
+				switch (subtype)
+				{
+					case SubTypePrimary:
+						sqlcmd += ", '" + data.getEmail(0) + "'";
+						break;
+					case SubTypeSecondary:
+						sqlcmd += ", '" + data.getEmail(1) + "'";
+						break;
+					case SubTypeTertiary:
+						sqlcmd += ", '" + data.getEmail(2) + "'";
+						break;
+					case SubTypeFourth:
+						sqlcmd += ", '" + data.getEmail(3) + "'";
+						break;
+					case SubTypeFifth:
+						sqlcmd += ", '" + data.getEmail(4) + "'";
+						break;
+					default:
+						return false;	
+				}
+				break;									
+			case DtypeAddress:
+				sqlcmd += ", " + ValidInfo3;
+				switch (subtype)
+				{
+					case SubTypeAddr1:
+						sqlcmd += ", '" + data.getAddressLine(0) + "'";
+						break;
+					case SubTypeAddr2:
+						sqlcmd += ", '" + data.getAddressLine(1) + "'";
+						break;
+					case SubTypeAddr3:
+						sqlcmd += ", '" + data.getAddressLine(2) + "'";
+						break;
+					case SubTypeAddr4:
+						sqlcmd += ", '" + data.getAddressLine(3) + "'";
+						break;
+					case SubTypeAddr5:
+						sqlcmd += ", '" + data.getAddressLine(4) + "'";
+						break;
+					default:
+						return false;	
+				}
+				break;
+			case DtypeTimeCard:
+				sqlcmd += ", " + ValidInfo3;
+				switch (subtype)
+				{
+					case SubTypeDayIn:
+						sqlcmd += ", '" + updatetime + "'";
+						break;
+					case SubTypeDayOut:
+						sqlcmd += ", '" + updatetime + "'";
+						break;
+					default:
+						return false;	
+				}
+				break;				
+			case DtypePersonal:
+				switch (subtype)
+				{	
+					case SubTypeFname:
+						sqlcmd += ", " + ValidInfo3;
+						sqlcmd += ", '" + data.getFname() + "'";
+						break;
+					case SubTypeMinit:
+						sqlcmd += ", " + ValidInfo3;
+						sqlcmd += ", '" + data.getMinit() + "'";
+						break;
+					case SubTypeLname:
+						sqlcmd += ", " + ValidInfo3;
+						sqlcmd += ", '" + data.getLname() + "'";
+						break;
+					case SubTypeJob:
+						sqlcmd += ", " + ValidInfo3;
+						sqlcmd += ", '" + data.getJob() + "'";
+						break;
+					case SubTypeSalary:
+						sqlcmd += ", " + ValidInfo2;
+						sqlcmd += ", " + data.getSalary();
+						break;
+					case SubTypeCommission:
+						sqlcmd += ", " + ValidInfo2;
+						sqlcmd += ", commission = " + data.getCommission();
+						break;													
+					default:
+						return false;
+				}
+			default:		
+				return false;
+		}
+					
+		sqlcmd += ")";
+						
+		rows = doRowsCmd(sqlcmd);		
+		System.out.println("number of rows inserted = " + rows);
+				
+		if (rows == 1)
+			return true;		
+		else if (rows == 0)
+			return false;	
+		else
+		{
+			System.out.println("addEmpIntoRecord() - returned neither 0 " +
+				"nor 1 rows added? But rather " + 
+				rows + " rows added??");
+			return false;
+		}
+				
+	} // End of addEmpInfoRecord()
+
  
 /** 	
 	deactivateEmpPhone method
@@ -224,7 +408,7 @@ public class EmpDBaccess extends RosiesSalon
 		int userid = data.getUserID();
 		int einfoid = 0;
 		int rows = 0;
-		String updatetime = super.readfullDateTime();
+		String updatetime = readfullDateTime();
 		boolean rvalue = false;
 		ResultSet result;
 		String sqlcmd;
@@ -264,6 +448,30 @@ public class EmpDBaccess extends RosiesSalon
 		return rvalue;		
 	} // End of deactivateEmpPhone()
 
+/** 	
+	deactivateEmpInfoRecord method
+	Expects ... fill in
+	
+	@param einfoid EinfoID 
+	@throws SQLException if there is an error with some SQL command
+	@return Returns a boolean true for success, else false
+*/
+	public boolean deactivateEmpInfoRecord(int einfoid) throws SQLException 
+	{
+		int rows = 0;
+		String updatetime = readfullDateTime();
+		String sqlcmd;
+							
+		sqlcmd = "UPDATE EmpInfo SET Validity = " + 0;
+		sqlcmd += ", UpdateTime = '" + updatetime + "'";
+		sqlcmd += " WHERE EinfoID = " + einfoid; 
+				
+		rows = doRowsCmd(sqlcmd) ;
+		if (rows > 0)	
+			return true;
+		else
+			return false;		
+	} // End of deactivateEmpInfoRecord()
 
 /** 	
 	fetchAllEmployeeInfo method
@@ -296,14 +504,15 @@ public class EmpDBaccess extends RosiesSalon
 			"salary, commission FROM Employee where EmpID = " + empid; 
 				
 	
-		System.out.println("fetchAllEmployeeInfo() - search DB using user's " + 
-			"EmpID as supplied.");
+		//System.out.println("fetchAllEmployeeInfo() - search DB using user's " + 
+		//	"EmpID as supplied.");
 					
 		result = doCmd(sqlcmd);
 		
 		if (result == null)
 		{ 
-			System.out.println("fetchAllEmployeeInfo() - could not find employee match!");
+			System.out.println("fetchAllEmployeeInfo() - " +
+				"could not find employee match!");
 			return false;
 		}
 		
@@ -329,8 +538,8 @@ public class EmpDBaccess extends RosiesSalon
 		sqlcmd = "SELECT EmpID, UserID, InfoType, InfoSubType, Validity, " +
 			"Nbr1Parm, Nbr2Parm, CharBig FROM EmpInfo where EmpID = " + empid; 
 					
-		System.out.println("fetchAllEmployeeInfo() - search EmpInfo DB record " + 
-				"using EmpID as supplied.");
+		//System.out.println("fetchAllEmployeeInfo() - search EmpInfo DB record " + 
+		//		"using EmpID as supplied.");
 				
 		result = doCmd(sqlcmd);
 		
@@ -418,9 +627,10 @@ public class EmpDBaccess extends RosiesSalon
 				data.setAddress(charparm,4);
 																
 			else
-				System.out.println("encountered unknown EmpInfo record??!");				
-			
+				// System.out.println("encountered unknown EmpInfo record??!");	
+				continue;					
 		} 	
+		
 		return true;	
 		
 	} // End of fetchAllEmployeeInfo()
@@ -533,7 +743,7 @@ public class EmpDBaccess extends RosiesSalon
 				"no last name supplied");
 		}
 			
-		System.out.println("searchEmployee() - search DB using user's Lname.");
+		//System.out.println("searchEmployee() - search DB using user's Lname.");
 			
 		String sqlcmd = "SELECT EmpID, UserID, Fname, Lname, Minit, job " +
 			"FROM Employee where Lname = '" + lname + "'";
@@ -561,6 +771,50 @@ public class EmpDBaccess extends RosiesSalon
 		*/
 			
 	}  // End of searchEmployeeByLastName
+	
+	
+	/** 	
+	findEmpInfoRecord method
+	Expects an user name, e.g. admin, or joe@myemail.com, etc.
+	
+	@param dtype Data Type
+	@param subtype Data Sub Tupe
+	@param data EmpData object reference
+	@throws SQLException if there is an error with some SQL command 
+	@return Returns a integer of EmpID if successful, else 0 
+	 
+*/
+	public int findEmpInfoRecord(int dtype, int subtype, EmpData data) throws SQLException 
+	{ 
+		int empid = data.getEmpID();
+		int einfoid = 0;
+		ResultSet result;
+				
+		String sqlcmd = "SELECT EinfoID, EmpID, InfoType, InfoSubType, Validity ";
+		sqlcmd += "FROM EmpInfo ";
+		sqlcmd += "WHERE EmpID = " + empid;
+		sqlcmd += " AND InfoType = " + dtype;
+		sqlcmd += " AND InfoSubType = " + subtype;
+		sqlcmd += " AND Validity <> 0 ";
+			
+		result = doCmd(sqlcmd); 
+		if (result != null)
+		{
+			if (!result.next())
+				return 0; // not found	
+					
+			einfoid = Integer.parseInt(result.getString("EinfoID"));
+			return einfoid;
+		}
+		
+		else
+		{ 
+			System.out.println("Can not find EmpInfo record");
+			return 0;
+		} 	
+		
+	} // End of findEmpInfoRecord()
+ 
 	 
   
 /** 	
@@ -575,180 +829,297 @@ public class EmpDBaccess extends RosiesSalon
 */
 	public boolean updateEmployeeFullName(EmpData data) throws SQLException 
 	{
-		return true;  // for now
+		return false;  // for now
 	}
- 
-  
-/** 	
-	updateEmployeeFname method
-	Expects an EmpData class as input, which will have EmpID and other data
-	overlayed into it upon return.
-	
-	@param data EmpData object
-	@throws SQLException if there is an error with some SQL command
-	@return Returns a boolean for success or not and updated supplied EmpData,
-	 
-*/
-	public boolean updateEmployeeFname(EmpData data) throws SQLException 
-	{
-		return true;  // for now
-	}
- 
- 
-  
+   
 /** 	
 	updateEmployeeLname method
 	Expects an EmpData class as input, which will have EmpID and other data
 	that is needed.
+	
+	@param which integer of which name field to update - 
+	see DtypePersonal SubType... 
 	
 	@param data EmpData object
 	@throws SQLException if there is an error with some SQL command
 	@return Returns a boolean for success or not
 	 
 */
-	public boolean updateEmployeeLname(EmpData data) throws SQLException 
+	public boolean updateEmployee(int subtype, EmpData data) throws SQLException 
 	{ 
 		int empid = data.getEmpID();
-		int einfoid;
-		String lname = data.getLname();
 		int user = data.getUserID();
+		int einfoid;
 		int olduser;
+		String oldfname = null;
 		String oldlname = null;
+		String oldminit = null;
+		String oldjob = null;
+		double oldsalary = 0.0;
+		double oldcommission = 0.0;
+		int Nbr1Parm;
+		double Nbr2Parm;
+		String CharBig;
 		int rows;
 		ResultSet result;
-		String updatetime = super.readfullDateTime();
+		String updatetime = readfullDateTime();
 		
 		if (empid == 0)
 		{
 			throw new SQLException("Attempting update Employee Lname " +
 					"when no EmpID supplied!");
 		} 
-		
-		Statement statement = dbConnection.createStatement();
 			
 		// Ensure there is a DB record for Employee
-		System.out.println("updateEmployeeLname() - confirming that DB " +
-				"has that Employee using EmpID");
+		// System.out.println("updateEmployeeLname() - confirming that DB " +
+		//		"has that Employee using EmpID");
 				
-		String sqlcmd = "SELECT EmpID, UserID, Lname" +
+		String sqlcmd = "SELECT EmpID, UserID, Fname, Minit, Lname" +
 				" FROM Employee where EmpID = " + empid; 
 		
 		result = doCmd(sqlcmd);
 		 
 		if (!result.next())
 		{
-			throw new SQLException("Attempting update Employee Lname " +
+			throw new SQLException("Attempting update Employee " +
 				"when no such Employee exits!");
 		}	
 					
-		// we want to update Employee table with new Lname
+		// we want to update Employee table with new record
 		// But also, update history of change into EmpInfo table
+		oldfname = result.getString("Fname");
+		oldminit = result.getString("Minit");
 		oldlname = result.getString("Lname");
 		olduser = result.getInt("UserID");
 		
-		sqlcmd = "UPDATE Employee SET UserID = " + user +
-			", Lname = '" + lname + "'" +
-			", UpdateTime = '" + updatetime + "'" +
-			" WHERE EmpID = " + empid;
+		sqlcmd = "UPDATE Employee SET UserID = " + user;
+		sqlcmd += ", UpdateTime = '" + updatetime + "'";
+		switch (subtype)
+		{
+			case SubTypeFname:
+				sqlcmd += ", Fname = '" + data.getFname() + "'";
+				break;
+			case SubTypeMinit:
+				sqlcmd += ", Minit = '" + data.getMinit() + "'";
+				break;
+			case SubTypeLname:
+				sqlcmd += ", Lname = '" + data.getLname() + "'";
+				break;
+			case SubTypeJob:
+				sqlcmd += ", job = '" + data.getJob() + "'";
+				break;
+			case SubTypeSalary:
+				sqlcmd += ", salary = " + data.getSalary();
+				break;
+			case SubTypeCommission:
+				sqlcmd += ", commission = " + data.getCommission();
+				break;
+										
+			default:
+				break;
+		}
+		
+		sqlcmd += " WHERE EmpID = " + empid;
 				
 		rows = doRowsCmd(sqlcmd);
-		System.out.println("updateEmployeeLname() - just attempted Employee update");
+		// System.out.println("updateEmployee() - just attempted Employee update");
 				
 		if (rows != 1)
 		{
-			throw new SQLException("Attempting update Employee Lname " +
+			throw new SQLException("Attempting update Employee" +
 				"but the update step failed!");
 		}	
-			
-		
+
+/*			
+		// WE PROBABLY NEVER CAN GET HERE !!!			
 		// now update EmpInfo
-		// 1st find any old Lname record and de-validate it
-		sqlcmd = "SELECT EinfoID, InfoType, InfoSubType, Validity, CharBig" +
-			" FROM EmpInfo where EmpID = " + empid +
-			" AND InfoType = " + DtypePersonal + 
-			" AND InfoSubType = " + SubTypeLname +
-			" And Validity = '" + ValidInfo3 + "'";  
-			
-		
-		System.out.println("updateEmployeeLname() - will do EmpInfo query");
+		// 1st find old which choice record and de-validate it
+		sqlcmd = "SELECT EinfoID, InfoType, InfoSubType, Validity, CharBig";
+		sqlcmd += " FROM EmpInfo where EmpID = " + empid;
+		sqlcmd += " AND InfoType = " + DtypePersonal;
+		sqlcmd += " AND InfoSubType = " + subtype;
+		sqlcmd += " And Validity <> " + 0;  
+					
+		System.out.println("updateEmployee() - will do EmpInfo query");
 		result = doCmd(sqlcmd);
 			
 		while (result.next())	
 		{
-			// There is at least one prior active last name record,
+			// There is at least one prior active personal record,
 			// we need to mark that as invalid before adding the new EmpInfo record.
 			einfoid = result.getInt("EinfoID");
-			// einfolname = result.getString("CharBig"));
+			Nbr1Parm = result.getInt("Nbr1Parm");
+			Nbr2Parm = result.getDouble("Nbr2Parm");
+			CharBig = result.getString("CharBig");
 					
 			sqlcmd = "UPDATE EmpInfo SET Validity = " + 0 +
 				", UpdateTime = '" + updatetime + "'" +
 				" WHERE EinfoID = " + einfoid;   
 		}	
-				
-		// now we can insert EmpInfo record with old Lname and not valid	
-			
-		sqlcmd = "INSERT INTO EmpInfo (EmpID, UserID, " +
-			"UpdateTime, " +
-			"InfoType, InfoSubType, Validity, CharBig)" +
-			" VALUES ( " + 
-			empid + ", " + user + ", " +
-			"'" + updatetime + "'," +
-			DtypePersonal + ", " +
-			SubTypeLname + ", " +
-			0 + ", " +
-			"'" + oldlname + "' )";
 		
-		System.out.println("addEmployee() - add EmpInfo Lname record into DB.");
 				
-		rows = doRowsCmd(sqlcmd);
-				
-		if (rows == 1)
-			return true;
-				
+		// if we find an existing EmpInfo record for this update,
+		// deactivate it.
+		einfoid = findEmpInfoRecord(DtypePersonal,subtype, data);
+		if (einfoid > 0)
+			deactivateEmpInfoRecord(einfoid);
+			
+		// now we can insert EmpInfo record with new data
+		if (addEmpInfoRecord(DtypePersonal, subtype, data))
+			return true;		
 		else
 		{
-				System.out.println("addEmployee() - returned " + rows +
-					"added! Not good!");
-				return false;
+			System.out.println("addEmployee() - returned " + rows +
+				"added! Not good!");
+			return false;
 		}
-				
+*/
+
+		return true;				
 	} // End of updateEmployeeLname()
  
  
 /** 	
-	updateEmployeeJob method
+	updateEmployeexxxx method
 	Expects an EmpData class as input, which will have EmpID and other data
 	that is needed.
 	
+	@param which integer of which name field to update - 
+	see DtypePersonal SubType... 
+	
 	@param data EmpData object
-	@throws SQLException if there is an error with some SQL command 
+	@throws SQLException if there is an error with some SQL command
 	@return Returns a boolean for success or not
 	 
 */
-	public boolean updateEmployeeJob(EmpData data) throws SQLException 
-	{
-		return true;  // for now
+	public boolean updateEmployeeFname(EmpData data) throws SQLException 
+	{ 
+		return updateEmployee(SubTypeFname,data);	
 	}
- 
- 
-  
-/** 	
-	updateEmployeePhone method
-	Expects an EmpData class as input, which will have EmpID and other data
-	needed data.
 	
-	@param data EmpData object
-	@throws SQLException if there is an error with some SQL command 
-	@return Returns a boolean for success or not 
-	 
-*/
-	public boolean updateEmployeePhone(EmpData data) throws SQLException 
-	{
-		return true;  // for now
+	public boolean updateEmployeeMinit(EmpData data) throws SQLException 
+	{ 
+		return updateEmployee(SubTypeMinit,data);	
 	}
- 
-   
- 
+	
+	public boolean updateEmployeeLname(EmpData data) throws SQLException 
+	{ 
+		return updateEmployee(SubTypeLname,data);	
+	}
+	
+	public boolean updateEmployeeJob(EmpData data) throws SQLException 
+	{ 
+		return updateEmployee(SubTypeJob,data);	
+	}
+
+	public boolean updateEmployeeSalary(EmpData data) throws SQLException 
+	{ 
+		return updateEmployee(SubTypeSalary,data);	
+	}
+		
+	public boolean updateEmployeeCommission(EmpData data) throws SQLException 
+	{ 
+		return updateEmployee(SubTypeCommission,data);	
+	}
+	
+	public boolean updateEmployeeDob(EmpData data) throws SQLException 
+	{ 
+		int key = findEmpInfoRecord(DtypePersonal, SubTypeDob, data);	
+		if (key > 0)	
+			deactivateEmpInfoRecord(key);	
+		return addEmpInfoRecord(DtypePersonal,SubTypeDob,data);	
+	}
+	
+	public boolean updateEmployeeAddress(EmpData data,int index) 
+		throws SQLException 
+	{ 
+		int which;
+		switch (index)
+		{
+			case 0:
+				which = SubTypePrimary;
+				break;
+			case 1:
+				which = SubTypePrimary;
+				break;				
+			case 2:
+				which = SubTypePrimary;
+				break;
+			case 3:
+				which = SubTypePrimary;
+				break;
+			case 4:
+				which = SubTypePrimary;
+				break;
+			default:
+				return false;
+		}
+		int key = findEmpInfoRecord(DtypeAddress, which, data);	
+		if (key > 0)	
+			deactivateEmpInfoRecord(key);	
+		return addEmpInfoRecord(DtypeAddress, which, data);		
+	}
+	
+	public boolean updateEmployeePhone(EmpData data, int index) 
+		throws SQLException 
+	{ 
+		int which;
+		switch (index)
+		{
+			case 0:
+				which = SubTypePrimary;
+				break;
+			case 1:
+				which = SubTypePrimary;
+				break;				
+			case 2:
+				which = SubTypePrimary;
+				break;
+			case 3:
+				which = SubTypePrimary;
+				break;
+			case 4:
+				which = SubTypePrimary;
+				break;
+			default:
+				return false;
+		}
+		int key = findEmpInfoRecord(DtypePhone, which, data);	
+		if (key > 0)	
+			deactivateEmpInfoRecord(key);	
+		return addEmpInfoRecord(DtypePhone, which, data);					
+	}
+	
+	public boolean updateEmployeeEmail(EmpData data,int index) 
+		throws SQLException 
+	{ 
+		int which;
+		switch (index)
+		{
+			case 0:
+				which = SubTypePrimary;
+				break;
+			case 1:
+				which = SubTypePrimary;
+				break;				
+			case 2:
+				which = SubTypePrimary;
+				break;
+			case 3:
+				which = SubTypePrimary;
+				break;
+			case 4:
+				which = SubTypePrimary;
+				break;
+			default:
+				return false;
+		}
+		int key = findEmpInfoRecord(DtypeEmail, which, data);	
+		if (key > 0)	
+			deactivateEmpInfoRecord(key);	
+		return addEmpInfoRecord(DtypeEmail, which, data);				
+	}	
+							
  
 }  // End of class
 
