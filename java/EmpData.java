@@ -232,7 +232,7 @@ public class EmpData
 		}
 		else
 		{
-			return(this.EmailData[index]);
+			return(this.AddrData[index]);
 		}
 	}
 	
