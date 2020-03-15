@@ -376,16 +376,16 @@ public class UserApp
 			if (data.getPhone(4) != null)
 				System.out.println("\tFifth Phone: " + data.getPhone(4));
 				
-			if (data.getAddressLine(0) != null)
-				System.out.println("\tAddress: " + data.getAddressLine(0));
-			if (data.getAddressLine(1) != null)
-				System.out.println("\t         " + data.getAddressLine(1));
-			if (data.getAddressLine(2) != null)
-				System.out.println("\t         " + data.getAddressLine(2));
-			if (data.getAddressLine(3) != null)
-				System.out.println("\t         " + data.getAddressLine(3));
-			if (data.getAddressLine(4) != null)
-				System.out.println("\t         " + data.getAddressLine(4));
+			if (data.getAddr(0) != null)
+				System.out.println("\tAddress: " + data.getAddr(0));
+			if (data.getAddr(1) != null)
+				System.out.println("\t         " + data.getAddr(1));
+			if (data.getAddr(2) != null)
+				System.out.println("\t         " + data.getAddr(2));
+			if (data.getAddr(3) != null)
+				System.out.println("\t         " + data.getAddr(3));
+			if (data.getAddr(4) != null)
+				System.out.println("\t         " + data.getAddr(4));
 															
 			System.out.println();
 			return true;
@@ -508,8 +508,14 @@ public class UserApp
 			{
 				rvalue = setNewPhoneEmpInfo(data, originalData);
 			} // End of Phone changes
-			
-			
+					
+			System.out.println("Change Address (y or n)?");
+			userresponse = keyboard.nextLine();
+			if ((userresponse.charAt(0) == 'Y') || (userresponse.charAt(0) == 'y'))
+			{
+				rvalue = setNewAddrEmpInfo(data, originalData);
+			} // End of Address changes
+						
 			return true;
 			
 		} // End of found existing Employee record
@@ -640,39 +646,48 @@ public class UserApp
 	public static boolean setNewEmailEmpInfo(EmpData data, EmpData originalData) 
 		throws SQLException
 	{		
-		boolean rvalue = false;
+		boolean rvalue = true;
 		String response = null;
 		String name = null;
 		int i;
-			
-		System.out.println();
-						
-		for (i = 0; i < 5; i++)
+											
+		System.out.println("\nYou can update up to 5 Email addresses," +
+			" starting with the new primary email, etc." +
+			" Watch for Pop-up prompts.");
+		
+		i = 0;
+		do
 		{
 			name = originalData.getEmail(i);
 			if (name != null)
 			{
 				System.out.println("Current Email at index " + i + " is " + name);
-			}	
-		}
-				
-		System.out.println(" You can update up to 5 Email addresses, " +
-			"starting with the new primary email, etc.");
-		System.out.println("Enter no to exit making Email changes");
-		i = 0;
-		do
-		{
-			System.out.print("Email address at index " + i + "? ");
-			name = keyboard.nextLine();
-			if (name.equals("No") || name.equals("no") || name.equals("no"))
+			}
+			else
 			{
-				return rvalue;
+				System.out.println("Current Email at index " + i + " is blank");
 			}
 			
-			data.setEmail(name,i);
-			rvalue = dbaccess.updateEmployeeEmail(data,i);		
-			
-		} while (i++ < 5);
+			name = JOptionPane.showInputDialog("New Email address?" +
+				" Enter nothing to leave as is." +
+				" Enter 'quit' to stop making Email changes.");
+			if (name.equals("Quit") || name.equals("quit") || name.equals("QUIT"))
+			{
+				do // clear the rest out
+				{
+					data.setEmail(null,i);
+					rvalue = dbaccess.updateEmployeeEmail(data,i);	
+				} while (++i < 5);
+				return rvalue;
+			}
+					
+			if (name.length() > 0)
+			{
+				data.setEmail(name,i);
+				rvalue = dbaccess.updateEmployeeEmail(data,i);		
+			}
+						
+		} while (++i < 5);
 			
 		return rvalue;	
 	} // End of setNewEmailEmpInfo
@@ -690,63 +705,116 @@ public class UserApp
 	public static boolean setNewPhoneEmpInfo(EmpData data, EmpData originalData) 
 		throws SQLException
 	{		
-		boolean rvalue = false;
+		boolean rvalue = true;
 		String response = null;
 		String name = null;
 		int i;
-			
-		System.out.println();	
-				
-		for (i = 0; i < 5; i++)
-		{
+													 
+		System.out.println("\nYou can update up to 5 Phone numbers," +
+			" starting with the new primary phone, etc." +			
+			" Watch for Pop-up prompts.");
+		
+		i = 0;
+		do
+		{			
 			name = originalData.getPhone(i);
 			if (name != null)
 			{
-				System.out.println("Current Phone at index =  " + i + " is " + name);
-			}	
-		}
-									 
-		System.out.println(" You can update up to 5 Phone numbers, " +
-			"starting with the new primary phone, etc.");
-		System.out.println("Enter no to exit making Phone number changes");		
-		i = 0;
-		do
-		{
-			/*	
-				JOptionPane.showMessageDialog(null, "Your grade is F !");
-	 			varString = JOptionPane.showInputDialog("Want to try this with pop-ups? Please answer Y or N: ");
-        		varAnswer = varString.charAt(0);
-        		
-        		System.out.print("New Phone number: ");
-        		name = keyboard.nextLine();
+				System.out.println("Current Phone at index " + i + " is " + name);
 
-        		if (varAnswer == 'Y' || varAnswer == 'y')
-        	*/
-			
-			name = JOptionPane.showInputDialog("New Phone number: ");
-			if (name.equals("No") || name.equals("no") || name.equals("no"))
-			{
-				return rvalue;
 			}
+			else
+			{
+				System.out.println("Current Phone at index " + i + " is blank");
+			}			
 			
-			data.setPhone(name,i);
-			
-			//rvalue = dbaccess.updateEmployeePhone(data,i);		
-			// deactivate any old phone for this slot
-			if ((name = originalData.getPhone(i)) != null)
-			{		
-				System.out.println("old phone # to be deactivated " + name);
-				rvalue = dbaccess.deactivateEmpPhone(originalData, i);
+			name = JOptionPane.showInputDialog("New Phone address?" +
+				" Enter nothing to leave as is." +
+				" Enter 'Quit' to stop making phone changes.");
+				
+			if (name.equals("Quit") || name.equals("quit") || name.equals("QUIT"))
+			{
+				do // clear the rest out
+				{
+					data.setEmail(null,i);
+					rvalue = dbaccess.updateEmployeePhone(data,i);	
+				} while (++i < 5);
+				return rvalue; 
 			}
 				
-			System.out.println("new phone # to be added " + name);
-			rvalue = dbaccess.addEmpPhone(data, i);
-		} while (i++ < 5);
+			if (name.length() > 0)
+			{
+				data.setPhone(name,i);
+				rvalue = dbaccess.updateEmployeePhone(data,i);	
+			}
+
+		} while (++i < 5);
 			
 		return rvalue;	
 	} // End of setNewPhoneEmpInfo
 
-	
+
+	/**		     	
+		This method is a helper for updating an existing employee Address info.
+		
+   		@param data an EmpData object to be updated
+   		@param originalData an EmpData object of existing Employee
+   		@throws SQLException if there is an error with some SQL command
+   		@return boolean of either success or failure.  		
+	*/
+		  
+	public static boolean setNewAddrEmpInfo(EmpData data, EmpData originalData) 
+		throws SQLException
+	{		
+		boolean rvalue = true;
+		String response = null;
+		String name = null;
+		int i;
+													 
+		System.out.println("\nYou can update up to 5 lines of address," +
+			" starting with the new 1st line, etc." +			
+			" Watch for Pop-up prompts.");
+		
+		i = 0;
+		do
+		{			
+			name = originalData.getAddr(i);
+			if (name != null)
+			{
+				System.out.println("Current Address at index " + i + " is " + name);
+
+			}
+			else
+			{
+				System.out.println("Current Address at index " + i + " is blank");
+			}			
+			
+			name = JOptionPane.showInputDialog("New address line?" +
+				" Enter nothing to leave as is." +
+				" Enter 'Quit' to stop making address changes.");
+				
+			if (name.equals("Quit") || name.equals("quit") || name.equals("QUIT"))
+			{
+				do // clear the rest out
+				{
+					data.setEmail(null,i);
+					rvalue = dbaccess.updateEmployeeAddress(data,i);	
+				} while (++i < 5);
+				return rvalue; 
+			}
+				
+			if (name.length() > 0)
+			{
+				data.setAddr(name,i);
+				rvalue = dbaccess.updateEmployeeAddress(data,i);	
+			}
+
+		} while (++i < 5);
+			
+		return rvalue;	
+	} // End of setNewAddrEmpInfo
+
+
 }
 	
 		

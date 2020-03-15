@@ -134,7 +134,7 @@ public class EmpDBaccess extends RosiesSalon
 				
 		System.out.println("addEmployee() - doing insert"); 	
 		rows = doRowsCmd(sqlcmd);		
-		System.out.println("number of rows inserted = " + rows);
+		// System.out.println("number of rows inserted = " + rows);
 				
 		if (rows == 1)
 			return true;		
@@ -193,7 +193,7 @@ public class EmpDBaccess extends RosiesSalon
 					
 		System.out.println("addEmpPhone() - doing insert"); 	
 		rows = doRowsCmd(sqlcmd);		
-		System.out.println("number of rows inserted = " + rows);
+		//System.out.println("number of rows inserted = " + rows);
 				
 		if (rows == 1)
 			return true;		
@@ -307,19 +307,19 @@ public class EmpDBaccess extends RosiesSalon
 				switch (subtype)
 				{
 					case SubTypeAddr1:
-						sqlcmd += ", '" + data.getAddressLine(0) + "'";
+						sqlcmd += ", '" + data.getAddr(0) + "'";
 						break;
 					case SubTypeAddr2:
-						sqlcmd += ", '" + data.getAddressLine(1) + "'";
+						sqlcmd += ", '" + data.getAddr(1) + "'";
 						break;
 					case SubTypeAddr3:
-						sqlcmd += ", '" + data.getAddressLine(2) + "'";
+						sqlcmd += ", '" + data.getAddr(2) + "'";
 						break;
 					case SubTypeAddr4:
-						sqlcmd += ", '" + data.getAddressLine(3) + "'";
+						sqlcmd += ", '" + data.getAddr(3) + "'";
 						break;
 					case SubTypeAddr5:
-						sqlcmd += ", '" + data.getAddressLine(4) + "'";
+						sqlcmd += ", '" + data.getAddr(4) + "'";
 						break;
 					default:
 						return false;	
@@ -376,7 +376,7 @@ public class EmpDBaccess extends RosiesSalon
 		sqlcmd += ")";
 						
 		rows = doRowsCmd(sqlcmd);		
-		System.out.println("number of rows inserted = " + rows);
+		//System.out.println("number of rows inserted = " + rows);
 				
 		if (rows == 1)
 			return true;		
@@ -608,23 +608,23 @@ public class EmpDBaccess extends RosiesSalon
 			// Address		
 			else if ((infotype == DtypeAddress) && (infosubtype == SubTypePrimary) &&
 				(validity == ValidInfo3))		
-				data.setAddress(charparm,0);
+				data.setAddr(charparm,0);
 					
 			else if ((infotype == DtypeAddress) && (infosubtype == SubTypeSecondary) &&
 				(validity == ValidInfo3))
-				data.setAddress(charparm,1);	
+				data.setAddr(charparm,1);	
 									
 			else if ((infotype == DtypeAddress) && (infosubtype == SubTypeTertiary) &&
 				(validity == ValidInfo3))
-				data.setAddress(charparm,2);	
+				data.setAddr(charparm,2);	
 	
 			else if ((infotype == DtypeAddress) && (infosubtype == SubTypeFourth) &&
 				(validity == ValidInfo3))
-				data.setAddress(charparm,3);
+				data.setAddr(charparm,3);
 				
 			else if ((infotype == DtypeAddress) && (infosubtype == SubTypeFifth) &&
 				(validity == ValidInfo3))
-				data.setAddress(charparm,4);
+				data.setAddr(charparm,4);
 																
 			else
 				// System.out.println("encountered unknown EmpInfo record??!");	
@@ -789,7 +789,7 @@ public class EmpDBaccess extends RosiesSalon
 		int empid = data.getEmpID();
 		int einfoid = 0;
 		ResultSet result;
-				
+						
 		String sqlcmd = "SELECT EinfoID, EmpID, InfoType, InfoSubType, Validity ";
 		sqlcmd += "FROM EmpInfo ";
 		sqlcmd += "WHERE EmpID = " + empid;
@@ -930,68 +930,12 @@ public class EmpDBaccess extends RosiesSalon
 				"but the update step failed!");
 		}	
 
-/*			
-		// WE PROBABLY NEVER CAN GET HERE !!!			
-		// now update EmpInfo
-		// 1st find old which choice record and de-validate it
-		sqlcmd = "SELECT EinfoID, InfoType, InfoSubType, Validity, CharBig";
-		sqlcmd += " FROM EmpInfo where EmpID = " + empid;
-		sqlcmd += " AND InfoType = " + DtypePersonal;
-		sqlcmd += " AND InfoSubType = " + subtype;
-		sqlcmd += " And Validity <> " + 0;  
-					
-		System.out.println("updateEmployee() - will do EmpInfo query");
-		result = doCmd(sqlcmd);
-			
-		while (result.next())	
-		{
-			// There is at least one prior active personal record,
-			// we need to mark that as invalid before adding the new EmpInfo record.
-			einfoid = result.getInt("EinfoID");
-			Nbr1Parm = result.getInt("Nbr1Parm");
-			Nbr2Parm = result.getDouble("Nbr2Parm");
-			CharBig = result.getString("CharBig");
-					
-			sqlcmd = "UPDATE EmpInfo SET Validity = " + 0 +
-				", UpdateTime = '" + updatetime + "'" +
-				" WHERE EinfoID = " + einfoid;   
-		}	
-		
-				
-		// if we find an existing EmpInfo record for this update,
-		// deactivate it.
-		einfoid = findEmpInfoRecord(DtypePersonal,subtype, data);
-		if (einfoid > 0)
-			deactivateEmpInfoRecord(einfoid);
-			
-		// now we can insert EmpInfo record with new data
-		if (addEmpInfoRecord(DtypePersonal, subtype, data))
-			return true;		
-		else
-		{
-			System.out.println("addEmployee() - returned " + rows +
-				"added! Not good!");
-			return false;
-		}
-*/
+
 
 		return true;				
 	} // End of updateEmployeeLname()
  
- 
-/** 	
-	updateEmployeexxxx method
-	Expects an EmpData class as input, which will have EmpID and other data
-	that is needed.
-	
-	@param which integer of which name field to update - 
-	see DtypePersonal SubType... 
-	
-	@param data EmpData object
-	@throws SQLException if there is an error with some SQL command
-	@return Returns a boolean for success or not
-	 
-*/
+
 	public boolean updateEmployeeFname(EmpData data) throws SQLException 
 	{ 
 		return updateEmployee(SubTypeFname,data);	
@@ -1033,6 +977,7 @@ public class EmpDBaccess extends RosiesSalon
 	public boolean updateEmployeeAddress(EmpData data,int index) 
 		throws SQLException 
 	{ 
+		boolean rvalue = true;
 		int which;
 		switch (index)
 		{
@@ -1040,29 +985,33 @@ public class EmpDBaccess extends RosiesSalon
 				which = SubTypePrimary;
 				break;
 			case 1:
-				which = SubTypePrimary;
+				which = SubTypeSecondary;
 				break;				
 			case 2:
-				which = SubTypePrimary;
+				which = SubTypeTertiary;
 				break;
 			case 3:
-				which = SubTypePrimary;
+				which = SubTypeFourth;
 				break;
 			case 4:
-				which = SubTypePrimary;
+				which = SubTypeFifth;
 				break;
 			default:
 				return false;
 		}
 		int key = findEmpInfoRecord(DtypeAddress, which, data);	
 		if (key > 0)	
-			deactivateEmpInfoRecord(key);	
-		return addEmpInfoRecord(DtypeAddress, which, data);		
+			rvalue = deactivateEmpInfoRecord(key);
+		if (data.getAddr(index) != null)	
+			return addEmpInfoRecord(DtypeAddress, which, data);
+		
+		return rvalue;		
 	}
 	
 	public boolean updateEmployeePhone(EmpData data, int index) 
 		throws SQLException 
 	{ 
+		boolean rvalue = true;		
 		int which;
 		switch (index)
 		{
@@ -1070,56 +1019,63 @@ public class EmpDBaccess extends RosiesSalon
 				which = SubTypePrimary;
 				break;
 			case 1:
-				which = SubTypePrimary;
+				which = SubTypeSecondary;
 				break;				
 			case 2:
-				which = SubTypePrimary;
+				which = SubTypeTertiary;
 				break;
 			case 3:
-				which = SubTypePrimary;
+				which = SubTypeFourth;
 				break;
 			case 4:
-				which = SubTypePrimary;
+				which = SubTypeFifth;
 				break;
 			default:
 				return false;
 		}
 		int key = findEmpInfoRecord(DtypePhone, which, data);	
 		if (key > 0)	
-			deactivateEmpInfoRecord(key);	
-		return addEmpInfoRecord(DtypePhone, which, data);					
+			rvalue = deactivateEmpInfoRecord(key);
+		if (data.getPhone(index) != null)	
+			return addEmpInfoRecord(DtypePhone, which, data);
+			
+		return rvalue;							
 	}
 	
 	public boolean updateEmployeeEmail(EmpData data,int index) 
 		throws SQLException 
 	{ 
+		boolean rvalue = true;		
 		int which;
+		
 		switch (index)
 		{
 			case 0:
 				which = SubTypePrimary;
 				break;
 			case 1:
-				which = SubTypePrimary;
+				which = SubTypeSecondary;
 				break;				
 			case 2:
-				which = SubTypePrimary;
+				which = SubTypeTertiary;
 				break;
 			case 3:
-				which = SubTypePrimary;
+				which = SubTypeFourth;
 				break;
 			case 4:
-				which = SubTypePrimary;
+				which = SubTypeFifth;
 				break;
 			default:
 				return false;
 		}
 		int key = findEmpInfoRecord(DtypeEmail, which, data);	
 		if (key > 0)	
-			deactivateEmpInfoRecord(key);	
-		return addEmpInfoRecord(DtypeEmail, which, data);				
-	}	
-							
- 
+			rvalue = deactivateEmpInfoRecord(key);	
+		if (data.getEmail(index) != null)	
+			return addEmpInfoRecord(DtypeEmail, which, data);
+			
+		return rvalue;					
+	}
+						
 }  // End of class
 

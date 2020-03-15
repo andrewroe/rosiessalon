@@ -108,7 +108,7 @@ public class EmpData
 	{
 		if (index > 4)
 		{
-			System.out.println("addEmail() - index too big!");
+			System.out.println("setEmail() - index too big!");
 			return false;
 		}
 		
@@ -117,11 +117,11 @@ public class EmpData
 	}
 
 
-	public boolean setAddress(String address, int index)
+	public boolean setAddr(String address, int index)
 	{
 		if (index > 4)
 		{
-			System.out.println("addAddress() - index too big!");
+			System.out.println("setAddr() - index too big!");
 			return false;
 		}
 		
@@ -223,11 +223,11 @@ public class EmpData
 		}
 	}
 
-	public String getAddressLine(int index)
+	public String getAddr(int index)
 	{
 		if (index > 4)
 		{
-			System.out.println("getAddressLine() - can't read past the maximum Address index!");
+			System.out.println("getAddr() - can't read past the maximum Address index!");
 			return(null);
 		}
 		else
@@ -277,11 +277,11 @@ public class EmpData
 		if (!setPhone(null,3)) return(false);
 		if (!setPhone(null,4)) return(false);
 		
-		if (!setAddress(null,0)) return(false);
-		if (!setAddress(null,1)) return(false);
-		if (!setAddress(null,2)) return(false);
-		if (!setAddress(null,3)) return(false);
-		if (!setAddress(null,4)) return(false);
+		if (!setAddr(null,0)) return(false);
+		if (!setAddr(null,1)) return(false);
+		if (!setAddr(null,2)) return(false);
+		if (!setAddr(null,3)) return(false);
+		if (!setAddr(null,4)) return(false);
 
 		return true;
 	}

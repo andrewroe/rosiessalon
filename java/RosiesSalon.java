@@ -180,7 +180,7 @@ public abstract class RosiesSalon
 		
 		rvalue = String.format("%02d%02d%02d", 
 			time.getHour(),time.getMinute(),time.getSecond());
-		System.out.println("local clock value is: " + rvalue);	  
+		// System.out.println("local clock value is: " + rvalue);	  
 		return(rvalue);	
 	} 
 	
@@ -209,7 +209,7 @@ public abstract class RosiesSalon
 			cal.get(Calendar.DAY_OF_MONTH));
 			
 		// rvalue = String.format("%8", time);
-		System.out.println("local date is: " + rvalue);
+		// System.out.println("local date is: " + rvalue);
 		return(rvalue);	
 	} 
 	
