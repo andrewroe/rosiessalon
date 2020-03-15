@@ -155,7 +155,7 @@ public class UserApp
 			}
 			
 		} while ((userchoice < 0) || (userchoice > 12));
-		
+				
 		// flush newline, this is necessary, when only one Scanner of keyboard
 		keyboard.nextLine(); 
 		
@@ -481,7 +481,9 @@ public class UserApp
 			System.out.println("Did you want to update one of the name fields " +
 				"(y or n)?");
 			userresponse = keyboard.nextLine();
-			if ((userresponse.charAt(0) == 'Y') || (userresponse.charAt(0) == 'y'))
+			if ((userresponse.length() > 0) &&
+				(userresponse.charAt(0) == 'Y') || 
+				(userresponse.charAt(0) == 'y'))
 			{
 				rvalue = setNewNameEmpInfo(data, originalData);							
 			} // End of change name fields
@@ -489,7 +491,9 @@ public class UserApp
 			System.out.println("Did you want to update job, salary, or commission " +
 				"(y or n)?");
 			userresponse = keyboard.nextLine();
-			if ((userresponse.charAt(0) == 'Y') || (userresponse.charAt(0) == 'y'))
+			if ((userresponse.length() > 0) &&
+				(userresponse.charAt(0) == 'Y') || 
+				(userresponse.charAt(0) == 'y'))
 			{
 				rvalue = setNewProfessionalEmpInfo(data, originalData);		
 			} // End of job, salary, or commission fields changes
@@ -497,21 +501,27 @@ public class UserApp
 			
 			System.out.println("Change any email addresses (y or n)?");
 			userresponse = keyboard.nextLine();
-			if ((userresponse.charAt(0) == 'Y') || (userresponse.charAt(0) == 'y'))
+			if ((userresponse.length() > 0) &&
+				(userresponse.charAt(0) == 'Y') || 
+				(userresponse.charAt(0) == 'y'))
 			{
 				rvalue = setNewEmailEmpInfo(data, originalData);		 
 			} // End of Email changes
 			
 			System.out.println("Change phone numbers (y or n)?");
 			userresponse = keyboard.nextLine();
-			if ((userresponse.charAt(0) == 'Y') || (userresponse.charAt(0) == 'y'))
+			if ((userresponse.length() > 0) &&
+				(userresponse.charAt(0) == 'Y') || 
+				(userresponse.charAt(0) == 'y'))
 			{
 				rvalue = setNewPhoneEmpInfo(data, originalData);
 			} // End of Phone changes
 					
 			System.out.println("Change Address (y or n)?");
 			userresponse = keyboard.nextLine();
-			if ((userresponse.charAt(0) == 'Y') || (userresponse.charAt(0) == 'y'))
+			if ((userresponse.length() > 0) &&
+				(userresponse.charAt(0) == 'Y') || 
+				(userresponse.charAt(0) == 'y'))
 			{
 				rvalue = setNewAddrEmpInfo(data, originalData);
 			} // End of Address changes
@@ -547,9 +557,11 @@ public class UserApp
 		System.out.println("Change first name, which was " +
 			originalData.getFname() + " (y or n)?");
 		response = keyboard.nextLine();
-		if ((response.charAt(0) == 'Y') || (response.charAt(0) == 'y'))
+		if ((response.length() > 0) &&
+			(response.charAt(0) == 'Y') || 
+			(response.charAt(0) == 'y'))
 		{
-			System.out.print("Look for first name pop-up");
+			System.out.println("Look for first name pop-up");
 			response = JOptionPane.showInputDialog("new First name?");
 			data.setFname(response);
 			rvalue = dbaccess.updateEmployeeFname(data);
@@ -558,9 +570,12 @@ public class UserApp
 		System.out.println("Change Middle Initial or Name, which was " +
 			originalData.getMinit() + " (y or n)?");
 		response = keyboard.nextLine();
-		if ((response.charAt(0) == 'Y') || (response.charAt(0) == 'y'))
+		if ((response.length() > 0) &&
+			(response.charAt(0) == 'Y') || 
+			(response.charAt(0) == 'y'))
+
 		{
-			System.out.print("Look for Middle name pop-up");
+			System.out.println("Look for Middle name pop-up");
 			response = JOptionPane.showInputDialog("new Middle name or initial?");
 			data.setMinit(response);
 			rvalue = dbaccess.updateEmployeeMinit(data);
@@ -569,9 +584,12 @@ public class UserApp
 		System.out.println("Change Last Name, which was " +
 			originalData.getLname() + " (y or n)?");
 		response = keyboard.nextLine();
-		if ((response.charAt(0) == 'Y') || (response.charAt(0) == 'y'))
+		if ((response.length() > 0) &&
+			(response.charAt(0) == 'Y') || 
+			(response.charAt(0) == 'y'))
+
 		{
-			System.out.print("Look for last name pop-up");
+			System.out.println("Look for last name pop-up");
 			response = JOptionPane.showInputDialog("new Middle name or initial?");
 			data.setLname(response);
 			rvalue = dbaccess.updateEmployeeLname(data);
@@ -611,22 +629,28 @@ public class UserApp
 		System.out.println("Change salary, which was " +
 			originalData.getSalary() + " (y or n)?");
 		response = keyboard.nextLine();
-		if ((response.charAt(0) == 'Y') || (response.charAt(0) == 'y'))
+		if ((response.length() > 0) &&
+			(response.charAt(0) == 'Y') || 
+			(response.charAt(0) == 'y'))
 		{
 			System.out.print("new salary? ");
 			doubleResponse = keyboard.nextDouble();
 			data.setSalary(doubleResponse);
+			keyboard.nextLine(); // flush input of newline
 			rvalue = dbaccess.updateEmployeeSalary(data);
 		}
 				
 		System.out.println("Change commission, which was " +
 			originalData.getCommission() + " (y or n)?");
 		response = keyboard.nextLine();
-		if ((response.charAt(0) == 'Y') || (response.charAt(0) == 'y'))
+		if ((response.length() > 0) &&
+			(response.charAt(0) == 'Y') || 
+			(response.charAt(0) == 'y'))
 		{
 			System.out.print("new commission? ");
 			doubleResponse = keyboard.nextDouble();
 			data.setCommission(doubleResponse);
+			keyboard.nextLine(); // flush input of newline
 			rvalue = dbaccess.updateEmployeeCommission(data);
 		}		
 		
