@@ -11,7 +11,7 @@ CREATE TABLE Employee (
   commission    NUMBER(15,2)
 );
 CREATE TABLE Customer (
-  CustID 	NUMBER NOT NULL,
+  CustID        NUMBER NOT NULL,
   UserID        NUMBER,
   CreateTime    VARCHAR2(32),
   UpdateTime    VARCHAR2(32),
@@ -22,7 +22,7 @@ CREATE TABLE Customer (
   email         VARCHAR2(64)
 );
 CREATE TABLE Supplier (
-  SuppID 	NUMBER NOT NULL,
+  SuppID 	    NUMBER NOT NULL,
   UserID        NUMBER,
   CreateTime    VARCHAR(32),
   UpdateTime    VARCHAR(32),
@@ -116,3 +116,4 @@ CREATE TABLE TransactionDetails (
   Nbr2Parm      NUMBER(15,2),
   CharBig       VARCHAR(64)
 );
+
