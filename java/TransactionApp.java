@@ -7,15 +7,21 @@ import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Button;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.text.TextAlignment;
+import javafx.scene.text.Font;
 import javafx.geometry.Pos;
 import javafx.geometry.Insets;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.event.EventHandler;
 import javafx.event.ActionEvent;
+
 //import javafx.event.*;
 
 
@@ -82,19 +88,12 @@ public class TransactionApp extends Application
 	/**		     	
 		This method is for login handling of the user.
 		
-   		@param user which is an EmpData object to be updated when user successfully
-   		can be found in the Database.
+   		@param primaryStage which is 
    		@throws SQLException if there is an error with some SQL command			
 	*/
 		  
 	public static void handlelogin(Stage primaryStage) throws SQLException
 	{
-		int trycount = 0;
-		String username = null;
-		int empid = 0;
-		String password = null;
-		String userpassword = null;
-		
 		Label loginScreen = new Label("Login Screen - 3 tries max");
 		Label userPrompt = new Label("enter user name");
 		Label passwordPrompt = new Label("enter Password");
@@ -165,6 +164,130 @@ public class TransactionApp extends Application
 	}
 
 	
+	/**		     	
+		This method is for presenting the main action choices to the user.
+		
+   		@param primaryStage which is 
+   		@throws SQLException if there is an error with some SQL command			
+	*/
+		  
+	public static void menu(Stage primaryStage) throws SQLException
+	{
+		//int trycount = 0;
+		int empid = 0;
+		String username = null;
+		String password = null;
+		String userpassword = null;
+		
+		Label topbanner = new Label("Rosie's Salon");
+		Label bottombanner = new Label("UserName: fill in");
+		Label leftbanner = new Label("Select Action Area");
+		Label centerbanner = new Label("Center Border Area");
+		Label rightbanner = new Label("Select Sub-Action Area");
+		
+		topbanner.setFont(Font.font("Ariel",32));
+		
+		// giving up on toggle group
+		Label mainPrompt = new Label("Main Menu");
+		Button bMain = new Button("Go");
+		bMain.setOnAction(new ButtonClickHandler());
+		HBox mainHbox = new HBox(10, mainPrompt, bMain);
+		
+		Label findCustPrompt = new Label("Find Customer");
+		Button bFindCust = new Button("Go");
+		bFindCust.setOnAction(new ButtonClickHandler());
+		HBox findCustHbox = new HBox(10, findCustPrompt, bFindCust);
+		
+		Label addCustPrompt = new Label("Add Customer");
+		Button bAddCust = new Button("Go");
+		bAddCust.setOnAction(new ButtonClickHandler());
+		HBox addCustHbox = new HBox(10, addCustPrompt, bAddCust);
+		
+		Label updateCustPrompt = new Label("Update Customer");
+		Button bUpdateCust = new Button("Go");
+		bUpdateCust.setOnAction(new ButtonClickHandler());
+		HBox updateCustHbox = new HBox(10, updateCustPrompt, bUpdateCust);
+		
+		Label newTransPrompt = new Label("New Transaction");
+		Button bNewTrans = new Button("Go");
+		bNewTrans.setOnAction(new ButtonClickHandler());
+		HBox newTransHbox = new HBox(10, newTransPrompt, bNewTrans);
+		
+		Label findTransPrompt = new Label("Find Transaction");
+		Button bFindTrans = new Button("Go");
+		bFindTrans.setOnAction(new ButtonClickHandler());
+		HBox findTransHbox = new HBox(10, findTransPrompt, bFindTrans);
+		
+		Label updateTransPrompt = new Label("Update Transaction");
+		Button bUpdateTrans = new Button("Go");
+		bUpdateTrans.setOnAction(new ButtonClickHandler());
+		HBox updateTransHbox = new HBox(10, updateTransPrompt, bUpdateTrans);
+		
+		Label signOutPrompt = new Label("Sign Out");
+		Button bSignOut = new Button("Go");
+		bSignOut.setOnAction(new ButtonClickHandler());
+		HBox signOutHbox = new HBox(10, signOutPrompt, bSignOut);
+				
+		Label exitPrompt = new Label("Exit Program");
+		Button bExit = new Button("Go");
+		
+		// a Lambda
+		bExit.setOnAction(event ->
+		{
+			System.out.println("Good bye.");
+			try
+        	{               			
+				EmployeeDBaccess.DisconnectFromDB();
+            }
+            catch (SQLException ex)
+            {
+            	System.out.println("Got a SQL exception!");
+            }    
+        	System.exit(0);		
+		});
+		
+		HBox exitHbox = new HBox(10, exitPrompt, bExit);
+		
+ 				
+		VBox actionVbox = 
+			new VBox(20,mainHbox,findCustHbox,addCustHbox,updateCustHbox,
+			newTransHbox,findTransHbox,updateTransHbox,signOutHbox,exitHbox);
+					
+		ImageView imageview = new ImageView();
+		Image yogaDoor = new Image("file:yogadoor.jpg");
+		ImageView imageDoor = new ImageView(yogaDoor);
+		imageDoor.setFitWidth(500);
+		imageDoor.setFitHeight(500);
+		imageDoor.setPreserveRatio(true);
+		imageview.setImage(yogaDoor);
+		
+		HBox bannerHbox = new HBox(topbanner);
+		HBox footerHbox = new HBox(bottombanner);
+		HBox centerHbox = new HBox(centerbanner);
+		
+		VBox rightVbox = new VBox(rightbanner);		
+		
+		bannerHbox.setAlignment(Pos.CENTER);
+		footerHbox.setAlignment(Pos.CENTER);
+						
+		BorderPane borderPane = new BorderPane();
+		borderPane.setTop(bannerHbox);
+		borderPane.setBottom(footerHbox);
+		//borderPane.setLeft(leftVbox);
+		borderPane.setLeft(actionVbox);
+		borderPane.setCenter(imageview);	
+		borderPane.setRight(rightVbox);
+				
+		Scene menuScene = new Scene(borderPane,800,800);
+		menuScene.getStylesheets().add("Transaction.css");
+		primaryStage.setScene(menuScene);
+ 		primaryStage.setTitle("Rosie Salon Transaction GUI Application");  	  
+ 		primaryStage.show();
+ 				
+	}
+	
+	
+	
 	/*
 	private static final Logger LOG =
 	Logger.getLogger(ExampleApplication.class.getCanonicalName());
@@ -220,9 +343,10 @@ class ButtonClickHandler implements EventHandler<ActionEvent>
 				
 					if (userpassword.compareTo(passwordInDB) == 0)
 					{
-						System.out.println("found the user, now what?");
+						System.out.println("found the user, display menu.");
 						TransactionApp.userid = userid;
 						TransactionApp.logintries = 0;
+						TransactionApp.menu(TransactionApp.mainStage);
 					}
 					else
 					{
@@ -251,6 +375,9 @@ class ButtonClickHandler implements EventHandler<ActionEvent>
         }		        
         		
 	}
+	
+	
+
 }
 
 		
