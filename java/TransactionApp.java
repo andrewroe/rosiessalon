@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.control.Button;
 import javafx.geometry.Pos;
 import javafx.geometry.Insets;
@@ -37,40 +38,43 @@ public class TransactionApp extends Application
 		invalidChoice
 	}
 	
-	private static EmpDBaccess EmployeeDBaccess = new EmpDBaccess();
-	//private Button executeButton = new Button("Execute");
-	private static Button exitButton = new Button("Exit");
+	protected static EmpDBaccess EmployeeDBaccess = new EmpDBaccess();
+	protected static Button signinButton = new Button("Sign-In");
+	protected static Button exitButton = new Button("Exit");
+	protected static TextField usernameText = null;
+	protected static TextField passwordText = null;
+	protected static int userid = 0;		// the user's EmpID
+	protected static int logintries = 0;
+	protected static boolean validEmployeeData = false;
+	protected static Stage mainStage;
 
-	
+			
 	@Override
 	public void start(Stage primaryStage) throws SQLException
 	{
-		UsersChoice choice = UsersChoice.invalidChoice;	// The user's choice 
-        int userid = 0;		// the user's EmpID
-        int empid = 0;		// the employee's EmpID
-        EmpData userData = new EmpData();
-        EmpData employeeData = new EmpData();
-        boolean validEmployeeData = false;
-        
-         // Stage title
- 		primaryStage.setTitle("Rosie Salon Transaction GUI Application");  	
+		//UsersChoice choice = UsersChoice.invalidChoice;	// The user's choice      
+        //int empid = 0;		// the employee's EmpID
+        //EmpData userData = new EmpData();
+        //EmpData employeeData = new EmpData();
+     
+     	mainStage = primaryStage;
+        // Stage title
+ 		mainStage.setTitle("Rosie Salon Transaction GUI Application");  	
  		
-        EmployeeDBaccess.ConnectToDB("rosiessalon","andrewroe","andysql");
+ 		if (!EmployeeDBaccess.ConnectToDB("rosiessalon","andrewroe","andysql"))
+   		{
+   			System.out.println("Can not connect to DB, Bye.");
+   			return;
+   		}     
         
-        userid = handlelogin(primaryStage,userData);
-        if (userid == 0)
-        {
-        	System.out.println("Could not log you in - good bye!");
-        	EmployeeDBaccess.DisconnectFromDB();
-        	return;
-        }	
-        
+        handlelogin(mainStage);
+        /* this comes back immediately - before actual login 
         userData.setUserID(userid);
-		
- 		// Stage title
- 		//primaryStage.setTitle("Rosie Salon Transaction GUI Application");  	  
- 		// Show the window
- 		//primaryStage.show();
+        System.out.println("Got the user logged in, now what?");
+        */
+        
+        // if we are not happy about who is logged in, then go back to handlelogin()
+        
 	}  // End of start()
 	
 
@@ -80,11 +84,10 @@ public class TransactionApp extends Application
 		
    		@param user which is an EmpData object to be updated when user successfully
    		can be found in the Database.
-   		@throws SQLException if there is an error with some SQL command
-   		@return UserID of user or 0, if not found.  		
+   		@throws SQLException if there is an error with some SQL command			
 	*/
 		  
-	public static int handlelogin(Stage primaryStage,EmpData user) throws SQLException
+	public static void handlelogin(Stage primaryStage) throws SQLException
 	{
 		int trycount = 0;
 		String username = null;
@@ -92,102 +95,74 @@ public class TransactionApp extends Application
 		String password = null;
 		String userpassword = null;
 		
-		Label loginScreen = new Label("Login Screen");
+		Label loginScreen = new Label("Login Screen - 3 tries max");
 		Label userPrompt = new Label("enter user name");
+		Label passwordPrompt = new Label("enter Password");
+		Label signinPrompt = 
+			new Label("After filling in Username and Password click Sign-in Button");
+		Label exitPrompt = new Label("Click Button to exit");
+			
+		switch (logintries)
+		{
+			case 0:
+				loginScreen = new Label("Login Screen");
+				break;
+			case 1:
+				loginScreen = new Label("Login Screen - 2nd attempt");
+				break;
+			case 2:
+				loginScreen = new Label("Login Screen - 3rd attempt");
+				break;
+			default:
+				System.out.println("Too many login attempts! Bye.");
+				System.exit(0);
+				break;
+		}
 		
 		Image yogaDoor = new Image("file:yogadoor.jpg");
 		ImageView imageDoor = new ImageView(yogaDoor);
-		imageDoor.setFitWidth(800);
-		imageDoor.setFitHeight(800);
+		imageDoor.setFitWidth(500);
+		imageDoor.setFitHeight(500);
 		imageDoor.setPreserveRatio(true);
 		
-		HBox loginHbox = new HBox(loginScreen);
-		//loginHbox.setAlignment(Pos.CENTER);
-		loginHbox.setAlignment(Pos.BOTTOM_CENTER);
-		
-		VBox loginVbox = new VBox(loginScreen);
-		loginVbox.setAlignment(Pos.BOTTOM_CENTER);
-		
-		
-		HBox doorHbox = new HBox(imageDoor);
-		doorHbox.setAlignment(Pos.TOP_CENTER);
-		
-		VBox doorVbox = new VBox(20,imageDoor);
-		doorVbox.setAlignment(Pos.TOP_CENTER);
-		
-		// Add a button
-		Label exitPrompt = new Label("Click Button to exit");
-		
+		usernameText = new TextField();
+		passwordText = new TextField();
+
+		// Add button handling
+		signinButton.setOnAction(new ButtonClickHandler());
 		exitButton.setOnAction(new ButtonClickHandler());
 		
-		VBox exitBox = new VBox(20,exitPrompt,exitButton);
-		exitBox.setAlignment(Pos.CENTER);
+		HBox doorHbox = new HBox(imageDoor);				
+		HBox loginHbox = new HBox(loginScreen);
+		HBox userHbox = new HBox(40, userPrompt, usernameText);
+		HBox pwdHbox = new HBox(40, passwordPrompt, passwordText);
+		HBox signinHbox = new HBox(40, signinPrompt, signinButton);
+		HBox exitHbox = new HBox(40, exitPrompt, exitButton);
 		
-		Scene loginScene = new Scene(loginHbox,500,400);
+		doorHbox.setAlignment(Pos.CENTER);
+		loginHbox.setAlignment(Pos.CENTER);
+		userHbox.setAlignment(Pos.CENTER);
+		pwdHbox.setAlignment(Pos.CENTER);
+		signinHbox.setAlignment(Pos.CENTER);
+		exitHbox.setAlignment(Pos.CENTER);
+		
+		VBox loginVbox = 
+			new VBox(20,doorHbox,loginHbox,userHbox,pwdHbox,signinHbox,exitHbox);
+		loginVbox.setAlignment(Pos.CENTER);
+				
+		Scene loginScene = new Scene(loginVbox,800,800);
 		// Scene loginScene = new Scene(doorHbox,500,400);
 		// Scene loginScene = new Scene(doorVbox);
 		// Scene loginScene = new Scene(doorHbox);
-		Scene exitScene = new Scene(exitBox,700,700);
+		// Scene exitScene = new Scene(exitBox,700,700);
 		
-		//do
-		//{
-			//primaryStage.setScene(loginScene);
-			primaryStage.setScene(exitScene);
- 	
- 			primaryStage.setTitle("Rosie Salon Transaction GUI Application");  	  
- 	
- 			primaryStage.show();
- 		
-			username = ("admin");
-
-			empid = EmployeeDBaccess.fetchUser(username);
-			if (empid != 0) 
-			{ 
-				password = EmployeeDBaccess.fetchPassword(empid);
-				/*
-				if (password != null)
-				{
-					System.out.print("enter password: ");
-					userpassword = keyboard.nextLine();
-					if (userpassword.compareTo(password) == 0)
-					{
-						// NEED to fill in all the EmpDater of user !!!
-						return empid;  // user login successful
-					}
-				}
-				*/
-			}
-			
-		//} while (++trycount < 3);
-		
-		return empid;
+		//primaryStage.setScene(loginScene);
+		primaryStage.setScene(loginScene);
+ 		primaryStage.setTitle("Rosie Salon Transaction GUI Application");  	  
+ 		primaryStage.show();
+ 								
+		// return;
 	}
-
-	/**		     	
-		This method is 
-			
-   		@return boolean 		
-	*/
-		  
-	public static boolean ISexitButton(Object button)
-	{
-		if (button == exitButton)
-			return true;
-		else
-			return false;
-	}	
-	
-	/**		     	
-		This method is 
-		
-   		@throws SQLException if there is an error with some SQL command
-   		@return void  		
-	*/
-		  
-	public static void dbDisconnect() throws SQLException
-	{
-		EmployeeDBaccess.DisconnectFromDB();
-	}	
 
 	
 	/*
@@ -206,14 +181,14 @@ class ButtonClickHandler implements EventHandler<ActionEvent>
 	@Override
 	public void handle(ActionEvent event)
 	{		
-		// if (event.getSource() == executeButton)
-		if (TransactionApp.ISexitButton(event.getSource())) 
+		if (event.getSource() == TransactionApp.exitButton)
 		{
 			System.out.println("Good bye.");
 			
 			try
         	{               
-				TransactionApp.dbDisconnect();
+				//TransactionApp.dbDisconnect();
+				TransactionApp.EmployeeDBaccess.DisconnectFromDB();
             }
             catch (SQLException ex)
             {
@@ -221,7 +196,60 @@ class ButtonClickHandler implements EventHandler<ActionEvent>
             }
                 
         	System.exit(0);
-        }		
+        }
+        
+		else if (event.getSource() == TransactionApp.signinButton)
+		{
+			int userid = 0;
+			String username = null;
+			String userpassword = null;
+			String passwordInDB = null;
+				
+			username = TransactionApp.usernameText.getText();
+			userpassword = TransactionApp.passwordText.getText();
+			
+			System.out.println("User login: " + "username = " + username + 
+				" password = " + userpassword);
+
+			try
+        	{               
+				userid = TransactionApp.EmployeeDBaccess.fetchUser(username);
+				if (userid != 0) 
+				{ 
+					passwordInDB = TransactionApp.EmployeeDBaccess.fetchPassword(userid);
+				
+					if (userpassword.compareTo(passwordInDB) == 0)
+					{
+						System.out.println("found the user, now what?");
+						TransactionApp.userid = userid;
+						TransactionApp.logintries = 0;
+					}
+					else
+					{
+						System.out.println("user password wrong, try again!");
+						TransactionApp.userid = 0;
+						TransactionApp.logintries++;
+						TransactionApp.handlelogin(TransactionApp.mainStage);
+					}										
+				}
+				else
+				{
+					System.out.println("username wrong, try again!");
+					TransactionApp.userid = 0;
+					TransactionApp.logintries++;
+					TransactionApp.handlelogin(TransactionApp.mainStage);
+				}
+			}
+            catch (SQLException ex)
+            {
+            	System.out.println("Got a SQL exception!");
+            }
+					
+        }
+        else
+        {
+        }		        
+        		
 	}
 }
 
