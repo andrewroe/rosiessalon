@@ -187,7 +187,8 @@ public class TransactionApp extends Application
 		int empid = 0;
 		String username = null;				
 		username = usernameText.getText();
-		FindCustomer findcustomer = new FindCustomer();		
+		FindCustomer findcustomer = new FindCustomer();
+		AddCustomer addcustomer = new AddCustomer();		
 		
 		Label topbanner = new Label("Rosie's Salon");
 		Label bottombanner = new Label("UserName: " + username);
@@ -209,6 +210,7 @@ public class TransactionApp extends Application
 			}
             catch (SQLException ex)
             {
+            	System.out.println(ex.getMessage());
             	System.out.println("Got a SQL exception!");
             }							
 		});		
@@ -226,6 +228,7 @@ public class TransactionApp extends Application
 			}
             catch (SQLException ex)
             {
+            	System.out.println(ex.getMessage());
             	System.out.println("Got a SQL exception!");
             }							
 		});		
@@ -234,7 +237,19 @@ public class TransactionApp extends Application
 		
 		Label addCustPrompt = new Label("         Add Customer");
 		Button bAddCust = new Button("Go");
-		bAddCust.setOnAction(new ButtonClickHandler());
+		bAddCust.setOnAction(event ->
+		{
+			try
+			{
+				addcustomer.addCustomer(mainStage);	
+			}
+            catch (SQLException ex)
+            {
+            	System.out.println(ex.getMessage());
+            	System.out.println("Got a SQL exception!");
+            }							
+		});				
+		
 		HBox addCustHbox = new HBox(10, addCustPrompt, bAddCust);
 		
 		Label updateCustPrompt = new Label("      Update Customer");
@@ -269,6 +284,7 @@ public class TransactionApp extends Application
 			}
             catch (SQLException ex)
             {
+            	System.out.println(ex.getMessage());
             	System.out.println("Got a SQL exception!");
             }							
 		});
@@ -288,6 +304,7 @@ public class TransactionApp extends Application
             }
             catch (SQLException ex)
             {
+            	System.out.println(ex.getMessage());
             	System.out.println("Got a SQL exception!");
             }    
         	System.exit(0);		

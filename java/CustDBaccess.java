@@ -82,14 +82,14 @@ public class CustDBaccess extends RosiesSalon
 	
 
 /** 	
-	addCustomer method
+	addNewCustomer method
 	Expects a completed CustData class as input
 	
 	@param data CustData object 
 	@throws SQLException if there is an error with some SQL command
 	@return Returns a boolean true for success, else false
 */
-	public boolean addCustomer(CustData data) throws SQLException 
+	public boolean addNewCustomer(CustData data) throws SQLException 
 	{
 		int i;
 		int rows;
@@ -116,6 +116,9 @@ public class CustDBaccess extends RosiesSalon
 		System.out.println("the Commission is = " + commission);
 		*/
 		
+		System.out.println("addNewCustomer() - userid = " +
+			userid + " fname = " + fname + " minit = " +
+			minit + " lname = " + lname);
 		if ((userid == 0) ||
 			(lname == null) || (fname == null) || (minit == null))
 		{
@@ -130,7 +133,7 @@ public class CustDBaccess extends RosiesSalon
 		sqlcmd += "'" + updatetime +  "', ";
 		sqlcmd += "'" + fname + "', " + "'" + minit + "', ";
 		sqlcmd += "'" + lname + "', " + "'" + primaryphone + "', "; 
-		sqlcmd += primaryemail + ")";
+		sqlcmd += "'" + primaryemail + "')";
 				
 		// System.out.println("addCustomer() - doing insert"); 	
 		rows = doRowsCmd(sqlcmd);		
@@ -172,6 +175,7 @@ public class CustDBaccess extends RosiesSalon
 		int nbr1parm;
 		double nbr2parm;
 		String charparm;
+		String[] addressparm = new String[5];
 		
 		if (custid == 0) 
 		{
@@ -282,25 +286,35 @@ public class CustDBaccess extends RosiesSalon
 
 			// Address		
 			else if ((infotype == DtypeAddress) && (infosubtype == SubTypePrimary) &&
-				(validity == ValidInfo3))		
-				data.setAddr(charparm,0);
-					
+				(validity == ValidInfo1+ValidInfo3))
+				{
+					addressparm[nbr1parm] = charparm;		
+					data.setAddr(addressparm,0);
+				}	
 			else if ((infotype == DtypeAddress) && (infosubtype == SubTypeSecondary) &&
-				(validity == ValidInfo3))
-				data.setAddr(charparm,1);	
-									
+				(validity == ValidInfo1+ValidInfo3))
+				{
+					addressparm[nbr1parm] = charparm;
+					data.setAddr(addressparm,1);
+				}						
 			else if ((infotype == DtypeAddress) && (infosubtype == SubTypeTertiary) &&
-				(validity == ValidInfo3))
-				data.setAddr(charparm,2);	
-	
+				(validity == ValidInfo1+ValidInfo3))
+				{
+					addressparm[nbr1parm] = charparm;
+					data.setAddr(addressparm,2);	
+				}
 			else if ((infotype == DtypeAddress) && (infosubtype == SubTypeFourth) &&
-				(validity == ValidInfo3))
-				data.setAddr(charparm,3);
-				
+				(validity == ValidInfo1+ValidInfo3))
+				{
+					addressparm[nbr1parm] = charparm;
+					data.setAddr(addressparm,3);
+				}
 			else if ((infotype == DtypeAddress) && (infosubtype == SubTypeFifth) &&
-				(validity == ValidInfo3))
-				data.setAddr(charparm,4);
-																
+				(validity == ValidInfo1+ValidInfo3))
+				{
+					addressparm[nbr1parm] = charparm;
+					data.setAddr(addressparm,4);
+				}												
 			else
 				// System.out.println("encountered unknown EmpInfo record??!");	
 				continue;					

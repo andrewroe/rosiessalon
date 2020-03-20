@@ -22,7 +22,7 @@ public class CustData
 	protected double BalanceDue = 0.0;
 	protected String[] PhoneData = new String[5]; 
 	protected String[] EmailData = new String[5]; 
-	protected String[] AddrData = new String[5];	
+	protected String[][] AddrData = new String[5][5];	
 	
 
 /*
@@ -31,6 +31,7 @@ public class CustData
 
 	public CustData Replicate()
 	{
+		int i, j;
 		CustData replicated = new CustData();
 		
 		replicated.CustIDData = this.CustIDData;
@@ -75,16 +76,14 @@ public class CustData
 		if (this.PhoneData[4] != null)
 			replicated.EmailData[4] = new String(this.EmailData[4]);
 			
-		if (this.AddrData[0] != null)
-			replicated.AddrData[0] = new String(this.AddrData[0]);
-		if (this.PhoneData[1] != null)
-			replicated.AddrData[1] = new String(this.AddrData[1]);
-		if (this.PhoneData[2] != null)
-			replicated.AddrData[2] = new String(this.AddrData[2]);
-		if (this.PhoneData[3] != null)
-			replicated.AddrData[3] = new String(this.AddrData[3]);
-		if (this.PhoneData[4] != null)
-			replicated.AddrData[4] = new String(this.AddrData[4]);
+		for (i = 0; i < 5; i++)
+		{
+			for (j = 0; j < 5; j++)
+			{
+				//if (this.AddrData[i][j] != null)
+				replicated.AddrData[i][j] = new String(this.AddrData[i][j]);
+			}
+		}
 		
 		return replicated;
 	}
@@ -187,15 +186,16 @@ public class CustData
 		return true;	
 	}
 
-	public boolean setAddr(String address, int index)
+	public boolean setAddr(String[] addressArray, int row)
 	{
-		if (index > 4)
+		if (row > 4)
 		{
 			System.out.println("setAddr() - index too big!");
 			return false;
 		}
 		
-		AddrData[index] = address;
+		for (int i = 0; i < 5; i++)
+			AddrData[row][i] = addressArray[i];
 		return true;
 	}
 
@@ -287,17 +287,20 @@ public class CustData
 		}
 	}
 
-	public String getAddr(int index)
+	public String[] getAddr(int row)
 	{
-		if (index > 4)
+		String[] address = new String[5];
+		if (row > 4)
 		{
 			System.out.println("getAddr() - can't read past the maximum Address index!");
 			return(null);
 		}
 		else
 		{
-			return(this.AddrData[index]);
-		}
+			for (int col = 0; col < 5; col++)
+				address[col] = this.AddrData[row][col];
+			return address;
+		}	
 	}
 	
 /*
@@ -330,11 +333,12 @@ public class CustData
 		if (!setPhone(null,3)) return(false);
 		if (!setPhone(null,4)) return(false);
 		
-		if (!setAddr(null,0)) return(false);
-		if (!setAddr(null,1)) return(false);
-		if (!setAddr(null,2)) return(false);
-		if (!setAddr(null,3)) return(false);
-		if (!setAddr(null,4)) return(false);
+		int row;
+		String[] stringArray = {null, null, null, null, null};
+		for (row = 0; row < 5; row++)
+		{
+			setAddr(stringArray,row);
+		}
 
 		return true;
 	}
