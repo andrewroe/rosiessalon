@@ -3,151 +3,55 @@ import java.util.Properties;
 import java.io.*; 
 
 /** 	
-	Class to define user I/F for Employee data
+	Class to define user I/F for Customer data
 	This is not to have any SQL details - no awareness of which DB server is being used.
-	Note: this will probably need a copy constructor that does a deep copy.
 */
 
-public class EmpData
+public class CustData
 { 
-	protected int EmpIDData = 0;		// EmpID (PK) if known
+	protected int CustIDData = 0;		// CustID (PK) if known
 	protected int UserIDData =0;		// UpdaterID (FK) - could be 0 on initial add
-	protected String DateTimeData = null; // YYYYMMDDhhmmss
+	protected String CreateTimeData = null; // YYYYMMDDhhmmss
+	protected String UpdateTimeData = null; // YYYYMMDDhhmmss
 	protected String FnameData = null;	// currently max of 64 chars
 	protected String LnameData = null;	// currently max of 64 chars
 	protected String MinitData = null;	// 64 chars
+	protected String PrimaryPhone = null;
+	protected String PrimaryEmail = null;
 	protected String DobData = null;	// yyyymmdd
-	protected String Job = null;		// whatever
-	protected double Salary = 0.0;
-	protected double Commission = 0.0;
+	protected double BalanceDue = 0.0;
 	protected String[] PhoneData = new String[5]; 
 	protected String[] EmailData = new String[5]; 
 	protected String[] AddrData = new String[5];	
-	protected String UserName = null;
-	protected String Password = null;
-
-
-/*
-	Constructor.
-
-
-	public EmpData()
-	{
-		this.EmpIDData = 0;
-		this.UserIDData = 0;
-		this.DateTimeData = null;
-		this.FnameData = null;
-		this.MinitData = null;
-		this.LnameData = null;
-		this.DobData = null;
-		this.Job = null;
-		this.Salary = 0.0;
-		this.Commission = 0.0;
-		this.PhoneData[0] = null;
-		this.PhoneData[1] = null;
-		this.PhoneData[2] = null;
-		this.PhoneData[3] = null;
-		this.PhoneData[4] = null;
-		this.EmailData[0] = null;
-		this.EmailData[1] = null;
-		this.EmailData[2] = null;
-		this.EmailData[3] = null;
-		this.EmailData[4] = null;
-		this.AddrData[0] = null;
-		this.AddrData[1] = null;
-		this.AddrData[2] = null;
-		this.AddrData[3] = null;
-		this.AddrData[4] = null;
-		this.UserName = null;
-		this.Password = null;
-	}
-*/
-
-/*
-	Copy Constructor.
-
-	// @Override
-	public EmpData(EmpData object)
-	{
-		this.EmpIDData = object.EmpIDData;
-		this.UserIDData = object.UserIDData;
-		if (object.DateTimeData != null)
-			this.DateTimeData = new String(object.DateTimeData);
-		if (object.FnameData != null)
-			this.FnameData = new String(object.FnameData);
-		if (object.MinitData != null)
-			this.MinitData = new String(object.MinitData);
-		if (object.LnameData != null)
-			this.LnameData = new String(object.LnameData);
-		if (object.DobData != null)
-			this.DobData = new String(object.DobData);
-		if (object.Job != null)
-			this.Job = new String(object.Job);
-		this.Salary = object.Salary;
-		this.Commission = object.Commission;
-		
-		if (object.PhoneData[0] != null)
-			this.PhoneData[0] = new String(object.PhoneData[0]);
-		if (object.PhoneData[1] != null)
-			this.PhoneData[1] = new String(object.PhoneData[1]);
-		if (object.PhoneData[2] != null)
-			this.PhoneData[2] = new String(object.PhoneData[2]);
-		if (object.PhoneData[3] != null)
-			this.PhoneData[3] = new String(object.PhoneData[3]);
-		if (object.PhoneData[4] != null)
-			this.PhoneData[4] = new String(object.PhoneData[4]);
-			
-		if (object.EmailData[0] != null)
-			this.EmailData[0] = new String(object.EmailData[0]);
-		if (object.PhoneData[1] != null)
-			this.EmailData[1] = new String(object.EmailData[1]);
-		if (object.PhoneData[2] != null)
-			this.EmailData[2] = new String(object.EmailData[2]);
-		if (object.PhoneData[3] != null)
-			this.EmailData[3] = new String(object.EmailData[3]);
-		if (object.PhoneData[4] != null)
-			this.EmailData[4] = new String(object.EmailData[4]);
-			
-		if (object.AddrData[0] != null)
-			this.AddrData[0] = new String(object.AddrData[0]);
-		if (object.PhoneData[1] != null)
-			this.AddrData[1] = new String(object.AddrData[1]);
-		if (object.PhoneData[2] != null)
-			this.AddrData[2] = new String(object.AddrData[2]);
-		if (object.PhoneData[3] != null)
-			this.AddrData[3] = new String(object.AddrData[3]);
-		if (object.PhoneData[4] != null)
-			this.AddrData[4] = new String(object.AddrData[4]);
-			
-		this.UserName = null;
-		this.Password = null;
-	}
-*/
+	
 
 /*
 	Replicate Constructor.
 */
 
-	public EmpData Replicate()
+	public CustData Replicate()
 	{
-		EmpData replicated = new EmpData();
+		CustData replicated = new CustData();
 		
-		replicated.EmpIDData = this.EmpIDData;
+		replicated.CustIDData = this.CustIDData;
 		replicated.UserIDData = this.UserIDData;
-		if (this.DateTimeData != null)
-			replicated.DateTimeData = new String(this.DateTimeData);
+		if (this.CreateTimeData != null)
+			replicated.CreateTimeData = new String(this.CreateTimeData);
+		if (this.UpdateTimeData != null)
+			replicated.UpdateTimeData = new String(this.UpdateTimeData);		
 		if (this.FnameData != null)
 			replicated.FnameData = new String(this.FnameData);
 		if (this.MinitData != null)
 			replicated.MinitData = new String(this.MinitData);
 		if (this.LnameData != null)
 			replicated.LnameData = new String(this.LnameData);
+		if (this.PrimaryPhone != null)
+			replicated.PrimaryPhone = new String(this.PrimaryPhone);
+		if (this.PrimaryEmail != null)
+			replicated.PrimaryEmail = new String(this.PrimaryEmail);
 		if (this.DobData != null)
 			replicated.DobData = new String(this.DobData);
-		if (this.Job != null)
-			replicated.Job = new String(this.Job);
-		replicated.Salary = this.Salary;
-		replicated.Commission = this.Commission;
+		replicated.BalanceDue = this.BalanceDue;
 		
 		if (this.PhoneData[0] != null)
 			replicated.PhoneData[0] = new String(this.PhoneData[0]);
@@ -181,11 +85,6 @@ public class EmpData
 			replicated.AddrData[3] = new String(this.AddrData[3]);
 		if (this.PhoneData[4] != null)
 			replicated.AddrData[4] = new String(this.AddrData[4]);
-			
-		if (this.UserName != null)
-			replicated.UserName = new String(this.UserName);
-		if (this.Password != null)
-			replicated.Password = new String(this.Password);
 		
 		return replicated;
 	}
@@ -195,9 +94,9 @@ public class EmpData
 	All the set data field's methods.
 */
 
-	public boolean setEmpID(int id)
+	public boolean setCustID(int id)
 	{
-		EmpIDData = id;
+		CustIDData = id;
 		return true;
 	}
 
@@ -207,9 +106,15 @@ public class EmpData
 		return true;
 	}
 
-	public boolean setDateTime(String datetime)
+	public boolean setCreateTime(String datetime)
 	{
-		DateTimeData = datetime;
+		CreateTimeData = datetime;
+		return true;
+	}
+
+	public boolean setUpdateTime(String datetime)
+	{
+		UpdateTimeData = datetime;
 		return true;
 	}
 
@@ -231,29 +136,30 @@ public class EmpData
 		return true;
 	}
 
+	public boolean setPrimaryPhone(String phone)
+	{
+		PrimaryPhone = phone;
+		return true;
+	}
+
+	public boolean setPrimaryEmail(String email)
+	{
+		PrimaryEmail = email;
+		return true;
+	}
+		
 	public boolean setDob(String dob)
 	{
 		DobData = dob;
 		return true;
 	}
-	
-	public boolean setJob(String job)
+		
+	public boolean setBalanceDue(double balance)
 	{
-		Job = job;
+		BalanceDue = balance;
 		return true;
 	}
 	
-	public boolean setSalary(double salary)
-	{
-		Salary = salary;
-		return true;
-	}
-	
-	public boolean setCommission(double commission)
-	{
-		Commission = commission;
-		return true;
-	}
 
 	public boolean setPhone(String phone, int index) 
 	{
@@ -281,7 +187,6 @@ public class EmpData
 		return true;	
 	}
 
-
 	public boolean setAddr(String address, int index)
 	{
 		if (index > 4)
@@ -293,26 +198,15 @@ public class EmpData
 		AddrData[index] = address;
 		return true;
 	}
-	
-	public boolean setUname(String username)
-	{
-		UserName = username;
-		return true;
-	}
 
-	public boolean setPassword(String password)
-	{
-		Password = password;
-		return true;
-	}
 
 /*
 	All of the get data field's methods.
 */
 
-	public int getEmpID()
+	public int getCustID()
 	{
-		return(this.EmpIDData);
+		return(this.CustIDData);
 	}
 
 	public int getUserID()
@@ -320,9 +214,14 @@ public class EmpData
 		return(this.UserIDData);
 	}
 
-	public String getDateTime()
+	public String getCreateTime()
 	{
-		return(this.DateTimeData);
+		return(this.CreateTimeData);
+	}
+
+	public String getUpdateTime()
+	{
+		return(this.UpdateTimeData);
 	}
 
 	public String getFname()
@@ -339,22 +238,22 @@ public class EmpData
 	{
 		return(this.MinitData);
 	}
-		
-	public String getJob()
-	{
-		return Job;
-	}
-	
-	public double getSalary()
-	{
-		return Salary;
-	}
-	
-	public double getCommission()
-	{
-		return Commission;
-	}
 
+	public String getPrimaryPhone()
+	{
+		return this.PrimaryPhone;
+	}
+	
+	public String getPrimaryEmail()
+	{
+		return this.PrimaryEmail;
+	}
+				
+	public double getBalanceDue()
+	{
+		return BalanceDue;
+	}
+	
 	public String getDob()
 	{
 		return(this.DobData);
@@ -401,34 +300,23 @@ public class EmpData
 		}
 	}
 	
-	public String getUname()
-	{
-		return UserName;
-	}
-
-	public String getPassword()
-	{
-		return Password;
-	}
-	
 /*
 	All the clear data field's methods.
 */
 
 	public boolean clearAll()
 	{
-		if (!setEmpID(0)) return(false);
+		if (!setCustID(0)) return(false);
 		if (!setUserID(0)) return(false);
-		if (!setDateTime(null)) return(false);
+		if (!setCreateTime(null)) return(false);
+		if (!setUpdateTime(null)) return(false);
 		if (!setFname(null)) return(false);
 		if (!setLname(null)) return(false);
 		if (!setMinit(null)) return(false);
-		if (!setJob(null)) return(false);
-		if (!setSalary(0.0)) return(false);
-		if (!setCommission(0.0)) return(false);
+		if (!setPrimaryPhone(null)) return(false);
+		if (!setPrimaryEmail(null)) return(false);
+		if (!setBalanceDue(0.0)) return(false);
 		if (!setDob(null)) return(false);
-		if (!setUname(null)) return(false);
-		if (!setPassword(null)) return(false);
 		
 		if (!setEmail(null,0)) return(false);
 		if (!setEmail(null,1)) return(false);

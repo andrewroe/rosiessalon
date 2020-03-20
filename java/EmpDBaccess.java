@@ -393,6 +393,34 @@ public class EmpDBaccess extends RosiesSalon
 	} // End of addEmpInfoRecord()
 
  
+ /** 	
+	deactivateEmpInfoRecord method
+	Expects ... fill in
+	
+	@param einfoid EinfoID 
+	@param userid UserID;
+	@throws SQLException if there is an error with some SQL command
+	@return Returns a boolean true for success, else false
+*/
+	public boolean deactivateEmpInfoRecord(int einfoid) throws SQLException 
+	{
+		int rows = 0;
+		String updatetime = readfullDateTime();
+		String sqlcmd;
+							
+		sqlcmd = "UPDATE EmpInfo SET Validity = " + 0;
+		// sqlcmd += ", UpdateTime = '" + updatetime + "'";
+		// sqlcmd += ", UserID = " + userid;
+		sqlcmd += " WHERE EinfoID = " + einfoid; 
+				
+		rows = doRowsCmd(sqlcmd) ;
+		if (rows > 0)	
+			return true;
+		else
+			return false;		
+	} // End of deactivateEmpInfoRecord()
+
+ 
 /** 	
 	deactivateEmpPhone method
 	Expects a completed EmpData class as input
@@ -437,9 +465,10 @@ public class EmpDBaccess extends RosiesSalon
 			einfoid = result.getInt("EinfoID");
 			System.out.println("deactivateEmpPhone() - EinfoID = " + einfoid);
 					
-			sqlcmd = "UPDATE EmpInfo SET Validity = " + 0 +
-				", UpdateTime = '" + updatetime + "'" +
-				" WHERE EinfoID = " + einfoid; 
+			sqlcmd = "UPDATE EmpInfo SET Validity = " + 0;
+			// sqlcmd += ", UpdateTime = '" + updatetime + "'";
+			// sqlcmd += ", UserID = " + userid;	
+			sqlcmd += " WHERE EinfoID = " + einfoid; 
 				
 			//result = doCmd(sqlcmd);
 			rows = doRowsCmd(sqlcmd) ;
@@ -448,30 +477,6 @@ public class EmpDBaccess extends RosiesSalon
 		return rvalue;		
 	} // End of deactivateEmpPhone()
 
-/** 	
-	deactivateEmpInfoRecord method
-	Expects ... fill in
-	
-	@param einfoid EinfoID 
-	@throws SQLException if there is an error with some SQL command
-	@return Returns a boolean true for success, else false
-*/
-	public boolean deactivateEmpInfoRecord(int einfoid) throws SQLException 
-	{
-		int rows = 0;
-		String updatetime = readfullDateTime();
-		String sqlcmd;
-							
-		sqlcmd = "UPDATE EmpInfo SET Validity = " + 0;
-		sqlcmd += ", UpdateTime = '" + updatetime + "'";
-		sqlcmd += " WHERE EinfoID = " + einfoid; 
-				
-		rows = doRowsCmd(sqlcmd) ;
-		if (rows > 0)	
-			return true;
-		else
-			return false;		
-	} // End of deactivateEmpInfoRecord()
 
 /** 	
 	fetchAllEmployeeInfo method

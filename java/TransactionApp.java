@@ -45,10 +45,13 @@ public class TransactionApp extends Application
 	}
 	
 	protected static EmpDBaccess EmployeeDBaccess = new EmpDBaccess();
+	protected static CustDBaccess CustomerDBaccess = new CustDBaccess();
 	protected static Button signinButton = new Button("Sign-In");
 	protected static Button exitButton = new Button("Exit");
 	protected static TextField usernameText = null;
 	protected static TextField passwordText = null;
+	protected static Label userPrompt = new Label("enter user name");
+	protected static Label passwordPrompt = new Label("enter Password");
 	protected static int userid = 0;		// the user's EmpID
 	protected static int logintries = 0;
 	protected static boolean validEmployeeData = false;
@@ -72,7 +75,14 @@ public class TransactionApp extends Application
    			System.out.println("Can not connect to DB, Bye.");
    			return;
    		}     
-        
+ 
+ 		if (!CustomerDBaccess.ConnectToDB("rosiessalon","andrewroe","andysql"))
+   		{
+   			System.out.println("Can not connect to DB for Customer DB, Bye.");
+   			EmployeeDBaccess.DisconnectFromDB();
+   			return;
+   		}  
+   		       
         handlelogin(mainStage);
         /* this comes back immediately - before actual login 
         userData.setUserID(userid);
@@ -175,60 +185,97 @@ public class TransactionApp extends Application
 	{
 		//int trycount = 0;
 		int empid = 0;
-		String username = null;
-		String password = null;
-		String userpassword = null;
+		String username = null;				
+		username = usernameText.getText();
+		FindCustomer findcustomer = new FindCustomer();		
 		
 		Label topbanner = new Label("Rosie's Salon");
-		Label bottombanner = new Label("UserName: fill in");
+		Label bottombanner = new Label("UserName: " + username);
 		Label leftbanner = new Label("Select Action Area");
 		Label centerbanner = new Label("Center Border Area");
 		Label rightbanner = new Label("Select Sub-Action Area");
 		
-		topbanner.setFont(Font.font("Ariel",32));
-		
+		topbanner.setFont(Font.font("Ariel",48));
+		bottombanner.setFont(Font.font("Ariel",24));
+				
 		// giving up on toggle group
-		Label mainPrompt = new Label("Main Menu");
+		Label mainPrompt = new Label("           Main Menu");
 		Button bMain = new Button("Go");
-		bMain.setOnAction(new ButtonClickHandler());
+		bMain.setOnAction(event ->
+		{
+			try
+			{
+				menu(mainStage);	
+			}
+            catch (SQLException ex)
+            {
+            	System.out.println("Got a SQL exception!");
+            }							
+		});		
+		
 		HBox mainHbox = new HBox(10, mainPrompt, bMain);
 		
-		Label findCustPrompt = new Label("Find Customer");
+		Label findCustPrompt = new Label("        Find Customer");
 		Button bFindCust = new Button("Go");
-		bFindCust.setOnAction(new ButtonClickHandler());
+		
+		bFindCust.setOnAction(event ->
+		{
+			try
+			{
+				findcustomer.findCustomer(mainStage);	
+			}
+            catch (SQLException ex)
+            {
+            	System.out.println("Got a SQL exception!");
+            }							
+		});		
+		
 		HBox findCustHbox = new HBox(10, findCustPrompt, bFindCust);
 		
-		Label addCustPrompt = new Label("Add Customer");
+		Label addCustPrompt = new Label("         Add Customer");
 		Button bAddCust = new Button("Go");
 		bAddCust.setOnAction(new ButtonClickHandler());
 		HBox addCustHbox = new HBox(10, addCustPrompt, bAddCust);
 		
-		Label updateCustPrompt = new Label("Update Customer");
+		Label updateCustPrompt = new Label("      Update Customer");
 		Button bUpdateCust = new Button("Go");
 		bUpdateCust.setOnAction(new ButtonClickHandler());
 		HBox updateCustHbox = new HBox(10, updateCustPrompt, bUpdateCust);
 		
-		Label newTransPrompt = new Label("New Transaction");
+		Label newTransPrompt = new Label("     New Transaction");
 		Button bNewTrans = new Button("Go");
 		bNewTrans.setOnAction(new ButtonClickHandler());
 		HBox newTransHbox = new HBox(10, newTransPrompt, bNewTrans);
 		
-		Label findTransPrompt = new Label("Find Transaction");
+		Label findTransPrompt = new Label("    Find Transaction");
 		Button bFindTrans = new Button("Go");
 		bFindTrans.setOnAction(new ButtonClickHandler());
 		HBox findTransHbox = new HBox(10, findTransPrompt, bFindTrans);
 		
-		Label updateTransPrompt = new Label("Update Transaction");
+		Label updateTransPrompt = new Label("  Update Transaction");
 		Button bUpdateTrans = new Button("Go");
 		bUpdateTrans.setOnAction(new ButtonClickHandler());
 		HBox updateTransHbox = new HBox(10, updateTransPrompt, bUpdateTrans);
 		
-		Label signOutPrompt = new Label("Sign Out");
+		Label signOutPrompt = new Label("            Sign Out");
 		Button bSignOut = new Button("Go");
-		bSignOut.setOnAction(new ButtonClickHandler());
+		bSignOut.setOnAction(event ->
+		{
+			userid = 0;
+			logintries = 0;
+			try
+			{
+				handlelogin(mainStage);	
+			}
+            catch (SQLException ex)
+            {
+            	System.out.println("Got a SQL exception!");
+            }							
+		});
+					
 		HBox signOutHbox = new HBox(10, signOutPrompt, bSignOut);
 				
-		Label exitPrompt = new Label("Exit Program");
+		Label exitPrompt = new Label("        Exit Program");
 		Button bExit = new Button("Go");
 		
 		// a Lambda
@@ -256,8 +303,8 @@ public class TransactionApp extends Application
 		ImageView imageview = new ImageView();
 		Image yogaDoor = new Image("file:yogadoor.jpg");
 		ImageView imageDoor = new ImageView(yogaDoor);
-		imageDoor.setFitWidth(500);
-		imageDoor.setFitHeight(500);
+		imageDoor.setFitWidth(600);
+		imageDoor.setFitHeight(600);
 		imageDoor.setPreserveRatio(true);
 		imageview.setImage(yogaDoor);
 		

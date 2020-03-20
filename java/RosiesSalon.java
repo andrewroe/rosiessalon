@@ -47,6 +47,9 @@ public abstract class RosiesSalon
 	final int SubTypeSalary = 5;
 	final int SubTypeCommission = 6;
 	final int SubTypeDob = 7;
+	final int SubTypePrimaryPhone = 8;
+	final int SubTypePrimaryEmail = 9;
+	final int SubTypeBalance = 10;
 	
 	final int ValidInfo1 = 1;
 	final int ValidInfo2 = 2;
@@ -249,10 +252,10 @@ public abstract class RosiesSalon
 		
 		Statement statement = dbConnection.createStatement();
 		
-		/*				
+					
 		System.out.println("SQL statement:");
 		System.out.println(sqlcmd);
-		*/
+		
 				  
 		try 
 		{
@@ -290,10 +293,10 @@ public abstract class RosiesSalon
 		
 		Statement statement = dbConnection.createStatement();
 		
-		/*				
+					
 		System.out.println("SQL statement:");
 		System.out.println(sqlcmd);
-		*/
+		
 									  
 		try 
 		{
