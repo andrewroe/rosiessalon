@@ -11,14 +11,14 @@ import java.io.*;
 public class CustInfoDB extends RosiesSalon
 { 
 	 
-  /** 	
-	addCustInfoRecorde method
-	Expects a completed CustData class as input
+	/** 	
+		addCustInfoRecorde method
+		Expects a completed CustData class as input
 	
-	@param data CustData object 
-	@throws SQLException if there is an error with some SQL command
-	@return Returns a boolean true for success, else false
-*/
+		@param data CustData object 
+		@throws SQLException if there is an error with some SQL command
+		@return Returns a boolean true for success, else false
+	*/
 	public boolean addCustInfoRecord(int dtype, int subtype, CustData data) 
 		throws SQLException 
 	{
@@ -29,12 +29,22 @@ public class CustInfoDB extends RosiesSalon
 		ResultSet result;
 		String sqlcmd;
 		boolean returnValue = false;
+		CustDBaccess CustInfoDBaccess = new CustDBaccess();
+		
+		if (!CustInfoDBaccess.ConnectToDB("rosiessalon","andrewroe","andysql"))
+   		{
+   			System.out.println("Can not connect to DB for CustInfo DB, Bye.");
+   			
+   			return false;
+   		}  
 			
 		sqlcmd = "INSERT INTO CustInfo (CustID, UserID";
 		sqlcmd += ", UpdateTime";
 		sqlcmd += ", InfoType";
 		sqlcmd += ", InfoSubType";
 		sqlcmd += ", Validity";
+		sqlcmd += ", Nbr1Parm";
+		sqlcmd += ", Nbr2Parm";
 		sqlcmd += ", CharBig)";
 		sqlcmd += " VALUES (";
 		sqlcmd += cinfoid;
@@ -46,6 +56,8 @@ public class CustInfoDB extends RosiesSalon
 		{
 			case DtypePhone:
 				sqlcmd += ", " + ValidInfo3;
+				sqlcmd += ", " + 0;
+				sqlcmd += ", " + 0.0;
 				switch (subtype)
 				{
 					case SubTypePrimary:
@@ -69,6 +81,8 @@ public class CustInfoDB extends RosiesSalon
 				break;
 			case DtypeEmail:
 				sqlcmd += ", " + ValidInfo3;
+				sqlcmd += ", " + 0;
+				sqlcmd += ", " + 0.0;				
 				switch (subtype)
 				{
 					case SubTypePrimary:
@@ -90,43 +104,7 @@ public class CustInfoDB extends RosiesSalon
 						return false;	
 				}
 				break;									
-			case DtypeAddress:
-				sqlcmd += ", " + ValidInfo3;
-				switch (subtype)
-				{
-					case SubTypeAddr1:
-						sqlcmd += ", '" + data.getAddr(0) + "'";
-						break;
-					case SubTypeAddr2:
-						sqlcmd += ", '" + data.getAddr(1) + "'";
-						break;
-					case SubTypeAddr3:
-						sqlcmd += ", '" + data.getAddr(2) + "'";
-						break;
-					case SubTypeAddr4:
-						sqlcmd += ", '" + data.getAddr(3) + "'";
-						break;
-					case SubTypeAddr5:
-						sqlcmd += ", '" + data.getAddr(4) + "'";
-						break;
-					default:
-						return false;	
-				}
-				break;
-			case DtypeTimeCard:
-				sqlcmd += ", " + ValidInfo3;
-				switch (subtype)
-				{
-					case SubTypeDayIn:
-						sqlcmd += ", '" + updatetime + "'";
-						break;
-					case SubTypeDayOut:
-						sqlcmd += ", '" + updatetime + "'";
-						break;
-					default:
-						return false;	
-				}
-				break;				
+	
 			case DtypePersonal:
 				switch (subtype)
 				{	
@@ -155,22 +133,98 @@ public class CustInfoDB extends RosiesSalon
 					
 		sqlcmd += ")";
 						
-		rows = doRowsCmd(sqlcmd);		
+		rows = CustInfoDBaccess.doRowsCmd(sqlcmd);		
 		//System.out.println("number of rows inserted = " + rows);
+		
+		CustInfoDBaccess.DisconnectFromDB();
 				
-		if (rows == 1)
-			return true;		
-		else if (rows == 0)
-			return false;	
-		else
+		if (rows != 1)
 		{
 			System.out.println("addCustIntoRecord() - returned neither 0 " +
 				"nor 1 rows added? But rather " + 
-				rows + " rows added??");
+				rows + " rows added??");					
 			return false;
 		}
+			
+		return true;
 				
 	} // End of addCustInfoRecord()
+
+
+
+	/** 	
+		addCustInfoAddress method
+		Expects a completed CustData class as input
+	
+		@param data CustData object 
+		@throws SQLException if there is an error with some SQL command
+		@return Returns a boolean true for success, else false
+	*/
+	public boolean addCustInfoAddress(int subtype, CustData data) 
+		throws SQLException 
+	{
+		int cinfoid = data.getCustID();
+		int userid = data.getUserID();
+		String[] address = data.getAddr(subtype - 1);
+		int rows;	
+		String updatetime = readfullDateTime();
+		ResultSet result;
+		String sqlcmd;
+		boolean returnValue = false;
+		CustDBaccess CustInfoDBaccess = new CustDBaccess();
+		
+		if (!CustInfoDBaccess.ConnectToDB("rosiessalon","andrewroe","andysql"))
+   		{
+   			System.out.println("Can not connect to DB for CustInfo DB, Bye.");
+   			return false;
+   		}  
+		
+		System.out.println("addCustInfoAddress input address is: " +
+			address[0] + "-" +address[1] + "-" +
+			address[2] + "-" + address[3] + "-" + address[4]);
+		
+		for (int i = 0; i < 5; i++)
+		{
+			if (address[i] == null)
+			{
+				i = 5;
+				continue;
+			}
+			System.out.println("addCustInfoAddress() - Nbr1Parm index = " + i);
+			
+			sqlcmd = "INSERT INTO CustInfo (CustID, UserID";
+			sqlcmd += ", UpdateTime";
+			sqlcmd += ", InfoType";
+			sqlcmd += ", InfoSubType";
+			sqlcmd += ", Validity";
+			sqlcmd += ", Nbr1Parm";
+			sqlcmd += ", CharBig)";
+			sqlcmd += " VALUES (";
+			sqlcmd += cinfoid;
+			sqlcmd += ", " + userid;
+			sqlcmd += ", '" + updatetime + "'";
+			sqlcmd += ", " + DtypeAddress;
+			sqlcmd += ", " + subtype;
+			sqlcmd += ", " + (ValidInfo1 + ValidInfo3);
+			sqlcmd += ", " + i;			
+			sqlcmd += ", '" + address[i] + "'";		
+			sqlcmd += ")";
+					
+			rows = CustInfoDBaccess.doRowsCmd(sqlcmd);		
+		
+			if (rows != 0)
+			{
+				CustInfoDBaccess.DisconnectFromDB();
+				return false;		
+			}
+			
+			System.out.println("addCustInfoAddress after insert loop index = " + i);
+		} // End of for loop
+		
+		CustInfoDBaccess.DisconnectFromDB();		
+		return true;
+				
+	} // End of addCustInfoAddress()
 
 
 /** 	
@@ -186,17 +240,30 @@ public class CustInfoDB extends RosiesSalon
 		int rows = 0;
 		String updatetime = readfullDateTime();
 		String sqlcmd;
+		
+		CustDBaccess CustInfoDBaccess = new CustDBaccess();
+		
+		if (!CustInfoDBaccess.ConnectToDB("rosiessalon","andrewroe","andysql"))
+   		{
+   			System.out.println("Can not connect to DB for CustInfo DB, Bye.");
+   			
+   			return false;
+   		}  
+		
 							
 		sqlcmd = "UPDATE CustInfo SET Validity = " + 0;
 		// sqlcmd += ", UpdateTime = '" + updatetime + "'";
 		// sqlcmd += ", UserID = " + userid;
 		sqlcmd += " WHERE CinfoID = " + cinfoid; 
 				
-		rows = doRowsCmd(sqlcmd) ;
+		rows = CustInfoDBaccess.doRowsCmd(sqlcmd);
+		
+		CustInfoDBaccess.DisconnectFromDB();	
 		if (rows > 0)	
 			return true;
 		else
-			return false;		
+			return false;
+						
 	} // End of deactivateCustInfoRecord()
 
 
@@ -215,39 +282,121 @@ public class CustInfoDB extends RosiesSalon
 	public int findCustInfoRecord(int dtype, int subtype, CustData data) throws SQLException 
 	{ 
 		int custid = data.getCustID();
-		int einfoid = 0;
+		int cinfoid = 0;
 		ResultSet result;
-						
-		String sqlcmd = "SELECT EinfoID, CustID, InfoType, InfoSubType, Validity ";
+		
+		CustDBaccess CustInfoDBaccess = new CustDBaccess();
+		
+		if (!CustInfoDBaccess.ConnectToDB("rosiessalon","andrewroe","andysql"))
+   		{
+   			System.out.println("Can not connect to DB for CustInfo DB, Bye.");
+   			
+   			return 0;
+   		}  
+								
+		String sqlcmd = "SELECT CinfoID, CustID, InfoType, InfoSubType, Validity ";
 		sqlcmd += "FROM CustInfo ";
 		sqlcmd += "WHERE CustID = " + custid;
 		sqlcmd += " AND InfoType = " + dtype;
 		sqlcmd += " AND InfoSubType = " + subtype;
 		sqlcmd += " AND Validity <> 0 ";
 			
-		result = doCmd(sqlcmd); 
+		result = CustInfoDBaccess.doCmd(sqlcmd); 
 		if (result != null)
 		{
 			if (!result.next())
-				return 0; // not found	
+			{
+				CustInfoDBaccess.DisconnectFromDB();
+				return 0; // not found
+			}
 					
-			einfoid = Integer.parseInt(result.getString("CinfoID"));
-			return einfoid;
+			cinfoid = Integer.parseInt(result.getString("CinfoID"));
+			return cinfoid;
 		}
 		
 		else
 		{ 
 			System.out.println("Can not find CustInfo record");
+			CustInfoDBaccess.DisconnectFromDB();
 			return 0;
 		} 	
 		
 	} // End of findCustInfoRecord()
  
 
+	/** 	
+	findCustInfoAddress method
+	Expects an user name, e.g. admin, or joe@myemail.com, etc.
+	
+	@param subtype Data Sub Tupe (will point to Primary, Secondary, etc.)
+	@param data CustData object reference
+	@throws SQLException if there is an error with some SQL command 
+	@return Returns an integer string of up to 5 einfoid records 
+	 
+	*/
+	public int[] findCustInfoAddress(int subtype, CustData data) throws SQLException 
+	{ 
+		int custid = data.getCustID();
+		int cinfoid = 0;
+		int[] cinfoIDs = new int[]{0,0,0,0,0};
+		String[] address = data.getAddr(subtype - 1);
+		ResultSet result;
+		
+		CustDBaccess CustInfoDBaccess = new CustDBaccess();
+		
+		if (!CustInfoDBaccess.ConnectToDB("rosiessalon","andrewroe","andysql"))
+   		{
+   			System.out.println("Can not connect to DB for CustInfo DB, Bye.");	
+   			return cinfoIDs;
+   		}  
+
+		for (int i = 0; i < 5; i++)
+		{
+			if (address[i] == null)
+			{
+				i = 5;
+				continue;
+			}
+								
+			String sqlcmd = "SELECT CinfoID, CustID, InfoType, InfoSubType, Validity ";
+			sqlcmd += "FROM CustInfo ";
+			sqlcmd += "WHERE CustID = " + custid;
+			sqlcmd += " AND InfoType = " + DtypeAddress;
+			sqlcmd += " AND InfoSubType = " + subtype;
+			sqlcmd += " AND Validity <> 0 ";
+			
+			result = CustInfoDBaccess.doCmd(sqlcmd); 
+			if (result != null)
+			{
+				if (!result.next())
+				{		
+					cinfoIDs[i] = 0; // not found
+				}
+					
+				cinfoid = Integer.parseInt(result.getString("CinfoID"));
+				cinfoIDs[i] = cinfoid;
+			}
+		
+			else
+			{ 
+				cinfoIDs[i] = 0;
+			} 
+		
+		}  // End of for loop	
+		
+		CustInfoDBaccess.DisconnectFromDB();
+		
+		return cinfoIDs;		
+		
+	} // End of findCustInfoRecord()
+
+
  
 /** 	
 	addCustInfoPhone method
 	Expects a completed EmpData class as input
+	
+		SHOULD BE ABLE TO UTILIXE addCustInfoRecord instead 
 	
 	@param data CustData object 
 	@param index which phone slot primary - fifth (1 - 5) to be added
@@ -308,6 +457,8 @@ public class CustInfoDB extends RosiesSalon
 /** 	
 	deactivateCustInfoPhone method
 	Expects a completed EmpData class as input
+	
+		SHOULD NOT NEED THIS
 	
 	@param data CustData object 
 	@param index for which phone primary - fifth (1 - 5) to be added

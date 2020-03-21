@@ -47,10 +47,9 @@ public class AddCustomer
 	*/
 		  
 	public void addCustomer(Stage stage) throws SQLException
-	{
-		
-		int custid = 0;
+	{	
 		CustData data = new CustData();
+		CustInfoDB custinfoDB = new CustInfoDB();
 		
 		Label banner = new Label("Add a Customer    ");
 		Label fnamePrompt = new Label("Customer's first name:");
@@ -97,16 +96,30 @@ public class AddCustomer
 				data.setPrimaryPhone(phoneText.getText());
 				data.setPrimaryEmail(emailText.getText());
 				addressArray[0] = addr1Text.getText();
-				addressArray[1] = addr1Text.getText();
-				addressArray[2] = addr1Text.getText();
-				addressArray[3] = addr1Text.getText();
-				addressArray[4] = addr1Text.getText();
+				addressArray[1] = addr2Text.getText();
+				addressArray[2] = addr3Text.getText();
+				addressArray[3] = addr4Text.getText();
+				addressArray[4] = addr5Text.getText();
 				data.setAddr(addressArray,0); // only the Primary
 											
 				if (TransactionApp.CustomerDBaccess.addNewCustomer(data))
 				{
 					successLabel.setText(String.format("Successfully " +
-						"added new Customer"));
+						"added new Customer base info"));
+					if (addressArray[0] != null)
+					{
+						if (TransactionApp.CustomerDBaccess.searchCustomerByFullName
+						(data) == 1)
+						{
+							// data.getCustID() now filled in												
+							if (custinfoDB.addCustInfoAddress
+								(custinfoDB.SubTypePrimary,data))
+							{
+								successLabel.setText(String.format("Successfully " +
+									"added new Customer all info"));
+							}
+						}	
+					}	
 				}
 				else
 				{

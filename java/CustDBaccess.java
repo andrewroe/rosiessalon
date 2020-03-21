@@ -10,6 +10,8 @@ import java.io.*;
 public class CustDBaccess extends RosiesSalon
 { 
 	
+	
+	
 /** 	
 	searchCustomerByFullName method
 	Searches for any Customr infomation based on information available in 
@@ -602,6 +604,73 @@ public class CustDBaccess extends RosiesSalon
 			
 		return rvalue;					
 	}
+
+
+
+	
+	/** 	
+		addCustInfoAddress method
+		Expects a completed CustData class as input
+			THIS WAS AN experiment to replace addCustInfoAddress() in
+			CustInfoDB.java - but no improvement
+	
+		@param data CustData object 
+		@throws SQLException if there is an error with some SQL command
+		@return Returns a boolean true for success, else false
+	*/
+	public boolean addCustomerAddress(int subtype, CustData data) 
+		throws SQLException 
+	{
+		int cinfoid = data.getCustID();
+		int userid = data.getUserID();
+		String[] address = data.getAddr(subtype - 1);
+		int rows;	
+		String updatetime = readfullDateTime();
+		ResultSet result;
+		String sqlcmd;
+		boolean returnValue = false;
+		
+		for (int i = 0; i < 5; i++)
+		{
+			if (address[i] == null)
+			{
+				i = 5;
+				continue;
+			}
+			System.out.println("addCustInfoAddress() - Nbr1Parm index = " + i);
+			
+			sqlcmd = "INSERT INTO CustInfo (CustID, UserID";
+			sqlcmd += ", UpdateTime";
+			sqlcmd += ", InfoType";
+			sqlcmd += ", InfoSubType";
+			sqlcmd += ", Validity";
+			sqlcmd += ", Nbr1Parm";
+			sqlcmd += ", CharBig)";
+			sqlcmd += " VALUES (";
+			sqlcmd += cinfoid;
+			sqlcmd += ", " + userid;
+			sqlcmd += ", '" + updatetime + "'";
+			sqlcmd += ", " + DtypeAddress;
+			sqlcmd += ", " + subtype;
+			sqlcmd += ", " + (ValidInfo1 + ValidInfo3);
+			sqlcmd += ", " + i;			
+			sqlcmd += ", '" + address[i] + "'";		
+			sqlcmd += ")";
+					
+			rows = doRowsCmd(sqlcmd);		
+		
+			if (rows != 0)
+			{
+				return false;		
+			}
+			
+			System.out.println("addCustInfoAddress after insert loop index = " + i);
+		} // End of for loop
+				
+		return true;
+				
+	} // End of addCustInfoAddress()
+		
 						
 }  // End of class
 
