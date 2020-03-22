@@ -185,7 +185,7 @@ public class CustInfoDB extends RosiesSalon
 		
 		for (int i = 0; i < 5; i++)
 		{
-			if (address[i] == null)
+			if ((address[i] == null) || address[i].equals(""))
 			{
 				i = 5;
 				continue;
@@ -210,15 +210,17 @@ public class CustInfoDB extends RosiesSalon
 			sqlcmd += ", '" + address[i] + "'";		
 			sqlcmd += ")";
 					
-			rows = CustInfoDBaccess.doRowsCmd(sqlcmd);		
+			rows = CustInfoDBaccess.doRowsCmd(sqlcmd);
+			
+			System.out.println("addCustInfoAddress after insert loop index = " + i);		
 		
-			if (rows != 0)
+			if (rows != 1)
 			{
 				CustInfoDBaccess.DisconnectFromDB();
 				return false;		
 			}
 			
-			System.out.println("addCustInfoAddress after insert loop index = " + i);
+			System.out.println("addCustInfoAddress after rows check loop index = " + i);
 		} // End of for loop
 		
 		CustInfoDBaccess.DisconnectFromDB();		
