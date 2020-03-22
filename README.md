@@ -261,6 +261,8 @@ show grants;
 
 DB setup:
 
+After creating a database, run the scripts from the repository.
+
 testing:
 
 For running the SQL set up scripts against my 'rosiessalon' DB
