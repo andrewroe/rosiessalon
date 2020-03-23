@@ -53,7 +53,7 @@ public class TransactionApp extends Application
 	protected static Button dbdisconnectButton = new Button("DB disconnect");
 	protected static Button signinButton = new Button("Submit");
 	protected static Button exitButton = new Button("Exit");
-	protected static TextField dbcredfileText = null;
+	protected static TextField dbcredfileText = new TextField();
 	protected static TextField usernameText = null;
 	protected static TextField passwordText = null;
 	protected static String dbcredentialsfile = "NotConnected";
@@ -100,15 +100,24 @@ public class TransactionApp extends Application
 		Label dbconnectPrompt = new Label("DB connect");
 		Label exitPrompt = new Label("Click Button to exit");
 		
+		dbScreen.setFont(Font.font("Ariel",24));
+		dbcredPrompt.setFont(Font.font("Ariel",18));
+		dbconnectPrompt.setFont(Font.font("Ariel",18));
+		exitPrompt.setFont(Font.font("Ariel",18));
+		
 		Image yogaDoor = new Image("file:yogadoor.jpg");
 		ImageView imageDoor = new ImageView(yogaDoor);
-		imageDoor.setFitWidth(500);
-		imageDoor.setFitHeight(500);
+		imageDoor.setFitWidth(400);
+		imageDoor.setFitHeight(400);
 		imageDoor.setPreserveRatio(true);
 		
-		dbcredfileText = new TextField();
+		//dbcredfileText = new TextField();
 		dbcredentialsfile = "NotConnected";
 		dbcredfileText.setText(dbcredentialsfile);
+		dbcredfileText.setFont(Font.font("Ariel",18));
+		
+		dbconnectButton.setFont(Font.font("Ariel",18));
+		exitButton.setFont(Font.font("Ariel",18));
 		
 		HBox doorHbox = new HBox(imageDoor);
 		HBox dbscreenHbox = new HBox(dbScreen);				
@@ -138,33 +147,25 @@ public class TransactionApp extends Application
         	{
             	System.out.println(ex.getMessage());
             	System.out.println("Got a SQL exception!");
-            	TransactionApp.dbcredentialsfile="NotConnected";
+            	//TransactionApp.dbcredentialsfile="NotConnected";
+            	dbcredentialsfile = "NotConnected";
         	}			
         	catch (FileNotFoundException ex)
         	{
             	System.out.println(ex.getMessage());
             	System.out.println("Got a File Not Found exception!");
-            	TransactionApp.dbcredentialsfile="NotConnected";
+            	//TransactionApp.dbcredentialsfile="NotConnected";
+            	dbcredentialsfile = "NotConnected";
         	}					
 		});
 		
 		exitButton.setOnAction(event ->
 		{
 			System.out.println("Good bye.");
-			try
-        	{               			
-				EmployeeDBaccess.DisconnectFromDB();
-				CustomerDBaccess.DisconnectFromDB();
-            }
-            catch (SQLException ex)
-            {
-            	System.out.println(ex.getMessage());
-            	System.out.println("Got a SQL exception!");
-            }    
         	System.exit(0);		
 		});
 		
-		Scene dbconnectScene = new Scene(dbconnectVbox,800,800);
+		Scene dbconnectScene = new Scene(dbconnectVbox,500,800);
 		primaryStage.setScene(dbconnectScene);
  		primaryStage.setTitle("Rosie Salon Transaction GUI Application");  	  
  		primaryStage.show();
@@ -191,6 +192,11 @@ public class TransactionApp extends Application
 			new Label("Click Button for User Sign-in");
 		Label exitPrompt = new Label("Click Button to exit");
 			
+		disconnectPrompt.setFont(Font.font("Ariel",18));
+		userPrompt.setFont(Font.font("Ariel",18));
+		passwordPrompt.setFont(Font.font("Ariel",18));
+		exitPrompt.setFont(Font.font("Ariel",18));
+			
 		switch (logintries)
 		{
 			case 0:
@@ -208,14 +214,19 @@ public class TransactionApp extends Application
 				break;
 		}
 		
+		loginScreen.setFont(Font.font("Ariel",24));
+		
 		Image yogaDoor = new Image("file:yogadoor.jpg");
 		ImageView imageDoor = new ImageView(yogaDoor);
-		imageDoor.setFitWidth(500);
-		imageDoor.setFitHeight(500);
+		imageDoor.setFitWidth(400);
+		imageDoor.setFitHeight(400);
 		imageDoor.setPreserveRatio(true);
 		
 		usernameText = new TextField();
 		passwordText = new TextField();
+		
+		usernameText.setFont(Font.font("Ariel",18));
+		passwordText.setFont(Font.font("Ariel",18));
 
 		HBox doorHbox = new HBox(imageDoor);				
 		HBox loginHbox = new HBox(loginScreen);
@@ -238,6 +249,10 @@ public class TransactionApp extends Application
 			pwdHbox,disconnectHbox,signinHbox,exitHbox);
 			
 		loginVbox.setAlignment(Pos.CENTER);
+		
+		dbdisconnectButton.setFont(Font.font("Ariel",18));
+		signinButton.setFont(Font.font("Ariel",18));
+		exitButton.setFont(Font.font("Ariel",18));
 			
 		dbdisconnectButton.setOnAction(event ->
 		{
@@ -278,7 +293,7 @@ public class TransactionApp extends Application
         	System.exit(0);		
 		});
 		
-		Scene loginScene = new Scene(loginVbox,800,800);
+		Scene loginScene = new Scene(loginVbox,500,800);
 
 		primaryStage.setScene(loginScene);
  		primaryStage.setTitle("Rosie Salon Transaction GUI Application");  	  
