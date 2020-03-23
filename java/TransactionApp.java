@@ -1,6 +1,7 @@
 import java.util.Scanner; 
 import javax.swing.JOptionPane; 
-import java.sql.*;  	
+import java.sql.*;
+import java.io.*; 	
 import javafx.application.Application;
 import javafx.stage.Stage;
 // import javafx.scene.control.*;
@@ -44,22 +45,30 @@ public class TransactionApp extends Application
 		invalidChoice
 	}
 	
+	// protected static String CredentialsFile = "/Users/andrewroe/temp/credentials.txt";
+	protected static String CredentialsFile = null;
 	protected static EmpDBaccess EmployeeDBaccess = new EmpDBaccess();
 	protected static CustDBaccess CustomerDBaccess = new CustDBaccess();
-	protected static Button signinButton = new Button("Sign-In");
+	protected static Button dbconnectButton = new Button("DB connect");
+	protected static Button dbdisconnectButton = new Button("DB disconnect");
+	protected static Button signinButton = new Button("Submit");
 	protected static Button exitButton = new Button("Exit");
+	protected static TextField dbcredfileText = null;
 	protected static TextField usernameText = null;
 	protected static TextField passwordText = null;
+	protected static String dbcredentialsfile = "NotConnected";
+	protected static boolean dbconnected = false; 
 	protected static Label userPrompt = new Label("enter user name");
 	protected static Label passwordPrompt = new Label("enter Password");
 	protected static int userid = 0;		// the user's EmpID
 	protected static int logintries = 0;
-	protected static boolean validEmployeeData = false;
+	//protected static boolean validEmployeeData = false;
 	protected static Stage mainStage;
 
 			
 	@Override
-	public void start(Stage primaryStage) throws SQLException
+	public void start(Stage primaryStage) 
+			throws SQLException, FileNotFoundException
 	{
 		//UsersChoice choice = UsersChoice.invalidChoice;	// The user's choice      
         //int empid = 0;		// the employee's EmpID
@@ -69,30 +78,98 @@ public class TransactionApp extends Application
      	mainStage = primaryStage;
         // Stage title
  		mainStage.setTitle("Rosie Salon Transaction GUI Application");  	
- 		
- 		if (!EmployeeDBaccess.ConnectToDB("rosiessalon","andrewroe","andysql"))
-   		{
-   			System.out.println("Can not connect to DB, Bye.");
-   			return;
-   		}     
+	    
+	    promptForConnectToDB(mainStage);   
+        // handlelogin(mainStage);
  
- 		if (!CustomerDBaccess.ConnectToDB("rosiessalon","andrewroe","andysql"))
-   		{
-   			System.out.println("Can not connect to DB for Customer DB, Bye.");
-   			EmployeeDBaccess.DisconnectFromDB();
-   			return;
-   		}  
-   		       
-        handlelogin(mainStage);
-        /* this comes back immediately - before actual login 
-        userData.setUserID(userid);
-        System.out.println("Got the user logged in, now what?");
-        */
-        
-        // if we are not happy about who is logged in, then go back to handlelogin()
-        
 	}  // End of start()
 	
+
+	/**		     	
+		This method is for login handling of the user.
+		
+   		@param primaryStage which is 
+   		@throws SQLException if there is an error with some SQL command			
+	*/
+		  
+	public static void promptForConnectToDB(Stage primaryStage) 
+		throws SQLException, FileNotFoundException
+	{
+		Label dbScreen = new Label("Database Connect"); 
+		Label dbcredPrompt = new Label("DB credentials filename");
+		Label dbconnectPrompt = new Label("DB connect");
+		Label exitPrompt = new Label("Click Button to exit");
+		
+		Image yogaDoor = new Image("file:yogadoor.jpg");
+		ImageView imageDoor = new ImageView(yogaDoor);
+		imageDoor.setFitWidth(500);
+		imageDoor.setFitHeight(500);
+		imageDoor.setPreserveRatio(true);
+		
+		dbcredfileText = new TextField();
+		dbcredentialsfile = "NotConnected";
+		dbcredfileText.setText(dbcredentialsfile);
+		
+		HBox doorHbox = new HBox(imageDoor);
+		HBox dbscreenHbox = new HBox(dbScreen);				
+		HBox credHbox = new HBox(10, dbcredPrompt, dbcredfileText);
+		HBox connectHbox = new HBox(10, dbconnectPrompt, dbconnectButton);
+		HBox exitHbox = new HBox(10, exitPrompt, exitButton);
+		
+		doorHbox.setAlignment(Pos.CENTER);
+		dbscreenHbox.setAlignment(Pos.CENTER);
+		credHbox.setAlignment(Pos.CENTER);
+		connectHbox.setAlignment(Pos.CENTER);
+		exitHbox.setAlignment(Pos.CENTER);
+		
+		VBox dbconnectVbox = 
+			new VBox(20,doorHbox, dbscreenHbox, credHbox, connectHbox, exitHbox);
+		dbconnectVbox.setAlignment(Pos.CENTER);
+				
+		dbconnectButton.setOnAction(event ->
+		{
+			TransactionApp.dbcredentialsfile = TransactionApp.dbcredfileText.getText();
+
+			try
+			{	
+   				connectToDB(); 			
+			}
+        	catch (SQLException ex)
+        	{
+            	System.out.println(ex.getMessage());
+            	System.out.println("Got a SQL exception!");
+            	TransactionApp.dbcredentialsfile="NotConnected";
+        	}			
+        	catch (FileNotFoundException ex)
+        	{
+            	System.out.println(ex.getMessage());
+            	System.out.println("Got a File Not Found exception!");
+            	TransactionApp.dbcredentialsfile="NotConnected";
+        	}					
+		});
+		
+		exitButton.setOnAction(event ->
+		{
+			System.out.println("Good bye.");
+			try
+        	{               			
+				EmployeeDBaccess.DisconnectFromDB();
+				CustomerDBaccess.DisconnectFromDB();
+            }
+            catch (SQLException ex)
+            {
+            	System.out.println(ex.getMessage());
+            	System.out.println("Got a SQL exception!");
+            }    
+        	System.exit(0);		
+		});
+		
+		Scene dbconnectScene = new Scene(dbconnectVbox,800,800);
+		primaryStage.setScene(dbconnectScene);
+ 		primaryStage.setTitle("Rosie Salon Transaction GUI Application");  	  
+ 		primaryStage.show();
+ 	
+	}
 
 	
 	/**		     	
@@ -102,13 +179,16 @@ public class TransactionApp extends Application
    		@throws SQLException if there is an error with some SQL command			
 	*/
 		  
-	public static void handlelogin(Stage primaryStage) throws SQLException
+	public static void handlelogin(Stage primaryStage) 
+		throws SQLException, FileNotFoundException
 	{
-		Label loginScreen = new Label("Login Screen - 3 tries max");
-		Label userPrompt = new Label("enter user name");
-		Label passwordPrompt = new Label("enter Password");
+		Label loginScreen = new Label("Login Screen - 3 tries max"); // ??
+		Label disconnectPrompt = new Label("DB disconnect");
+		Label userPrompt = new Label("User name");
+		Label passwordPrompt = new Label("Password");
+		
 		Label signinPrompt = 
-			new Label("After filling in Username and Password click Sign-in Button");
+			new Label("Click Button for User Sign-in");
 		Label exitPrompt = new Label("Click Button to exit");
 			
 		switch (logintries)
@@ -137,40 +217,72 @@ public class TransactionApp extends Application
 		usernameText = new TextField();
 		passwordText = new TextField();
 
-		// Add button handling
-		signinButton.setOnAction(new ButtonClickHandler());
-		exitButton.setOnAction(new ButtonClickHandler());
-		
 		HBox doorHbox = new HBox(imageDoor);				
 		HBox loginHbox = new HBox(loginScreen);
-		HBox userHbox = new HBox(40, userPrompt, usernameText);
-		HBox pwdHbox = new HBox(40, passwordPrompt, passwordText);
-		HBox signinHbox = new HBox(40, signinPrompt, signinButton);
-		HBox exitHbox = new HBox(40, exitPrompt, exitButton);
+		HBox userHbox = new HBox(10, userPrompt, usernameText);
+		HBox pwdHbox = new HBox(10, passwordPrompt, passwordText);
+		HBox disconnectHbox = new HBox(10, dbdisconnectButton);
+		HBox signinHbox = new HBox(10, signinButton);
+		HBox exitHbox = new HBox(10, exitPrompt, exitButton);
 		
 		doorHbox.setAlignment(Pos.CENTER);
 		loginHbox.setAlignment(Pos.CENTER);
 		userHbox.setAlignment(Pos.CENTER);
 		pwdHbox.setAlignment(Pos.CENTER);
+		disconnectHbox.setAlignment(Pos.CENTER);
 		signinHbox.setAlignment(Pos.CENTER);
 		exitHbox.setAlignment(Pos.CENTER);
 		
 		VBox loginVbox = 
-			new VBox(20,doorHbox,loginHbox,userHbox,pwdHbox,signinHbox,exitHbox);
+			new VBox(20,doorHbox,loginHbox,userHbox,
+			pwdHbox,disconnectHbox,signinHbox,exitHbox);
+			
 		loginVbox.setAlignment(Pos.CENTER);
-				
-		Scene loginScene = new Scene(loginVbox,800,800);
-		// Scene loginScene = new Scene(doorHbox,500,400);
-		// Scene loginScene = new Scene(doorVbox);
-		// Scene loginScene = new Scene(doorHbox);
-		// Scene exitScene = new Scene(exitBox,700,700);
+			
+		dbdisconnectButton.setOnAction(event ->
+		{
+			try
+			{	
+   				TransactionApp.EmployeeDBaccess.DisconnectFromDB();
+   				TransactionApp.CustomerDBaccess.DisconnectFromDB();	
+   				TransactionApp.dbconnected = false;
+   				promptForConnectToDB(TransactionApp.mainStage);		
+			}
+        	catch (SQLException ex)
+        	{
+            	System.out.println(ex.getMessage());
+            	System.out.println("Got a SQL exception!");
+        	}			
+        	catch (FileNotFoundException ex)
+        	{
+            	System.out.println(ex.getMessage());
+            	System.out.println("Got a File Not Found exception!");
+        	}					
+		});
 		
-		//primaryStage.setScene(loginScene);
+		signinButton.setOnAction(new ButtonClickHandler());
+		
+		exitButton.setOnAction(event ->
+		{
+			System.out.println("Good bye.");
+			try
+        	{               			
+				EmployeeDBaccess.DisconnectFromDB();
+				CustomerDBaccess.DisconnectFromDB();
+            }
+            catch (SQLException ex)
+            {
+            	System.out.println(ex.getMessage());
+            	System.out.println("Got a SQL exception!");
+            }    
+        	System.exit(0);		
+		});
+		
+		Scene loginScene = new Scene(loginVbox,800,800);
+
 		primaryStage.setScene(loginScene);
  		primaryStage.setTitle("Rosie Salon Transaction GUI Application");  	  
- 		primaryStage.show();
- 								
-		// return;
+ 		primaryStage.show();							
 	}
 
 	
@@ -286,7 +398,12 @@ public class TransactionApp extends Application
             {
             	System.out.println(ex.getMessage());
             	System.out.println("Got a SQL exception!");
-            }							
+            }
+        	catch (FileNotFoundException ex)
+        	{
+            	System.out.println(ex.getMessage());
+            	System.out.println("Got a File Not Found exception!");
+        	}	       							
 		});
 					
 		HBox signOutHbox = new HBox(10, signOutPrompt, bSignOut);
@@ -350,7 +467,63 @@ public class TransactionApp extends Application
  				
 	}
 	
-	
+	/**		     	
+		This method is for 
+		
+   		@throws SQLException if there is an error with some SQL command			
+	*/
+		  
+	public static void connectToDB() 
+		throws SQLException, FileNotFoundException
+	{
+		try
+		{
+ 			if (!EmployeeDBaccess.ConnectToDB(dbcredentialsfile))
+   			{
+   				System.out.println("Can not connect to Employee I/F to DB.");
+   				dbcredentialsfile = "NotConnected";
+				dbconnected = false; 
+   			}  	
+ 			if (!CustomerDBaccess.ConnectToDB(dbcredentialsfile))
+   			{
+   				System.out.println("Can not connect to Customer I/F to DB.");
+   				dbcredentialsfile = "NotConnected";
+				dbconnected = false; 
+   			} 
+   			
+   			dbconnected = true;  
+   			handlelogin(mainStage);		
+   		}					
+        catch (SQLException ex)
+        {
+            System.out.println(ex.getMessage());
+            System.out.println("Got a SQL exception!");
+        }			
+        catch (FileNotFoundException ex)
+        {
+            System.out.println(ex.getMessage());
+            System.out.println("Got a File Not Found exception!");
+        }	
+ 		
+ 		return;					
+	}
+
+	/**		     	
+		This method is for login handling of the user.
+		
+   		@param primaryStage which is 
+   		@throws SQLException if there is an error with some SQL command			
+	*/
+		  
+	public static void disconnectFromDB(Stage primaryStage) 
+		throws SQLException, FileNotFoundException
+	{
+		EmployeeDBaccess.DisconnectFromDB();
+		CustomerDBaccess.DisconnectFromDB();
+		promptForConnectToDB(primaryStage);
+		return;
+	}
+						
 	
 	/*
 	private static final Logger LOG =
@@ -361,31 +534,14 @@ public class TransactionApp extends Application
 	
 
 class ButtonClickHandler implements EventHandler<ActionEvent>
-//class ButtonClickHandler implements EventHandler<event>
 {		
 	private static EmpDBaccess EmployeeDBaccess = new EmpDBaccess();
 	
 	@Override
 	public void handle(ActionEvent event)
 	{		
-		if (event.getSource() == TransactionApp.exitButton)
-		{
-			System.out.println("Good bye.");
-			
-			try
-        	{               
-				//TransactionApp.dbDisconnect();
-				TransactionApp.EmployeeDBaccess.DisconnectFromDB();
-            }
-            catch (SQLException ex)
-            {
-            	System.out.println("Got a SQL exception!");
-            }
-                
-        	System.exit(0);
-        }
-        
-		else if (event.getSource() == TransactionApp.signinButton)
+        // sign-in?
+		if (event.getSource() == TransactionApp.signinButton)
 		{
 			int userid = 0;
 			String username = null;
@@ -399,50 +555,56 @@ class ButtonClickHandler implements EventHandler<ActionEvent>
 				" password = " + userpassword);
 
 			try
-        	{               
-				userid = TransactionApp.EmployeeDBaccess.fetchUser(username);
-				if (userid != 0) 
-				{ 
-					passwordInDB = TransactionApp.EmployeeDBaccess.fetchPassword(userid);
-				
-					if (userpassword.compareTo(passwordInDB) == 0)
-					{
-						System.out.println("found the user, display menu.");
-						TransactionApp.userid = userid;
-						TransactionApp.logintries = 0;
-						TransactionApp.menu(TransactionApp.mainStage);
-					}
-					else
-					{
-						System.out.println("user password wrong, try again!");
-						TransactionApp.userid = 0;
-						TransactionApp.logintries++;
-						TransactionApp.handlelogin(TransactionApp.mainStage);
-					}										
-				}
-				else
-				{
-					System.out.println("username wrong, try again!");
-					TransactionApp.userid = 0;
-					TransactionApp.logintries++;
-					TransactionApp.handlelogin(TransactionApp.mainStage);
-				}
+        	{
+                userid = TransactionApp.EmployeeDBaccess.fetchUser(username);
+                if (userid != 0)
+                {
+                    passwordInDB = TransactionApp.EmployeeDBaccess.fetchPassword(userid);
+
+                    if (userpassword.compareTo(passwordInDB) == 0)
+                    {
+                        System.out.println("found the user, display menu.");
+                        TransactionApp.userid = userid;
+                        TransactionApp.logintries = 0;
+                        TransactionApp.menu(TransactionApp.mainStage);
+                    }
+                    else
+                    {
+                        System.out.println("user password wrong, try again!");
+                        TransactionApp.userid = 0;
+                        TransactionApp.logintries++;
+                        TransactionApp.handlelogin(TransactionApp.mainStage);
+                    }                                       
+                }   
+                else
+                {
+                    System.out.println("username wrong, try again!");
+                    TransactionApp.userid = 0;
+                    TransactionApp.logintries++;
+                    TransactionApp.handlelogin(TransactionApp.mainStage);
+                }   
 			}
-            catch (SQLException ex)
-            {
-            	System.out.println("Got a SQL exception!");
-            }
-					
-        }
+       		catch (SQLException ex)
+        	{
+            	System.out.println(ex.getMessage());
+            	System.out.println("Got a SQL exception!");        	
+        	} 
+        	catch (FileNotFoundException ex)
+        	{
+        		System.out.println(ex.getMessage());
+            	System.out.println("Got a File Not Found exception!");
+        	}          											
+        } // End of sign-in
+		        
+        // none of the above
         else
         {
         }		        
         		
 	}
 	
-	
-
 }
 
+					
 		
 				

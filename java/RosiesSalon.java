@@ -4,6 +4,7 @@ import java.io.*;
 import java.time.*;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Scanner;
 
 /** 	
 	This abstract class will be a base for many of the RosiesSalon DB handling.
@@ -11,7 +12,7 @@ import java.util.Date;
 
 public abstract class RosiesSalon 
 { 
-	public final String DBbaseURL = "jdbc:mysql://localhost:3306/";
+	// public final String DBbaseURL = "jdbc:mysql://localhost:3306/";
 	public String DBname = null;
 	public Connection dbConnection = null;
 	
@@ -63,7 +64,7 @@ public abstract class RosiesSalon
 	// @Override
 	public RosiesSalon()
 	{
-    	this.DBname = null;
+    	//this.DBname = null;
 		this.dbConnection = null;
 	}
 
@@ -73,18 +74,22 @@ public abstract class RosiesSalon
 	This could be expanded to allow for multiple DB connections,
 	but for now only ONE allowed.
 	
-	@param dbname The name of the DB to connect with (probably rosiessalon).
-	@param user The user name to use when connecting with the DB.
-	@param password The SQL password for that user.
+	@param credentials has jdbc URL and dbname, SQL user, SQL password
 	@throws SQLException if there is an error with some SQL command
 	@return Returns a boolean, true if connection successful, else false.
 */
-	public boolean ConnectToDB(String dbname, String user, String password) 
-			throws SQLException 
+	public boolean ConnectToDB(String credentials) 
+			throws SQLException, FileNotFoundException 
 	{
-		String url = DBbaseURL + dbname;
+		File file = new File(credentials);
+		Scanner inputFile = new Scanner(file);
+		String line = inputFile.nextLine();
+		String[] tokens = line.split(",");
+		String url = tokens[0]; 
+		String user = tokens[1]; 
+		String password = tokens[2];
 		Properties info = new Properties();
-
+		
 		System.out.println("ConnectToDB - DB URL = " + url);
 
 		info.put("user", user);
@@ -101,20 +106,22 @@ public abstract class RosiesSalon
 			dbConnection = DriverManager.getConnection(url, info);
 			if (dbConnection != null) 
 			{
-				System.out.println("Successfully connected to MySQL database " + dbname);
-				DBname = dbname;
+				System.out.println("Successfully connected to MySQL database " + url);
+				DBname = url;
 				return(true);
 			} 
 			else
 			{
-				System.out.println("Failed to connect to MySQL database " + dbname);
+				System.out.println("Failed to connect to MySQL database " + url);
+				DBname = null;
 				return(false);
 			} 
 		} 	
 		catch (SQLException ex) 
 		{ 
+			DBname = null;
 			System.out.println("An error occurred while connecting MySQL databse " +
-					dbname);
+					url);
 			ex.printStackTrace();
 			return(false);
 		} 
@@ -292,11 +299,9 @@ public abstract class RosiesSalon
 		}
 		
 		Statement statement = dbConnection.createStatement();
-		
 					
 		System.out.println("SQL statement:");
 		System.out.println(sqlcmd);
-		
 									  
 		try 
 		{

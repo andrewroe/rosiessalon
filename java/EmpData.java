@@ -162,24 +162,24 @@ public class EmpData
 			
 		if (this.EmailData[0] != null)
 			replicated.EmailData[0] = new String(this.EmailData[0]);
-		if (this.PhoneData[1] != null)
+		if (this.EmailData[1] != null)
 			replicated.EmailData[1] = new String(this.EmailData[1]);
-		if (this.PhoneData[2] != null)
+		if (this.EmailData[2] != null)
 			replicated.EmailData[2] = new String(this.EmailData[2]);
-		if (this.PhoneData[3] != null)
+		if (this.EmailData[3] != null)
 			replicated.EmailData[3] = new String(this.EmailData[3]);
-		if (this.PhoneData[4] != null)
+		if (this.EmailData[4] != null)
 			replicated.EmailData[4] = new String(this.EmailData[4]);
 			
 		if (this.AddrData[0] != null)
 			replicated.AddrData[0] = new String(this.AddrData[0]);
-		if (this.PhoneData[1] != null)
+		if (this.AddrData[1] != null)
 			replicated.AddrData[1] = new String(this.AddrData[1]);
-		if (this.PhoneData[2] != null)
+		if (this.AddrData[2] != null)
 			replicated.AddrData[2] = new String(this.AddrData[2]);
-		if (this.PhoneData[3] != null)
+		if (this.AddrData[3] != null)
 			replicated.AddrData[3] = new String(this.AddrData[3]);
-		if (this.PhoneData[4] != null)
+		if (this.AddrData[4] != null)
 			replicated.AddrData[4] = new String(this.AddrData[4]);
 			
 		if (this.UserName != null)

@@ -1,6 +1,7 @@
 import java.util.Scanner; 
 import javax.swing.JOptionPane; 
-import java.sql.*;  	
+import java.sql.*; 
+import java.io.*; 	
 
 /**		     	
    This program asks user to log in
@@ -45,7 +46,8 @@ public class UserApp
 	private static Scanner keyboard = new Scanner(System.in);
 	private static EmpDBaccess dbaccess = new EmpDBaccess();
 	
-	public static void main(String[] args) throws SQLException
+	public static void main(String[] args) 
+			throws SQLException, FileNotFoundException
 	{
     	  
         UsersChoice choice = UsersChoice.invalidChoice;	// The user's choice 
@@ -54,10 +56,22 @@ public class UserApp
         EmpData userData = new EmpData();
         EmpData employeeData = new EmpData();
         boolean validEmployeeData = false;
-        
-        dbaccess.ConnectToDB("rosiessalon","andrewroe","andysql");
-        // keyboard.nextLine(); // flush newline, this is necessary??
-        
+
+        try
+		{
+			dbaccess.ConnectToDB("/Users/andrewroe/temp/credentials.txt");	
+		}
+        catch (FileNotFoundException ex)
+        {
+            System.out.println(ex.getMessage());
+            System.out.println("Got a File Not Found exception!");
+        }	
+        catch (SQLException ex)
+        {
+            System.out.println(ex.getMessage());
+            System.out.println("Got a SQL exception!");
+        }			
+       
         userid = handlelogin(userData);
         if (userid == 0)
         {
