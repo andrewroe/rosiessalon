@@ -567,6 +567,14 @@ public class FindCustomer
 		{
 			TransactionApp.CustomerDBaccess.updateCustomerLname(data);
 		} 
+		if ( !data.getPrimaryPhone().equals(originaldata.getPrimaryPhone()) )
+		{
+			TransactionApp.CustomerDBaccess.updateCustomerPrimaryPhone(data);
+		} 
+		if ( !data.getPrimaryEmail().equals(originaldata.getPrimaryEmail()) )
+		{
+			TransactionApp.CustomerDBaccess.updateCustomerPrimaryEmail(data);
+		} 
 		
 		String [] oldaddress;
 		String [] newaddress;

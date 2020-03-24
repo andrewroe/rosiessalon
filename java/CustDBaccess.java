@@ -400,7 +400,7 @@ public class CustDBaccess extends RosiesSalon
 		
 		if (custid == 0)
 		{
-			throw new SQLException("Attempting update Customer Lname " +
+			throw new SQLException("Attempting update Customer " +
 					"when no CustID supplied!");
 		} 
 					
@@ -451,7 +451,7 @@ public class CustDBaccess extends RosiesSalon
 		}	
 
 		return true;				
-	} // End of updateCustomerLname()
+	} // End of updateCustomer()
  
 
 	public boolean updateCustomerFname(CustData data) throws SQLException 
@@ -468,7 +468,17 @@ public class CustDBaccess extends RosiesSalon
 	{ 
 		return updateCustomer(SubTypeLname,data);	
 	}
+
+	public boolean updateCustomerPrimaryPhone(CustData data) throws SQLException 
+	{ 
+		return updateCustomer(SubTypePrimaryPhone,data);	
+	}
 	
+	public boolean updateCustomerPrimaryEmail(CustData data) throws SQLException 
+	{ 
+		return updateCustomer(SubTypePrimaryEmail,data);	
+	}
+			
 	public boolean updateCustomerBalanceDue(CustData data) 
 		throws SQLException, FileNotFoundException 
 	{ 
