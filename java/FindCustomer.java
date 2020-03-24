@@ -1,6 +1,7 @@
 import java.util.Scanner; 
 import javax.swing.JOptionPane; 
-import java.sql.*;  	
+import java.sql.*;
+import java.io.*;  	
 import javafx.application.Application;
 import javafx.stage.Stage;
 // import javafx.scene.control.*;
@@ -167,7 +168,12 @@ public class FindCustomer
             {
             	System.out.println(ex.getMessage());
             	System.out.println("Got a SQL exception!");
-            }    
+            }
+        	catch (FileNotFoundException ex)
+        	{
+            	System.out.println(ex.getMessage());
+            	System.out.println("Got a File Not Found exception!");
+        	}	                
         		
 		});	
 		
@@ -194,8 +200,11 @@ public class FindCustomer
             catch (SQLException ex)
             {
             	System.out.println("Got a SQL exception!");
-            }    
-        	System.exit(0);		
+            } 
+       							
+        		            
+        	System.exit(0);	
+         		
 		});
 				
 		Scene findScene = new Scene(grid,800,800);
@@ -214,7 +223,8 @@ public class FindCustomer
    		@throws SQLException if there is an error with some SQL command			
 	*/
 		  
-	public void displayCustomer(Stage stage) throws SQLException
+	public void displayCustomer(Stage stage) 
+		throws SQLException, FileNotFoundException
 	{
 		int custid = data.getCustID();
 		
@@ -459,26 +469,41 @@ public class FindCustomer
 			if ( (newpEmailText.getText() != null) &&
 				(newpEmailText.getText().length() != 0) )
 				data.setPrimaryEmail(newpEmailText.getText());
-			
-			/*
-			String[] newaddress = null;
-			newaddress[0] = newAddr00Text.getText();
-			newaddress[1] = newAddr01Text.getText();
-			newaddress[2] = newAddr02Text.getText();
-			newaddress[3] = newAddr03Text.getText();
-			newaddress[4] = newAddr04Text.getText();		
-			data.setAddr(newaddress, 0);
-			*/
+					
+			String[] newaddress = {null, null, null, null, null};
+			if ( (newAddr00Text.getText() != null) &&
+				(newAddr00Text.getText().length() != 0) )
+				newaddress[0] = newAddr00Text.getText();
+			if ( (newAddr01Text.getText() != null) &&
+				(newAddr01Text.getText().length() != 0) )
+				newaddress[1] = newAddr01Text.getText();
+			if ( (newAddr02Text.getText() != null) &&
+				(newAddr02Text.getText().length() != 0) )
+				newaddress[2] = newAddr02Text.getText();
+			if ( (newAddr03Text.getText() != null) &&
+				(newAddr03Text.getText().length() != 0) )
+				newaddress[3] = newAddr03Text.getText();
+			if ( (newAddr04Text.getText() != null) &&
+				(newAddr04Text.getText().length() != 0) )
+				newaddress[4] = newAddr04Text.getText();
 				
+			data.setAddr(newaddress, 0);
+						
 			try
         	{               			
 				this.updateCustomer(myStage);
-            }
+            }  			
             catch (SQLException ex)
             {
+            	System.out.println(ex.getMessage());
             	System.out.println("Got a SQL exception!");
-            }    			
-				
+            }
+        	catch (FileNotFoundException ex)
+        	{
+            	System.out.println(ex.getMessage());
+            	System.out.println("Got a File Not Found exception!");
+        	}	       							
+        					
 		});	
 		
 		backButton.setOnAction(event ->
@@ -524,9 +549,11 @@ public class FindCustomer
    		@throws SQLException if there is an error with some SQL command			
 	*/
 		  
-	public void updateCustomer(Stage stage) throws SQLException
+	public void updateCustomer(Stage stage) 
+		throws SQLException, FileNotFoundException
 	{
-		// int custid = data.getCustID();
+		int i = 0;
+		boolean bValue = false;
 
 		if ( !data.getFname().equals(originaldata.getFname()) )
 		{
@@ -539,6 +566,31 @@ public class FindCustomer
 		if ( !data.getLname().equals(originaldata.getLname()) )
 		{
 			TransactionApp.CustomerDBaccess.updateCustomerLname(data);
+		} 
+		
+		String [] oldaddress;
+		String [] newaddress;
+		oldaddress = originaldata.getAddr(0);
+		newaddress = data.getAddr(0);
+		bValue = false;
+		for (i = 0; i < 5; i++)
+		{
+			if ( newaddress[i] != null )
+			{
+				if ( oldaddress[i] != null)
+				{
+					if ( !newaddress[i].equals(oldaddress[i]) )
+						bValue = true;
+				}
+				else
+				{
+					bValue = true;
+				}
+			}				
+		}
+		if ( bValue )
+		{
+			TransactionApp.CustomerDBaccess.updateCustomerAddress(data,0);
 		} 
 				
 	} // End of updateCustomer()

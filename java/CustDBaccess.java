@@ -495,6 +495,10 @@ public class CustDBaccess extends RosiesSalon
 		CustInfoDB custinfo = new CustInfoDB();
 		boolean rvalue = true;
 		int which;
+		int[] keys;
+		 
+		String[] addressLines;
+		
 		switch (index)
 		{
 			case 0:
@@ -515,11 +519,26 @@ public class CustDBaccess extends RosiesSalon
 			default:
 				return false;
 		}
-		int key = custinfo.findCustInfoRecord(DtypeAddress, which, data);	
-		if (key > 0)	
-			rvalue = custinfo.deactivateCustInfoRecord(key);
-		if (data.getAddr(index) != null)	
-			return custinfo.addCustInfoRecord(DtypeAddress, which, data);
+		
+		System.out.println("updateCustomerAddress() - find any/all addresses");
+		keys = custinfo.findCustInfoAddress(SubTypePrimary, data);
+		for ( int key : keys )
+		{
+			if (key > 0)
+			{
+				System.out.println("updateCustomerAddress() - " +
+					"found an address to deactivate at key: "+ key);		
+				rvalue = custinfo.deactivateCustInfoRecord(key);
+			}
+		}	
+
+		System.out.println("updateCustomerAddress() - add addresses");
+		addressLines = data.getAddr(index);
+		if (addressLines[0] != null)
+		{
+			System.out.println("updateCustomerAddress() - add addresses");
+			rvalue = custinfo.addCustInfoAddress(SubTypePrimary, data);
+		}
 		
 		return rvalue;		
 	}

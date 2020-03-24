@@ -438,9 +438,12 @@ public class CustInfoDB extends RosiesSalon
 				{		
 					cinfoIDs[i] = 0; // not found
 				}
-					
-				cinfoid = Integer.parseInt(result.getString("CinfoID"));
-				cinfoIDs[i] = cinfoid;
+				
+				else
+				{
+					cinfoid = Integer.parseInt(result.getString("CinfoID"));
+					cinfoIDs[i] = cinfoid;
+				}				
 			}
 		
 			else

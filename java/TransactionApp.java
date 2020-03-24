@@ -141,7 +141,8 @@ public class TransactionApp extends Application
 
 			try
 			{	
-   				connectToDB(); 			
+   				connectToDB(); 
+   				CredentialsFile = TransactionApp.dbcredentialsfile;				
 			}
         	catch (SQLException ex)
         	{
@@ -156,7 +157,8 @@ public class TransactionApp extends Application
             	System.out.println("Got a File Not Found exception!");
             	//TransactionApp.dbcredentialsfile="NotConnected";
             	dbcredentialsfile = "NotConnected";
-        	}					
+        	}
+        	   					
 		});
 		
 		exitButton.setOnAction(event ->

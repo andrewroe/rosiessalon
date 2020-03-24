@@ -136,6 +136,8 @@ public abstract class RosiesSalon
 */
 	public boolean DisconnectFromDB() throws SQLException
 	{
+		System.out.println("DisconnectRomDB () ");
+		
 		if (dbConnection == null) 
 		{
 			throw new SQLException("Trying to close a connection to DB " +
