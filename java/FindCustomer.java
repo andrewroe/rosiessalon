@@ -228,6 +228,8 @@ public class FindCustomer
 	{
 		int custid = data.getCustID();
 		
+		System.out.println("displayCustomer() - enter");
+		
 		if (!TransactionApp.CustomerDBaccess.fetchAllCustomerInfo(data))
 		{
 			System.out.println("can not do fetchAllCustomerInfo");
@@ -554,6 +556,8 @@ public class FindCustomer
 	{
 		int i = 0;
 		boolean bValue = false;
+		
+		System.out.println("updateCustomer() - enter");
 
 		if ( !data.getFname().equals(originaldata.getFname()) )
 		{
@@ -600,7 +604,9 @@ public class FindCustomer
 		{
 			TransactionApp.CustomerDBaccess.updateCustomerAddress(data,0);
 		} 
-				
+		
+		System.out.println("displayCustomer() -  call displayCustomer");
+		displayCustomer(myStage);		
 	} // End of updateCustomer()
 
 }
