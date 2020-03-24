@@ -444,11 +444,21 @@ public class FindCustomer
 		// Button Handling
 		updateButton.setOnAction(event ->
 		{              			
-			data.setFname(newFnameText.getText());
-			data.setMinit(newMnameText.getText());
-			data.setLname(newLnameText.getText());
-			data.setPrimaryPhone(newpPhoneText.getText());
-			data.setPrimaryEmail(newpEmailText.getText());
+			if ( (newFnameText.getText() != null) &&
+				(newFnameText.getText().length() != 0) )
+				data.setFname(newFnameText.getText());
+			if ( (newMnameText.getText() != null) &&
+				(newMnameText.getText().length() != 0) )
+				data.setMinit(newMnameText.getText());
+			if ( (newLnameText.getText() != null) &&
+				(newLnameText.getText().length() != 0) )
+				data.setLname(newLnameText.getText());	
+			if ( (newpPhoneText.getText() != null) &&
+				(newpPhoneText.getText().length() != 0) )
+				data.setPrimaryPhone(newpPhoneText.getText());
+			if ( (newpEmailText.getText() != null) &&
+				(newpEmailText.getText().length() != 0) )
+				data.setPrimaryEmail(newpEmailText.getText());
 			
 			/*
 			String[] newaddress = null;
