@@ -486,7 +486,9 @@ public class CustDBaccess extends RosiesSalon
 		int key = custinfo.findCustInfoRecord(DtypePersonal, SubTypeBalance, data);	
 		if (key > 0)	
 			custinfo.deactivateCustInfoRecord(key);	
-		return custinfo.addCustInfoRecord(DtypePersonal,SubTypeBalance,data);		
+		boolean rvalue = true;
+		rvalue = custinfo.addCustInfoRecord(DtypePersonal,SubTypeBalance,data);
+		return rvalue;	
 	}
 		
 	public boolean updateCustomerDob(CustData data) 
@@ -496,7 +498,9 @@ public class CustDBaccess extends RosiesSalon
 		int key = custinfo.findCustInfoRecord(DtypePersonal, SubTypeDob, data);	
 		if (key > 0)	
 			custinfo.deactivateCustInfoRecord(key);	
-		return custinfo.addCustInfoRecord(DtypePersonal,SubTypeDob,data);	
+		boolean rvalue = true;
+		rvalue = custinfo.addCustInfoRecord(DtypePersonal,SubTypeDob,data);	
+		return rvalue;
 	}
 	
 	public boolean updateCustomerAddress(CustData data,int index) 

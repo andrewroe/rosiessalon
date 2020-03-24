@@ -136,7 +136,7 @@ public abstract class RosiesSalon
 */
 	public boolean DisconnectFromDB() throws SQLException
 	{
-		System.out.println("DisconnectRomDB () ");
+		System.out.println("DisconnectFromDB () ");
 		
 		if (dbConnection == null) 
 		{

@@ -30,6 +30,8 @@ public class CustInfoDB extends RosiesSalon
 		boolean returnValue = false;
 		CustDBaccess CustInfoDBaccess = new CustDBaccess();
 		
+		System.out.println("addCustInfoRecord() - entry");
+		
         try
 		{
 			if (!CustInfoDBaccess.ConnectToDB(TransactionApp.CredentialsFile))
@@ -87,9 +89,11 @@ public class CustInfoDB extends RosiesSalon
 						sqlcmd += ", '" + data.getPhone(4) + "'";
 						break;
 					default:
+						CustInfoDBaccess.DisconnectFromDB();
 						return false;	
 				}
 				break;
+				
 			case DtypeEmail:
 				sqlcmd += ", " + ValidInfo3;
 				sqlcmd += ", " + 0;
@@ -112,33 +116,53 @@ public class CustInfoDB extends RosiesSalon
 						sqlcmd += ", '" + data.getEmail(4) + "'";
 						break;
 					default:
+						CustInfoDBaccess.DisconnectFromDB();	
 						return false;	
 				}
 				break;									
-	
+
 			case DtypePersonal:
+				System.out.println("addCustInfoRecord() - DtypePersonal");
 				switch (subtype)
 				{	
 					case SubTypeFname:
 						sqlcmd += ", " + ValidInfo3;
+						sqlcmd += ", " + 0;
+						sqlcmd += ", " + 0.0;						
 						sqlcmd += ", '" + data.getFname() + "'";
 						break;
 					case SubTypeMinit:
 						sqlcmd += ", " + ValidInfo3;
+						sqlcmd += ", " + 0;
+						sqlcmd += ", " + 0.0;
 						sqlcmd += ", '" + data.getMinit() + "'";
 						break;
 					case SubTypeLname:
 						sqlcmd += ", " + ValidInfo3;
+						sqlcmd += ", " + 0;
+						sqlcmd += ", " + 0.0;
 						sqlcmd += ", '" + data.getLname() + "'";
 						break;
-					case SubTypeBalance:
+					case SubTypeDob:
 						sqlcmd += ", " + ValidInfo3;
-						sqlcmd += ", '" + data.getBalanceDue() + "'";
+						sqlcmd += ", " + 0;
+						sqlcmd += ", " + 0.0;
+						sqlcmd += ", '" + data.getDob() + "'";
+						break;
+					case SubTypeBalance:
+						sqlcmd += ", " + ValidInfo2;
+						sqlcmd += ", " + 0;
+						sqlcmd += ", " + data.getBalanceDue();
+						sqlcmd += ", ''";
 						break;												
 					default:
+						CustInfoDBaccess.DisconnectFromDB();						
 						return false;
 				}
-			default:		
+				break;
+																																				
+			default:
+				CustInfoDBaccess.DisconnectFromDB();		
 				return false;
 		}
 					
@@ -184,6 +208,7 @@ public class CustInfoDB extends RosiesSalon
 		boolean returnValue = false;
 		CustDBaccess CustInfoDBaccess = new CustDBaccess();
 		
+		System.out.println("addCustInfoAddress() - entry");
         try
 		{
 			if (!CustInfoDBaccess.ConnectToDB(TransactionApp.CredentialsFile))

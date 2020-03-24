@@ -111,7 +111,6 @@ public class TransactionApp extends Application
 		imageDoor.setFitHeight(400);
 		imageDoor.setPreserveRatio(true);
 		
-		//dbcredfileText = new TextField();
 		dbcredentialsfile = "NotConnected";
 		dbcredfileText.setText(dbcredentialsfile);
 		dbcredfileText.setFont(Font.font("Ariel",18));
@@ -186,12 +185,11 @@ public class TransactionApp extends Application
 		throws SQLException, FileNotFoundException
 	{
 		Label loginScreen = new Label("Login Screen - 3 tries max"); // ??
-		Label disconnectPrompt = new Label("DB disconnect");
 		Label userPrompt = new Label("User name");
 		Label passwordPrompt = new Label("Password");
-		
 		Label signinPrompt = 
 			new Label("Click Button for User Sign-in");
+		Label disconnectPrompt = new Label("DB disconnect");	
 		Label exitPrompt = new Label("Click Button to exit");
 			
 		disconnectPrompt.setFont(Font.font("Ariel",18));
@@ -234,21 +232,21 @@ public class TransactionApp extends Application
 		HBox loginHbox = new HBox(loginScreen);
 		HBox userHbox = new HBox(10, userPrompt, usernameText);
 		HBox pwdHbox = new HBox(10, passwordPrompt, passwordText);
-		HBox disconnectHbox = new HBox(10, dbdisconnectButton);
 		HBox signinHbox = new HBox(10, signinButton);
+		HBox disconnectHbox = new HBox(10, dbdisconnectButton);
 		HBox exitHbox = new HBox(10, exitPrompt, exitButton);
 		
 		doorHbox.setAlignment(Pos.CENTER);
 		loginHbox.setAlignment(Pos.CENTER);
 		userHbox.setAlignment(Pos.CENTER);
 		pwdHbox.setAlignment(Pos.CENTER);
-		disconnectHbox.setAlignment(Pos.CENTER);
 		signinHbox.setAlignment(Pos.CENTER);
+		disconnectHbox.setAlignment(Pos.CENTER);
 		exitHbox.setAlignment(Pos.CENTER);
 		
 		VBox loginVbox = 
 			new VBox(20,doorHbox,loginHbox,userHbox,
-			pwdHbox,disconnectHbox,signinHbox,exitHbox);
+			pwdHbox,signinHbox,disconnectHbox,exitHbox);
 			
 		loginVbox.setAlignment(Pos.CENTER);
 		
