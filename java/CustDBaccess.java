@@ -23,7 +23,7 @@ public class CustDBaccess extends RosiesSalon
 	
 	@param data CustData object 
 	@throws SQLException if there is an error with some SQL command
-	@return Returns an integer 1, 0, or -1 and may update EmpID in EmpData object
+	@return Returns an integer 1, 0, or -1 and may update CustID in CustData object
 */
 	public int searchCustomerByFullName(CustData data) throws SQLException 
 	{
@@ -58,7 +58,6 @@ public class CustDBaccess extends RosiesSalon
 					
 		if (result.next())
 		{
-			//System.out.println("searchEmployee() - it should get here");
 			data.setCustID(result.getInt("CustID"));
 			data.setCreateTime(result.getString("CreateTime"));
 			data.setUpdateTime(result.getString("UpdateTime"));
@@ -98,7 +97,6 @@ public class CustDBaccess extends RosiesSalon
 		String lname = data.getLname();
 		String fname = data.getFname();
 		String minit = data.getMinit();
-		// int empid = data.getEmpID();
 		int userid = data.getUserID();
 		String createtime = readfullDateTime();
 		String updatetime = createtime;
@@ -164,7 +162,7 @@ public class CustDBaccess extends RosiesSalon
 	
 	@param data CustData object 
 	@throws SQLException if there is an error with some SQL command
-	@return Returns a boolean for success or not and updated the supplied EmpData,
+	@return Returns a boolean for success or not and updated the supplied CustData,
 	 
 */
 	public boolean fetchAllCustomerInfo(CustData data) throws SQLException 
@@ -186,11 +184,7 @@ public class CustDBaccess extends RosiesSalon
 		
 		String sqlcmd = "SELECT CustID, UserID, Fname, Lname, Minit, phone, ";
 		sqlcmd += "email FROM Customer where CustID = " + custid; 
-				
-	
-		//System.out.println("fetchAllEmployeeInfo() - search DB using user's " + 
-		//	"EmpID as supplied.");
-					
+								
 		result = doCmd(sqlcmd);
 		
 		if (result == null)
@@ -202,7 +196,6 @@ public class CustDBaccess extends RosiesSalon
 		
 		if (result.next())
 		{
-			// data.setEmpID(result.getInt("EmpID")); // could verify match
 			data.setUserID(result.getInt("UserID"));
 			data.setFname(result.getString("Fname"));
 			data.setMinit(result.getString("Minit"));
@@ -216,10 +209,10 @@ public class CustDBaccess extends RosiesSalon
 			return false;
 		} 	
 		 	
-		// Add in any EmpInfo data
+		// Add in any CustInfo data
 		
 		sqlcmd = "SELECT CustID, UserID, InfoType, InfoSubType, Validity, ";
-		sqlcmd += "Nbr1Parm, Nbr2Parm, CharBig FROM EmpInfo where EmpID = " + custid; 
+		sqlcmd += "Nbr1Parm, Nbr2Parm, CharBig FROM CustInfo where CustID = " + custid; 
 							
 		result = doCmd(sqlcmd);
 		
@@ -318,13 +311,13 @@ public class CustDBaccess extends RosiesSalon
 					data.setAddr(addressparm,4);
 				}												
 			else
-				// System.out.println("encountered unknown EmpInfo record??!");	
+				
 				continue;					
 		} 	
 		
 		return true;	
 		
-	} // End of fetchAllEmployeeInfo()
+	} // End of fetchAllCustomerInfo()
 
  
  
@@ -333,12 +326,12 @@ public class CustDBaccess extends RosiesSalon
 	searchCustomerByLastName method
 	Searches for any Customer infomation based only on the last name information 
 	available in the CustData object.
-	For each possible match the EmpID is addded into the ArrayListsupplied by caller.
+	For each possible match the CustID is addded into the ArrayListsupplied by caller.
 	
 	@param data CustData object
 	@param CustIDlist an ArrayList
 	@throws SQLException if there is an error with some SQL command 
-	@return Returns boolean true if one or more Employees could match the criteria
+	@return Returns boolean true if one or more Customers could match the criteria
 	and also updates the supplied Arraylist of CustID values of possible matches.
 */
 	public boolean searchCustomerByLastName(CustData data, ArrayList<Integer> CustIDlist) 
@@ -354,9 +347,7 @@ public class CustDBaccess extends RosiesSalon
 			throw new SQLException("Attempting last name search of DB and " + 
 				"no last name supplied");
 		}
-			
-		//System.out.println("searchEmployee() - search DB using user's Lname.");
-			
+				
 		String sqlcmd = "SELECT CustID, UserID, Fname, Lname, Minit ";
 		sqlcmd += "FROM Customer where Lname = '" + lname + "'";
 				
@@ -377,7 +368,7 @@ public class CustDBaccess extends RosiesSalon
 		
 		return(returnValue);
 					
-	}  // End of searchEmployeeByLastName
+	}  // End of searchCustomerByLastName
 	
 	
    
@@ -410,11 +401,11 @@ public class CustDBaccess extends RosiesSalon
 		if (custid == 0)
 		{
 			throw new SQLException("Attempting update Customer Lname " +
-					"when no EmpID supplied!");
+					"when no CustID supplied!");
 		} 
 					
 		String sqlcmd = "SELECT CustID, UserID, Fname, Minit, Lname";
-		sqlcmd += " FROM Customer where EmpID = " + custid; 
+		sqlcmd += " FROM Customer where CustID = " + custid; 
 		
 		result = doCmd(sqlcmd);
 		 
@@ -452,16 +443,15 @@ public class CustDBaccess extends RosiesSalon
 		sqlcmd += " WHERE CustID = " + custid;
 				
 		rows = doRowsCmd(sqlcmd);
-		// System.out.println("updateEmployee() - just attempted Employee update");
 				
 		if (rows != 1)
 		{
-			throw new SQLException("Attempting update Employee" +
+			throw new SQLException("Attempting update Customer" +
 				"but the update step failed!");
 		}	
 
 		return true;				
-	} // End of updateEmployeeLname()
+	} // End of updateCustomerLname()
  
 
 	public boolean updateCustomerFname(CustData data) throws SQLException 
@@ -479,7 +469,8 @@ public class CustDBaccess extends RosiesSalon
 		return updateCustomer(SubTypeLname,data);	
 	}
 	
-	public boolean updatCustomerBalanceDue(CustData data) throws SQLException 
+	public boolean updateCustomerBalanceDue(CustData data) 
+		throws SQLException, FileNotFoundException 
 	{ 
 		CustInfoDB custinfo = new CustInfoDB();
 		int key = custinfo.findCustInfoRecord(DtypePersonal, SubTypeBalance, data);	
@@ -488,7 +479,8 @@ public class CustDBaccess extends RosiesSalon
 		return custinfo.addCustInfoRecord(DtypePersonal,SubTypeBalance,data);		
 	}
 		
-	public boolean updateCustomerDob(CustData data) throws SQLException 
+	public boolean updateCustomerDob(CustData data) 
+		throws SQLException, FileNotFoundException 
 	{ 
 		CustInfoDB custinfo = new CustInfoDB();
 		int key = custinfo.findCustInfoRecord(DtypePersonal, SubTypeDob, data);	
@@ -498,7 +490,7 @@ public class CustDBaccess extends RosiesSalon
 	}
 	
 	public boolean updateCustomerAddress(CustData data,int index) 
-		throws SQLException 
+		throws SQLException, FileNotFoundException 
 	{ 
 		CustInfoDB custinfo = new CustInfoDB();
 		boolean rvalue = true;
@@ -533,7 +525,7 @@ public class CustDBaccess extends RosiesSalon
 	}
 	
 	public boolean updateCustomerPhone(CustData data, int index) 
-		throws SQLException 
+		throws SQLException, FileNotFoundException 
 	{ 
 		CustInfoDB custinfo = new CustInfoDB();
 		boolean rvalue = true;		
@@ -569,7 +561,7 @@ public class CustDBaccess extends RosiesSalon
 	}
 	
 	public boolean updateCustomerEmail(CustData data,int index) 
-		throws SQLException 
+		throws SQLException, FileNotFoundException 
 	{ 
 		CustInfoDB custinfo = new CustInfoDB();
 		boolean rvalue = true;		
@@ -619,7 +611,7 @@ public class CustDBaccess extends RosiesSalon
 		@return Returns a boolean true for success, else false
 	*/
 	public boolean addCustomerAddress(int subtype, CustData data) 
-		throws SQLException 
+		throws SQLException, FileNotFoundException 
 	{
 		int cinfoid = data.getCustID();
 		int userid = data.getUserID();

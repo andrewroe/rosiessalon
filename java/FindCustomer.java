@@ -38,6 +38,7 @@ public class FindCustomer
 	
 	protected Stage myStage;
 	protected CustData data = new CustData();
+	protected CustData originaldata = new CustData();
 	protected Label banner = new Label("Find/Update Customer");
 
 
@@ -222,6 +223,8 @@ public class FindCustomer
 			System.out.println("can not do fetchAllCustomerInfo");
 			return;
 		}
+
+		originaldata = data.Replicate();
 		
 		String[] address = null;
 		int i = 0;
@@ -305,6 +308,9 @@ public class FindCustomer
 		
 		banner.setFont(Font.font("Ariel",24)); // probably redundant
 		
+		currentInfo.setFont(Font.font("Ariel",18));
+		updateInfo.setFont(Font.font("Ariel",18));
+		
 		fnamePrompt.setFont(Font.font("Ariel",18));
 		mnamePrompt.setFont(Font.font("Ariel",18));
 		lnamePrompt.setFont(Font.font("Ariel",18));
@@ -342,6 +348,7 @@ public class FindCustomer
 		backPrompt.setFont(Font.font("Ariel",18));
 		exitPrompt.setFont(Font.font("Ariel",18));				
 		
+		updateButton.setFont(Font.font("Ariel",18));
 		backButton.setFont(Font.font("Ariel",18));
 		exitButton.setFont(Font.font("Ariel",18));
 				
@@ -389,7 +396,7 @@ public class FindCustomer
 		updateButtonHbox.setAlignment(Pos.CENTER_LEFT);
 		backButtonHbox.setAlignment(Pos.CENTER_LEFT);
 		exitButtonHbox.setAlignment(Pos.CENTER_LEFT);
-
+			
 		newFnameHbox.setAlignment(Pos.CENTER_LEFT);
 		newMnameHbox.setAlignment(Pos.CENTER_LEFT);
 		newLnameHbox.setAlignment(Pos.CENTER_LEFT);
@@ -403,7 +410,7 @@ public class FindCustomer
 
 		
 		GridPane grid = new GridPane();
-		grid.add(bannerHbox, 1, 0);
+		grid.add(bannerHbox, 0, 0);
 		grid.add(currentHbox, 0, 1);
 		grid.add(updateHbox, 1, 1);
 		
@@ -436,19 +443,32 @@ public class FindCustomer
 					
 		// Button Handling
 		updateButton.setOnAction(event ->
-		{
-			              			
-				data.setFname(fnameText.getText());
-				data.setMinit(mnameText.getText());
-				data.setLname(lnameText.getText());
-				//newFname.getText
-				// stop need to replicate data first 
+		{              			
+			data.setFname(newFnameText.getText());
+			data.setMinit(newMnameText.getText());
+			data.setLname(newLnameText.getText());
+			data.setPrimaryPhone(newpPhoneText.getText());
+			data.setPrimaryEmail(newpEmailText.getText());
+			
+			/*
+			String[] newaddress = null;
+			newaddress[0] = newAddr00Text.getText();
+			newaddress[1] = newAddr01Text.getText();
+			newaddress[2] = newAddr02Text.getText();
+			newaddress[3] = newAddr03Text.getText();
+			newaddress[4] = newAddr04Text.getText();		
+			data.setAddr(newaddress, 0);
+			*/
 				
-				System.out.println("Submit - values = " +
-					data.getFname() + " " + data.getMinit() + " " + data.getLname());				
-											
-            
-        		
+			try
+        	{               			
+				this.updateCustomer(myStage);
+            }
+            catch (SQLException ex)
+            {
+            	System.out.println("Got a SQL exception!");
+            }    			
+				
 		});	
 		
 		backButton.setOnAction(event ->
@@ -486,7 +506,32 @@ public class FindCustomer
  								
 	}
 
+				
+	/**		     	
+		This method is for 
+		
+   		@param primaryStage which is 
+   		@throws SQLException if there is an error with some SQL command			
+	*/
+		  
+	public void updateCustomer(Stage stage) throws SQLException
+	{
+		// int custid = data.getCustID();
 
+		if ( !data.getFname().equals(originaldata.getFname()) )
+		{
+			TransactionApp.CustomerDBaccess.updateCustomerFname(data);
+		} 
+		if ( !data.getMinit().equals(originaldata.getMinit()) )
+		{
+			TransactionApp.CustomerDBaccess.updateCustomerMinit(data);
+		} 
+		if ( !data.getLname().equals(originaldata.getLname()) )
+		{
+			TransactionApp.CustomerDBaccess.updateCustomerLname(data);
+		} 
+				
+	} // End of updateCustomer()
 
 }
 

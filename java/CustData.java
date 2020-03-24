@@ -80,8 +80,13 @@ public class CustData
 		{
 			for (j = 0; j < 5; j++)
 			{
-				//if (this.AddrData[i][j] != null)
-				replicated.AddrData[i][j] = new String(this.AddrData[i][j]);
+				if ( (this.AddrData[i][j] != null) && 
+					(!this.AddrData[i][j].equals("")) )
+					replicated.AddrData[i][j] = new String(this.AddrData[i][j]);
+				else
+				{
+					replicated.AddrData[i][j] = null;			
+				}
 			}
 		}
 		
