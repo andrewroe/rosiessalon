@@ -369,7 +369,38 @@ public class CustDBaccess extends RosiesSalon
 					
 	}  // End of searchCustomerByLastName
 	
-	
+
+	public boolean slideCustomerField(int dtype, CustData data)
+		throws SQLException, FileNotFoundException
+	{ 
+		int cinfoid = 0;
+		
+		System.out.println("slideCustomerField - entry");
+		
+		// slide these fields
+		cinfoid = 
+			TransactionApp.custinfoDB.findCustInfoRecord(dtype,SubTypeFifth,data);
+			
+		if (cinfoid > 0)
+		{
+			TransactionApp.custinfoDB.deactivateCustInfoRecord(cinfoid);
+		}
+
+		for (int i = SubTypeFourth; i < 0; i--)
+		{
+			cinfoid = 
+				TransactionApp.custinfoDB.findCustInfoRecord
+					(dtype,i,data);
+			if (cinfoid > 0)
+			{
+				TransactionApp.custinfoDB.changeSubTypeCustInfoRecord(cinfoid, i + 1);
+			}		
+		}
+								
+		System.out.println("slideCustomerField - exit");
+		return true;	
+	}
+
    
 /** 	
 	updateCustomer method
@@ -470,55 +501,14 @@ public class CustDBaccess extends RosiesSalon
 
 	public boolean updateCustomerPrimaryPhone(CustData data, CustData olddata) 
 		throws SQLException, FileNotFoundException 
-	{ 
-		//CustInfoDB TransactionApp.custinfoDB = new CustInfoDB();
-		
+	{ 		
 		System.out.println("updateCustomerPrimaryPhone - entry");
 		
-		int cinfoid = 0;
+		// int cinfoid = 0;
+		
 		// slide these numbers
-		
-		cinfoid = 
-			TransactionApp.custinfoDB.findCustInfoRecord(DtypePhone,SubTypeFifth,data);
-		if (cinfoid > 0)
-		{
-			TransactionApp.custinfoDB.deactivateCustInfoRecord(cinfoid);
-		}
-		
-		cinfoid = 
-			TransactionApp.custinfoDB.findCustInfoRecord(DtypePhone,SubTypeFourth,data);
-		if (cinfoid > 0)
-		{
-			TransactionApp.custinfoDB.changeSubTypeCustInfoRecord(cinfoid, SubTypeFifth);
-		}
-		
-		cinfoid = 
-			TransactionApp.custinfoDB.findCustInfoRecord
-			(DtypePhone,SubTypeTertiary,data);
-		if (cinfoid > 0)
-		{
-			TransactionApp.custinfoDB.changeSubTypeCustInfoRecord
-				(cinfoid, SubTypeFourth);
-		}
-		
-		cinfoid = 
-			TransactionApp.custinfoDB.findCustInfoRecord
-			(DtypePhone,SubTypeSecondary,data);
-		if (cinfoid > 0)
-		{
-			TransactionApp.custinfoDB.changeSubTypeCustInfoRecord
-			(cinfoid, SubTypeTertiary);
-		}		
-		
-		cinfoid = 
-			TransactionApp.custinfoDB.findCustInfoRecord
-			(DtypePhone,SubTypePrimary,data);
-		if (cinfoid > 0)
-		{
-			TransactionApp.custinfoDB.changeSubTypeCustInfoRecord
-			(cinfoid, SubTypeSecondary);
-		}	
-		
+		slideCustomerField(DtypePhone,data);
+				
 		if (olddata.getPrimaryPhone() != null)
 		{
 			CustData tempdata = olddata.Replicate();
@@ -533,41 +523,11 @@ public class CustDBaccess extends RosiesSalon
 	
 	public boolean updateCustomerPrimaryEmail(CustData data, CustData olddata) 
 		throws SQLException, FileNotFoundException  
-	{ 
-		//CustInfoDB custinfo = new CustInfoDB();
+	{ 	
+		//int cinfoid = 0;
 		
-		int cinfoid = 0;
 		// slide these email addrss
-		
-		cinfoid = TransactionApp.custinfoDB.findCustInfoRecord(DtypeEmail,SubTypeFifth,data);
-		if (cinfoid > 0)
-		{
-			TransactionApp.custinfoDB.deactivateCustInfoRecord(cinfoid);
-		}
-		
-		cinfoid = TransactionApp.custinfoDB.findCustInfoRecord(DtypeEmail,SubTypeFourth,data);
-		if (cinfoid > 0)
-		{
-			TransactionApp.custinfoDB.changeSubTypeCustInfoRecord(cinfoid, SubTypeFifth);
-		}
-		
-		cinfoid = TransactionApp.custinfoDB.findCustInfoRecord(DtypeEmail,SubTypeTertiary,data);
-		if (cinfoid > 0)
-		{
-			TransactionApp.custinfoDB.changeSubTypeCustInfoRecord(cinfoid, SubTypeFourth);
-		}
-		
-		cinfoid = TransactionApp.custinfoDB.findCustInfoRecord(DtypeEmail,SubTypeSecondary,data);
-		if (cinfoid > 0)
-		{
-			TransactionApp.custinfoDB.changeSubTypeCustInfoRecord(cinfoid, SubTypeTertiary);
-		}		
-		
-		cinfoid = TransactionApp.custinfoDB.findCustInfoRecord(DtypeEmail,SubTypePrimary,data);
-		if (cinfoid > 0)
-		{
-			TransactionApp.custinfoDB.changeSubTypeCustInfoRecord(cinfoid, SubTypeSecondary);
-		}	
+		slideCustomerField(DtypeEmail,data);
 		
 		if (olddata.getPrimaryEmail() != null)
 		{
