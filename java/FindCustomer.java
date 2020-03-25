@@ -628,12 +628,14 @@ public class FindCustomer
 		if ( data.getPrimaryPhone() != null && originaldata.getPrimaryPhone() != null 
 			&& !data.getPrimaryPhone().equals(originaldata.getPrimaryPhone()) )
 		{
-			TransactionApp.CustomerDBaccess.updateCustomerPrimaryPhone(data);
+			TransactionApp.CustomerDBaccess.updateCustomerPrimaryPhone
+				(data,originaldata.getPrimaryPhone());
 		}
 		if ( data.getPrimaryEmail() != null && originaldata.getPrimaryEmail() != null 
 			&& !data.getPrimaryEmail().equals(originaldata.getPrimaryEmail()) )		 
 		{
-			TransactionApp.CustomerDBaccess.updateCustomerPrimaryEmail(data);
+			TransactionApp.CustomerDBaccess.updateCustomerPrimaryEmail
+				(data,originaldata.getPrimaryEmail());
 		} 
 		if ( data.getDob() != null)
 		{

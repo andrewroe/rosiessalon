@@ -469,14 +469,100 @@ public class CustDBaccess extends RosiesSalon
 		return updateCustomer(SubTypeLname,data);	
 	}
 
-	public boolean updateCustomerPrimaryPhone(CustData data) throws SQLException 
+	public boolean updateCustomerPrimaryPhone(CustData data, String oldprimary) 
+		throws SQLException, FileNotFoundException 
 	{ 
+		CustInfoDB custinfo = new CustInfoDB();
+		
+		int cinfoid = 0;
+		// slide these numbers
+		
+		cinfoid = custinfo.findCustInfoRecord(DtypePhone,SubTypeFifth,data);
+		if (cinfoid > 0)
+		{
+			custinfo.deactivateCustInfoRecord(cinfoid);
+		}
+		
+		cinfoid = custinfo.findCustInfoRecord(DtypePhone,SubTypeFourth,data);
+		if (cinfoid > 0)
+		{
+			custinfo.changeSubTypeCustInfoRecord(cinfoid, SubTypeFifth);
+		}
+		
+		cinfoid = custinfo.findCustInfoRecord(DtypePhone,SubTypeTertiary,data);
+		if (cinfoid > 0)
+		{
+			custinfo.changeSubTypeCustInfoRecord(cinfoid, SubTypeFourth);
+		}
+		
+		cinfoid = custinfo.findCustInfoRecord(DtypePhone,SubTypeSecondary,data);
+		if (cinfoid > 0)
+		{
+			custinfo.changeSubTypeCustInfoRecord(cinfoid, SubTypeTertiary);
+		}		
+		
+		cinfoid = custinfo.findCustInfoRecord(DtypePhone,SubTypePrimary,data);
+		if (cinfoid > 0)
+		{
+			custinfo.changeSubTypeCustInfoRecord(cinfoid, SubTypeSecondary);
+		}	
+		
+		if (oldprimary != null)
+		{
+			CustData olddata = data.Replicate();
+			olddata.setPhone(oldprimary,0);
+			custinfo.addCustInfoRecord(DtypePhone, SubTypePrimary, olddata);
+		}			
+						
 		return updateCustomer(SubTypePrimaryPhone,data);	
 	}
 	
-	public boolean updateCustomerPrimaryEmail(CustData data) throws SQLException 
+	public boolean updateCustomerPrimaryEmail(CustData data, String oldprimary) 
+		throws SQLException, FileNotFoundException  
 	{ 
-		return updateCustomer(SubTypePrimaryEmail,data);	
+		CustInfoDB custinfo = new CustInfoDB();
+		
+		int cinfoid = 0;
+		// slide these email addrss
+		
+		cinfoid = custinfo.findCustInfoRecord(DtypeEmail,SubTypeFifth,data);
+		if (cinfoid > 0)
+		{
+			custinfo.deactivateCustInfoRecord(cinfoid);
+		}
+		
+		cinfoid = custinfo.findCustInfoRecord(DtypeEmail,SubTypeFourth,data);
+		if (cinfoid > 0)
+		{
+			custinfo.changeSubTypeCustInfoRecord(cinfoid, SubTypeFifth);
+		}
+		
+		cinfoid = custinfo.findCustInfoRecord(DtypeEmail,SubTypeTertiary,data);
+		if (cinfoid > 0)
+		{
+			custinfo.changeSubTypeCustInfoRecord(cinfoid, SubTypeFourth);
+		}
+		
+		cinfoid = custinfo.findCustInfoRecord(DtypeEmail,SubTypeSecondary,data);
+		if (cinfoid > 0)
+		{
+			custinfo.changeSubTypeCustInfoRecord(cinfoid, SubTypeTertiary);
+		}		
+		
+		cinfoid = custinfo.findCustInfoRecord(DtypeEmail,SubTypePrimary,data);
+		if (cinfoid > 0)
+		{
+			custinfo.changeSubTypeCustInfoRecord(cinfoid, SubTypeSecondary);
+		}	
+		
+		if (oldprimary != null)
+		{
+			CustData olddata = data.Replicate();
+			olddata.setEmail(oldprimary,0);
+			custinfo.addCustInfoRecord(DtypeEmail, SubTypePrimary, olddata);
+		}
+		
+		return updateCustomer(SubTypePrimaryEmail,data);			
 	}
 			
 	public boolean updateCustomerBalanceDue(CustData data) 

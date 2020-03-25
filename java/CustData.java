@@ -54,26 +54,35 @@ public class CustData
 			replicated.DobData = new String(this.DobData);
 		replicated.BalanceDue = this.BalanceDue;
 		
+		
 		if (this.PhoneData[0] != null)
 			replicated.PhoneData[0] = new String(this.PhoneData[0]);
+			
 		if (this.PhoneData[1] != null)
 			replicated.PhoneData[1] = new String(this.PhoneData[1]);
+		
 		if (this.PhoneData[2] != null)
 			replicated.PhoneData[2] = new String(this.PhoneData[2]);
+		
 		if (this.PhoneData[3] != null)
 			replicated.PhoneData[3] = new String(this.PhoneData[3]);
+		
 		if (this.PhoneData[4] != null)
 			replicated.PhoneData[4] = new String(this.PhoneData[4]);
 			
 		if (this.EmailData[0] != null)
 			replicated.EmailData[0] = new String(this.EmailData[0]);
-		if (this.PhoneData[1] != null)
+			
+		if (this.EmailData[1] != null)
 			replicated.EmailData[1] = new String(this.EmailData[1]);
-		if (this.PhoneData[2] != null)
+			
+		if (this.EmailData[2] != null)
 			replicated.EmailData[2] = new String(this.EmailData[2]);
-		if (this.PhoneData[3] != null)
+			
+		if (this.EmailData[3] != null)
 			replicated.EmailData[3] = new String(this.EmailData[3]);
-		if (this.PhoneData[4] != null)
+			
+		if (this.EmailData[4] != null)
 			replicated.EmailData[4] = new String(this.EmailData[4]);
 			
 		for (i = 0; i < 5; i++)
@@ -175,7 +184,7 @@ public class CustData
 		
 		PhoneData[index] = phone;
 		
-		// System.out.println("addPhone() - about to exit ");
+		System.out.printf("addPhone(%s,%d) - about to exit", phone, index);
 		return true;
 	}
 

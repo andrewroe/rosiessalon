@@ -279,6 +279,60 @@ public class CustInfoDB extends RosiesSalon
 
 
 /** 	
+	changeSubTypeInfoRecord method
+	Expects ... fill in
+	
+	@param cinfoid CinfoID 
+	@subtype new subtype value
+	@throws SQLException if there is an error with some SQL command
+	@return Returns a boolean true for success, else false
+*/
+	public boolean changeSubTypeCustInfoRecord(int cinfoid, int subtype) 
+		throws SQLException, FileNotFoundException 
+	{
+		int rows = 0;
+		String updatetime = readfullDateTime();
+		String sqlcmd;
+		
+		CustDBaccess CustInfoDBaccess = new CustDBaccess();
+		
+        try
+		{
+			if (!CustInfoDBaccess.ConnectToDB(TransactionApp.CredentialsFile))
+   			{
+   				System.out.println("Can not connect to DB for CustInfo DB, Bye.");	
+   				return false;
+   			} 
+		}
+        catch (FileNotFoundException ex)
+        {
+            System.out.println(ex.getMessage());
+            System.out.println("Got a File Not Found exception!");
+        }	
+        catch (SQLException ex)
+        {
+            System.out.println(ex.getMessage());
+            System.out.println("Got a SQL exception!");
+        }		
+							
+		sqlcmd = "UPDATE CustInfo SET InfoSubType = " + subtype;
+		sqlcmd += " WHERE CinfoID = " + cinfoid; 
+				
+		rows = CustInfoDBaccess.doRowsCmd(sqlcmd);
+		
+		CustInfoDBaccess.DisconnectFromDB();	
+		if (rows > 0)	
+			return true;
+		else
+			return false;
+						
+	} // End of changeSubTypeCustInfoRecord()
+
+
+
+
+
+/** 	
 	deactivateCustInfoRecord method
 	Expects ... fill in
 	
@@ -328,6 +382,7 @@ public class CustInfoDB extends RosiesSalon
 			return false;
 						
 	} // End of deactivateCustInfoRecord()
+
 
 
 
@@ -609,6 +664,8 @@ public class CustInfoDB extends RosiesSalon
 
 
 	
+	
+// Don't seem to be using the rest of these 
    
 	
 	public boolean updateCustomerAddress(CustData data,int index) 
