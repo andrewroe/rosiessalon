@@ -227,6 +227,7 @@ public class FindCustomer
 		throws SQLException, FileNotFoundException
 	{
 		int custid = data.getCustID();
+		//double balancedue;
 		
 		System.out.println("displayCustomer() - enter");
 		
@@ -251,6 +252,8 @@ public class FindCustomer
 		String Addr02 = null;
 		String Addr03 = null;
 		String Addr04 = null;
+		String Dob = null;
+		String BalanceDue = null;
 		
 		String newFname = null;
 		String newMname = null;
@@ -261,28 +264,33 @@ public class FindCustomer
 		String newAddr01 = null;
 		String newAddr02 = null;
 		String newAddr03 = null;
-		String newAddr04 = null;		
+		String newAddr04 = null;
+		String newDob = null;
+		String newBalanceDue = null;		
 		
-		Label currentInfo = new Label("Current Customer");
-		Label updateInfo = new Label("Update Customer");
-		Label fnamePrompt = new Label("Customer's first name:");
-		Label mnamePrompt = new Label("Customer's middle name:");
-		Label lnamePrompt = new Label("Customer's Last name:");
-		Label phonePrompt = new Label("Customer's Primary Phone:");
-		Label emailPrompt = new Label("Customer's Primary Email:");
-		Label addr00Prompt = new Label("Customer's Primary Address:");
-		Label addr01Prompt = new Label("Customer's P. A. line 2:");
-		Label addr02Prompt = new Label("Customer's P. A. line 3:");
-		Label addr03Prompt = new Label("Customer's P. A. line 4:");
-		Label addr04Prompt = new Label("Customer's P. A. line 5:");
+		Label currentInfo  = new  Label("Current Customer");
+		Label updateInfo   = new   Label("Update Customer");
+		Label fnamePrompt  = new  Label("   Customer's first name:");
+		Label mnamePrompt  = new  Label("  Customer's middle name:");
+		Label lnamePrompt  = new  Label("    Customer's Last name:");
+		Label phonePrompt  = new  Label("Customer's Primary Phone:");
+		Label emailPrompt  = new  Label("Customer's Primary Email:");
+		Label addr00Prompt = new Label(" Customer's Primary Addr:");
+		Label addr01Prompt = new Label(" Customer's P. A. line 2:");
+		Label addr02Prompt = new Label(" Customer's P. A. line 3:");
+		Label addr03Prompt = new Label(" Customer's P. A. line 4:");
+		Label addr04Prompt = new Label(" Customer's P. A. line 5:");
+		Label dobPrompt    = new Label("Customer's Date of Birth:");
+		Label balduePrompt = new Label("  Customer's Balance Due:");
+		Label custidPrompt = new Label("  Customer's Id:");
 			
 		Label updatePrompt = new Label("Update");
 		Label backPrompt = new Label("Back to Menu");
 		Label exitPrompt = new Label("Click this Button to exit");
 			
-		TextField fnameText = new TextField();
-		TextField mnameText = new TextField();
-		TextField lnameText = new TextField();
+		TextField fnameText  = new TextField();
+		TextField mnameText  = new TextField();
+		TextField lnameText  = new TextField();
 		TextField pPhoneText = new TextField();
 		TextField pEmailText = new TextField();
 		TextField Addr00Text = new TextField();
@@ -290,10 +298,13 @@ public class FindCustomer
 		TextField Addr02Text = new TextField();
 		TextField Addr03Text = new TextField();
 		TextField Addr04Text = new TextField();
+		TextField dobText    = new TextField();
+		TextField baldueText = new TextField();
+		TextField custidText = new TextField();
 		
-		TextField newFnameText = new TextField();
-		TextField newMnameText = new TextField();
-		TextField newLnameText = new TextField();
+		TextField newFnameText  = new TextField();
+		TextField newMnameText  = new TextField();
+		TextField newLnameText  = new TextField();
 		TextField newpPhoneText = new TextField();
 		TextField newpEmailText = new TextField();
 		TextField newAddr00Text = new TextField();
@@ -301,6 +312,8 @@ public class FindCustomer
 		TextField newAddr02Text = new TextField();
 		TextField newAddr03Text = new TextField();
 		TextField newAddr04Text = new TextField();
+		TextField newDobText    = new TextField();
+		TextField newBalDueText = new TextField();
 
 		fnameText.setText(data.getFname());
 		mnameText.setText(data.getMinit());
@@ -313,6 +326,9 @@ public class FindCustomer
 		Addr02Text.setText(address[2]);
 		Addr03Text.setText(address[3]);
 		Addr04Text.setText(address[4]);
+		dobText.setText(data.getDob());
+		baldueText.setText( String.format("%.02f",data.getBalanceDue()) );
+		custidText.setText( String.format("%d", custid) );
 
 		Button updateButton = new Button("Update");
 		Button backButton = new Button("Back to Main");
@@ -333,6 +349,9 @@ public class FindCustomer
 		addr02Prompt.setFont(Font.font("Ariel",18));
 		addr03Prompt.setFont(Font.font("Ariel",18));
 		addr04Prompt.setFont(Font.font("Ariel",18));
+		dobPrompt.setFont(Font.font("Ariel",18));
+		balduePrompt.setFont(Font.font("Ariel",18));
+		custidPrompt.setFont(Font.font("Ariel",18));
 		
 		fnameText.setFont(Font.font("Ariel",18));
 		mnameText.setFont(Font.font("Ariel",18));
@@ -344,6 +363,8 @@ public class FindCustomer
 		Addr02Text.setFont(Font.font("Ariel",18));
 		Addr03Text.setFont(Font.font("Ariel",18));
 		Addr04Text.setFont(Font.font("Ariel",18));
+		dobText.setFont(Font.font("Ariel",18));
+		baldueText.setFont(Font.font("Ariel",18));
 		
 		newFnameText.setFont(Font.font("Ariel",18));
 		newMnameText.setFont(Font.font("Ariel",18));
@@ -355,7 +376,9 @@ public class FindCustomer
 		newAddr02Text.setFont(Font.font("Ariel",18));
 		newAddr03Text.setFont(Font.font("Ariel",18));
 		newAddr04Text.setFont(Font.font("Ariel",18));
-				
+		newDobText.setFont(Font.font("Ariel",18));
+		newBalDueText.setFont(Font.font("Ariel",18));
+	
 		updatePrompt.setFont(Font.font("Ariel",18));
 		backPrompt.setFont(Font.font("Ariel",18));
 		exitPrompt.setFont(Font.font("Ariel",18));				
@@ -368,27 +391,32 @@ public class FindCustomer
 		HBox currentHbox = new HBox(currentInfo);
 		HBox updateHbox = new HBox(updateInfo);
 		
-		HBox fnameHbox = new HBox(10, fnamePrompt, fnameText);
-		HBox mnameHbox = new HBox(10, mnamePrompt, mnameText);
-		HBox lnameHbox = new HBox(10, lnamePrompt, lnameText);
-		HBox phoneHbox = new HBox(10, phonePrompt, pPhoneText);
-		HBox emailHbox = new HBox(10, emailPrompt, pEmailText);
+		HBox fnameHbox  = new HBox(10, fnamePrompt, fnameText);
+		HBox mnameHbox  = new HBox(10, mnamePrompt, mnameText);
+		HBox lnameHbox  = new HBox(10, lnamePrompt, lnameText);
+		HBox phoneHbox  = new HBox(10, phonePrompt, pPhoneText);
+		HBox emailHbox  = new HBox(10, emailPrompt, pEmailText);
 		HBox addr00Hbox = new HBox(10, addr00Prompt, Addr00Text);
 		HBox addr01Hbox = new HBox(10, addr01Prompt, Addr01Text);
 		HBox addr02Hbox = new HBox(10, addr02Prompt, Addr02Text);
 		HBox addr03Hbox = new HBox(10, addr03Prompt, Addr03Text);
 		HBox addr04Hbox = new HBox(10, addr04Prompt, Addr04Text);
+		HBox dobHbox    = new HBox(10, dobPrompt, dobText);
+		HBox baldueHbox = new HBox(10, balduePrompt, baldueText);
+		HBox custidHbox = new HBox(10, custidPrompt, custidText);
 		
-		HBox newFnameHbox = new HBox(10, newFnameText);
-		HBox newMnameHbox = new HBox(10, newMnameText);
-		HBox newLnameHbox = new HBox(10, newLnameText);
-		HBox newPhoneHbox = new HBox(10, newpPhoneText);
-		HBox newEmailHbox = new HBox(10, newpEmailText);
+		HBox newFnameHbox  = new HBox(10, newFnameText);
+		HBox newMnameHbox  = new HBox(10, newMnameText);
+		HBox newLnameHbox  = new HBox(10, newLnameText);
+		HBox newPhoneHbox  = new HBox(10, newpPhoneText);
+		HBox newEmailHbox  = new HBox(10, newpEmailText);
 		HBox newAddr00Hbox = new HBox(10, newAddr00Text);
 		HBox newAddr01Hbox = new HBox(10, newAddr01Text);
 		HBox newAddr02Hbox = new HBox(10, newAddr02Text);
 		HBox newAddr03Hbox = new HBox(10, newAddr03Text);
 		HBox newAddr04Hbox = new HBox(10, newAddr04Text);
+		HBox newDobHbox    = new HBox(10, newDobText);
+		HBox newBalDueHbox = new HBox(10, newBalDueText);
 				
 		HBox updateButtonHbox = new HBox(10, updateButton);
 		HBox backButtonHbox = new HBox(10, backButton);
@@ -404,6 +432,9 @@ public class FindCustomer
 		addr02Hbox.setAlignment(Pos.CENTER_LEFT);
 		addr03Hbox.setAlignment(Pos.CENTER_LEFT);
 		addr04Hbox.setAlignment(Pos.CENTER_LEFT);
+		dobHbox.setAlignment(Pos.CENTER_LEFT);
+		baldueHbox.setAlignment(Pos.CENTER_LEFT);
+		custidHbox.setAlignment(Pos.CENTER_LEFT);
 						
 		updateButtonHbox.setAlignment(Pos.CENTER_LEFT);
 		backButtonHbox.setAlignment(Pos.CENTER_LEFT);
@@ -419,40 +450,56 @@ public class FindCustomer
 		newAddr02Hbox.setAlignment(Pos.CENTER_LEFT);
 		newAddr03Hbox.setAlignment(Pos.CENTER_LEFT);
 		newAddr04Hbox.setAlignment(Pos.CENTER_LEFT);
-
-		
+		newDobHbox.setAlignment(Pos.CENTER_LEFT);
+		newBalDueHbox.setAlignment(Pos.CENTER_LEFT);
+						
 		GridPane grid = new GridPane();
 		grid.add(bannerHbox, 0, 0);
 		grid.add(currentHbox, 0, 1);
 		grid.add(updateHbox, 1, 1);
 		
 		grid.add(fnameHbox, 0, 2);
-		grid.add(mnameHbox, 0, 3);
-		grid.add(lnameHbox, 0, 4);
-		grid.add(phoneHbox, 0, 5);
-		grid.add(emailHbox, 0, 6);
-		grid.add(addr00Hbox, 0, 7);
-		grid.add(addr01Hbox, 0, 8);
-		grid.add(addr02Hbox, 0, 9);
-		grid.add(addr03Hbox, 0, 10);
-		grid.add(addr04Hbox, 0, 11);
-		
 		grid.add(newFnameHbox, 1, 2);
+		
+		grid.add(mnameHbox, 0, 3);
 		grid.add(newMnameHbox, 1, 3);
+		
+		grid.add(lnameHbox, 0, 4);
 		grid.add(newLnameHbox, 1, 4);
+		
+		grid.add(phoneHbox, 0, 5);
 		grid.add(newPhoneHbox, 1, 5);
+		
+		grid.add(emailHbox, 0, 6);
 		grid.add(newEmailHbox, 1, 6);
+		
+		grid.add(addr00Hbox, 0, 7);
 		grid.add(newAddr00Hbox, 1, 7);
+		
+		grid.add(addr01Hbox, 0, 8);
 		grid.add(newAddr01Hbox, 1, 8);
+		
+		grid.add(addr02Hbox, 0, 9);
 		grid.add(newAddr02Hbox, 1, 9);
+		
+		grid.add(addr03Hbox, 0, 10);
 		grid.add(newAddr03Hbox, 1, 10);
+		
+		grid.add(addr04Hbox, 0, 11);
 		grid.add(newAddr04Hbox, 1, 11);
+		
+		grid.add(dobHbox, 0, 12);
+		grid.add(newDobHbox, 1, 12);
+		
+		grid.add(baldueHbox, 0, 13);
+		grid.add(newBalDueHbox, 1, 13);
+		
+		grid.add(custidHbox, 0, 14);
 					
-		grid.add(updateButtonHbox, 0, 12);
-		grid.add(backButtonHbox, 0, 13);
-		grid.add(exitButtonHbox, 0, 14);
+		grid.add(updateButtonHbox, 0, 15);
+		grid.add(backButtonHbox, 0, 16);
+		grid.add(exitButtonHbox, 0, 17);
 	
-					
 		// Button Handling
 		updateButton.setOnAction(event ->
 		{              			
@@ -487,9 +534,16 @@ public class FindCustomer
 				newaddress[3] = newAddr03Text.getText();
 			if ( (newAddr04Text.getText() != null) &&
 				(newAddr04Text.getText().length() != 0) )
-				newaddress[4] = newAddr04Text.getText();
-				
+				newaddress[4] = newAddr04Text.getText();	
 			data.setAddr(newaddress, 0);
+			
+			if ( (newDobText.getText() != null) &&
+				(newDobText.getText().length() != 0) )
+				data.setDob(newDobText.getText());
+			if ( (newBalDueText.getText() != null) &&
+				(newBalDueText.getText().length() != 0) )
+				// data.setBalanceDue(newBalDueText.getText());
+				data.setBalanceDue(Double.parseDouble(newBalDueText.getText()));
 						
 			try
         	{               			
@@ -570,14 +624,28 @@ public class FindCustomer
 		if ( !data.getLname().equals(originaldata.getLname()) )
 		{
 			TransactionApp.CustomerDBaccess.updateCustomerLname(data);
-		} 
-		if ( !data.getPrimaryPhone().equals(originaldata.getPrimaryPhone()) )
+		}
+		if ( data.getPrimaryPhone() != null && originaldata.getPrimaryPhone() != null 
+			&& !data.getPrimaryPhone().equals(originaldata.getPrimaryPhone()) )
 		{
 			TransactionApp.CustomerDBaccess.updateCustomerPrimaryPhone(data);
-		} 
-		if ( !data.getPrimaryEmail().equals(originaldata.getPrimaryEmail()) )
+		}
+		if ( data.getPrimaryEmail() != null && originaldata.getPrimaryEmail() != null 
+			&& !data.getPrimaryEmail().equals(originaldata.getPrimaryEmail()) )		 
 		{
 			TransactionApp.CustomerDBaccess.updateCustomerPrimaryEmail(data);
+		} 
+		if ( data.getDob() != null)
+		{
+			if ( originaldata.getDob() == null
+				|| !data.getDob().equals(originaldata.getDob()) )
+			{
+				TransactionApp.CustomerDBaccess.updateCustomerDob(data);
+			} 
+		}
+		if ( data.getBalanceDue() != originaldata.getBalanceDue() )
+		{
+			TransactionApp.CustomerDBaccess.updateCustomerBalanceDue(data);
 		} 
 		
 		String [] oldaddress;
