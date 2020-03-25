@@ -468,7 +468,7 @@ public class CustDBaccess extends RosiesSalon
 		return updateCustomer(SubTypeLname,data);	
 	}
 
-	public boolean updateCustomerPrimaryPhone(CustData data, String oldprimary) 
+	public boolean updateCustomerPrimaryPhone(CustData data, CustData olddata) 
 		throws SQLException, FileNotFoundException 
 	{ 
 		//CustInfoDB TransactionApp.custinfoDB = new CustInfoDB();
@@ -519,18 +519,19 @@ public class CustDBaccess extends RosiesSalon
 			(cinfoid, SubTypeSecondary);
 		}	
 		
-		if (oldprimary != null)
+		if (olddata.getPrimaryPhone() != null)
 		{
-			CustData olddata = data.Replicate();
-			olddata.setPhone(oldprimary,0);
-			TransactionApp.custinfoDB.addCustInfoRecord(DtypePhone, SubTypePrimary, olddata);
+			CustData tempdata = olddata.Replicate();
+			tempdata.setPhone(olddata.getPrimaryPhone(),0); // note Primary -> Phone @ 0
+			TransactionApp.custinfoDB.addCustInfoRecord
+				(DtypePhone, SubTypePrimary, tempdata);
 		}			
 						
 		System.out.println("updateCustomerPrimaryPhone - exit");
 		return updateCustomer(SubTypePrimaryPhone,data);	
 	}
 	
-	public boolean updateCustomerPrimaryEmail(CustData data, String oldprimary) 
+	public boolean updateCustomerPrimaryEmail(CustData data, CustData olddata) 
 		throws SQLException, FileNotFoundException  
 	{ 
 		//CustInfoDB custinfo = new CustInfoDB();
@@ -568,12 +569,13 @@ public class CustDBaccess extends RosiesSalon
 			TransactionApp.custinfoDB.changeSubTypeCustInfoRecord(cinfoid, SubTypeSecondary);
 		}	
 		
-		if (oldprimary != null)
+		if (olddata.getPrimaryEmail() != null)
 		{
-			CustData olddata = data.Replicate();
-			olddata.setEmail(oldprimary,0);
-			TransactionApp.custinfoDB.addCustInfoRecord(DtypeEmail, SubTypePrimary, olddata);
-		}
+			CustData tempdata = olddata.Replicate();
+			tempdata.setEmail(olddata.getPrimaryEmail(),0); // note Primary -> Email @ 0
+			TransactionApp.custinfoDB.addCustInfoRecord
+				(DtypeEmail, SubTypePrimary, tempdata);
+		}			
 		
 		return updateCustomer(SubTypePrimaryEmail,data);			
 	}

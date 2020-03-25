@@ -614,67 +614,31 @@ public class FindCustomer
 		
 		System.out.println("updateCustomer() - enter");
 
-		if ( !data.getFname().equals(originaldata.getFname()) )
-		{
+		if ( !data.equalsFname(originaldata))
 			TransactionApp.CustomerDBaccess.updateCustomerFname(data);
-		} 
-		if ( !data.getMinit().equals(originaldata.getMinit()) )
-		{
+			
+		if ( !data.equalsMinit(originaldata)) 
 			TransactionApp.CustomerDBaccess.updateCustomerMinit(data);
-		} 
-		if ( !data.getLname().equals(originaldata.getLname()) )
-		{
-			TransactionApp.CustomerDBaccess.updateCustomerLname(data);
-		}
-		if ( data.getPrimaryPhone() != null && originaldata.getPrimaryPhone() != null 
-			&& !data.getPrimaryPhone().equals(originaldata.getPrimaryPhone()) )
-		{
-			TransactionApp.CustomerDBaccess.updateCustomerPrimaryPhone
-				(data,originaldata.getPrimaryPhone());
-		}
-		if ( data.getPrimaryEmail() != null && originaldata.getPrimaryEmail() != null 
-			&& !data.getPrimaryEmail().equals(originaldata.getPrimaryEmail()) )		 
-		{
-			TransactionApp.CustomerDBaccess.updateCustomerPrimaryEmail
-				(data,originaldata.getPrimaryEmail());
-		} 
-		if ( data.getDob() != null)
-		{
-			if ( originaldata.getDob() == null
-				|| !data.getDob().equals(originaldata.getDob()) )
-			{
-				TransactionApp.CustomerDBaccess.updateCustomerDob(data);
-			} 
-		}
-		if ( data.getBalanceDue() != originaldata.getBalanceDue() )
-		{
-			TransactionApp.CustomerDBaccess.updateCustomerBalanceDue(data);
-		} 
 		
-		String [] oldaddress;
-		String [] newaddress;
-		oldaddress = originaldata.getAddr(0);
-		newaddress = data.getAddr(0);
-		bValue = false;
-		for (i = 0; i < 5; i++)
-		{
-			if ( newaddress[i] != null )
-			{
-				if ( oldaddress[i] != null)
-				{
-					if ( !newaddress[i].equals(oldaddress[i]) )
-						bValue = true;
-				}
-				else
-				{
-					bValue = true;
-				}
-			}				
-		}
-		if ( bValue )
-		{
+		if ( !data.equalsLname(originaldata))
+			TransactionApp.CustomerDBaccess.updateCustomerLname(data);
+		
+		if ( !data.equalsPrimaryPhone(originaldata))
+			TransactionApp.CustomerDBaccess.updateCustomerPrimaryPhone
+				(data,originaldata);
+		
+		if ( !data.equalsPrimaryEmail(originaldata))
+			TransactionApp.CustomerDBaccess.updateCustomerPrimaryEmail
+				(data,originaldata);
+		 
+		if ( !data.equalsDob(originaldata))
+			TransactionApp.CustomerDBaccess.updateCustomerDob(data);
+			
+		if ( !data.equalsBalanceDue(originaldata))
+			TransactionApp.CustomerDBaccess.updateCustomerBalanceDue(data);
+		
+		if ( !data.equalsAddr(originaldata,0))
 			TransactionApp.CustomerDBaccess.updateCustomerAddress(data,0);
-		} 
 		
 		System.out.println("displayCustomer() -  call displayCustomer");
 		displayCustomer(myStage);		
