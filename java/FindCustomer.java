@@ -40,6 +40,7 @@ public class FindCustomer
 	protected Stage myStage;
 	protected CustData data = new CustData();
 	protected CustData originaldata = new CustData();
+	protected CustInfoDB custinfo = new CustInfoDB();
 	protected Label banner = new Label("Find/Update Customer");
 
 

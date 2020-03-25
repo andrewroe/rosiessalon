@@ -9,6 +9,7 @@ import java.io.*;
 
 public class CustInfoDB extends RosiesSalon
 { 
+
 	 
 	/** 	
 		addCustInfoRecorde method
@@ -28,29 +29,10 @@ public class CustInfoDB extends RosiesSalon
 		ResultSet result;
 		String sqlcmd;
 		boolean returnValue = false;
-		CustDBaccess CustInfoDBaccess = new CustDBaccess();
+		//CustDBaccess CustInfoDBaccess = new CustDBaccess();
 		
 		System.out.println("addCustInfoRecord() - entry");
 		
-        try
-		{
-			if (!CustInfoDBaccess.ConnectToDB(TransactionApp.CredentialsFile))
-   			{
-   				System.out.println("Can not connect to DB for CustInfo DB, Bye.");	
-   				return false;
-   			} 
-		}
-        catch (FileNotFoundException ex)
-        {
-            System.out.println(ex.getMessage());
-            System.out.println("Got a File Not Found exception!");
-        }	
-        catch (SQLException ex)
-        {
-            System.out.println(ex.getMessage());
-            System.out.println("Got a SQL exception!");
-        }		
-
 		sqlcmd = "INSERT INTO CustInfo (CustID, UserID";
 		sqlcmd += ", UpdateTime";
 		sqlcmd += ", InfoType";
@@ -89,7 +71,6 @@ public class CustInfoDB extends RosiesSalon
 						sqlcmd += ", '" + data.getPhone(4) + "'";
 						break;
 					default:
-						CustInfoDBaccess.DisconnectFromDB();
 						return false;	
 				}
 				break;
@@ -115,8 +96,7 @@ public class CustInfoDB extends RosiesSalon
 					case SubTypeFifth:
 						sqlcmd += ", '" + data.getEmail(4) + "'";
 						break;
-					default:
-						CustInfoDBaccess.DisconnectFromDB();	
+					default:	
 						return false;	
 				}
 				break;									
@@ -155,23 +135,19 @@ public class CustInfoDB extends RosiesSalon
 						sqlcmd += ", " + data.getBalanceDue();
 						sqlcmd += ", ''";
 						break;												
-					default:
-						CustInfoDBaccess.DisconnectFromDB();						
+					default:						
 						return false;
 				}
 				break;
 																																				
-			default:
-				CustInfoDBaccess.DisconnectFromDB();		
+			default:		
 				return false;
 		}
 					
 		sqlcmd += ")";
 						
-		rows = CustInfoDBaccess.doRowsCmd(sqlcmd);		
+		rows = doRowsCmd(sqlcmd);		
 		//System.out.println("number of rows inserted = " + rows);
-		
-		CustInfoDBaccess.DisconnectFromDB();
 				
 		if (rows != 1)
 		{
@@ -206,28 +182,10 @@ public class CustInfoDB extends RosiesSalon
 		ResultSet result;
 		String sqlcmd;
 		boolean returnValue = false;
-		CustDBaccess CustInfoDBaccess = new CustDBaccess();
+		//CustDBaccess CustInfoDBaccess = new CustDBaccess();
 		
 		System.out.println("addCustInfoAddress() - entry");
-        try
-		{
-			if (!CustInfoDBaccess.ConnectToDB(TransactionApp.CredentialsFile))
-   			{
-   				System.out.println("Can not connect to DB for CustInfo DB, Bye.");	
-   				return false;
-   			} 
-		}
-        catch (FileNotFoundException ex)
-        {
-            System.out.println(ex.getMessage());
-            System.out.println("Got a File Not Found exception!");
-        }	
-        catch (SQLException ex)
-        {
-            System.out.println(ex.getMessage());
-            System.out.println("Got a SQL exception!");
-        }		
-		
+
 		System.out.println("addCustInfoAddress input address is: " +
 			address[0] + "-" +address[1] + "-" +
 			address[2] + "-" + address[3] + "-" + address[4]);
@@ -259,20 +217,18 @@ public class CustInfoDB extends RosiesSalon
 			sqlcmd += ", '" + address[i] + "'";		
 			sqlcmd += ")";
 					
-			rows = CustInfoDBaccess.doRowsCmd(sqlcmd);
+			rows = doRowsCmd(sqlcmd);
 			
 			System.out.println("addCustInfoAddress after insert loop index = " + i);		
 		
 			if (rows != 1)
 			{
-				CustInfoDBaccess.DisconnectFromDB();
 				return false;		
 			}
 			
 			System.out.println("addCustInfoAddress after rows check loop index = " + i);
 		} // End of for loop
-		
-		CustInfoDBaccess.DisconnectFromDB();		
+				
 		return true;
 				
 	} // End of addCustInfoAddress()
@@ -294,33 +250,14 @@ public class CustInfoDB extends RosiesSalon
 		String updatetime = readfullDateTime();
 		String sqlcmd;
 		
-		CustDBaccess CustInfoDBaccess = new CustDBaccess();
-		
-        try
-		{
-			if (!CustInfoDBaccess.ConnectToDB(TransactionApp.CredentialsFile))
-   			{
-   				System.out.println("Can not connect to DB for CustInfo DB, Bye.");	
-   				return false;
-   			} 
-		}
-        catch (FileNotFoundException ex)
-        {
-            System.out.println(ex.getMessage());
-            System.out.println("Got a File Not Found exception!");
-        }	
-        catch (SQLException ex)
-        {
-            System.out.println(ex.getMessage());
-            System.out.println("Got a SQL exception!");
-        }		
-							
+		//CustDBaccess CustInfoDBaccess = new CustDBaccess();
+									
 		sqlcmd = "UPDATE CustInfo SET InfoSubType = " + subtype;
+		sqlcmd += ", UpdateTime = '" + updatetime + "'";
 		sqlcmd += " WHERE CinfoID = " + cinfoid; 
 				
-		rows = CustInfoDBaccess.doRowsCmd(sqlcmd);
-		
-		CustInfoDBaccess.DisconnectFromDB();	
+		rows = doRowsCmd(sqlcmd);
+			
 		if (rows > 0)	
 			return true;
 		else
@@ -347,35 +284,16 @@ public class CustInfoDB extends RosiesSalon
 		String updatetime = readfullDateTime();
 		String sqlcmd;
 		
-		CustDBaccess CustInfoDBaccess = new CustDBaccess();
+		//CustDBaccess CustInfoDBaccess = new CustDBaccess();
 		
-        try
-		{
-			if (!CustInfoDBaccess.ConnectToDB(TransactionApp.CredentialsFile))
-   			{
-   				System.out.println("Can not connect to DB for CustInfo DB, Bye.");	
-   				return false;
-   			} 
-		}
-        catch (FileNotFoundException ex)
-        {
-            System.out.println(ex.getMessage());
-            System.out.println("Got a File Not Found exception!");
-        }	
-        catch (SQLException ex)
-        {
-            System.out.println(ex.getMessage());
-            System.out.println("Got a SQL exception!");
-        }		
-							
+								
 		sqlcmd = "UPDATE CustInfo SET Validity = " + 0;
 		// sqlcmd += ", UpdateTime = '" + updatetime + "'";
 		// sqlcmd += ", UserID = " + userid;
 		sqlcmd += " WHERE CinfoID = " + cinfoid; 
 				
-		rows = CustInfoDBaccess.doRowsCmd(sqlcmd);
-		
-		CustInfoDBaccess.DisconnectFromDB();	
+		rows = doRowsCmd(sqlcmd);
+			
 		if (rows > 0)	
 			return true;
 		else
@@ -404,27 +322,9 @@ public class CustInfoDB extends RosiesSalon
 		int cinfoid = 0;
 		ResultSet result;
 		
-		CustDBaccess CustInfoDBaccess = new CustDBaccess();
+		//CustDBaccess CustInfoDBaccess = new CustDBaccess();
 	
-        try
-		{
-			if (!CustInfoDBaccess.ConnectToDB(TransactionApp.CredentialsFile))
-   			{
-   				System.out.println("Can not connect to DB for CustInfo DB, Bye.");	
-   				return 0;
-   			} 
-		}
-        catch (FileNotFoundException ex)
-        {
-            System.out.println(ex.getMessage());
-            System.out.println("Got a File Not Found exception!");
-        }	
-        catch (SQLException ex)
-        {
-            System.out.println(ex.getMessage());
-            System.out.println("Got a SQL exception!");
-        }			
-								
+											
 		String sqlcmd = "SELECT CinfoID, CustID, InfoType, InfoSubType, Validity ";
 		sqlcmd += "FROM CustInfo ";
 		sqlcmd += "WHERE CustID = " + custid;
@@ -432,12 +332,11 @@ public class CustInfoDB extends RosiesSalon
 		sqlcmd += " AND InfoSubType = " + subtype;
 		sqlcmd += " AND Validity <> 0 ";
 			
-		result = CustInfoDBaccess.doCmd(sqlcmd); 
+		result = doCmd(sqlcmd); 
 		if (result != null)
 		{
 			if (!result.next())
 			{
-				CustInfoDBaccess.DisconnectFromDB();
 				return 0; // not found
 			}
 					
@@ -448,7 +347,6 @@ public class CustInfoDB extends RosiesSalon
 		else
 		{ 
 			System.out.println("Can not find CustInfo record");
-			CustInfoDBaccess.DisconnectFromDB();
 			return 0;
 		} 	
 		
@@ -474,28 +372,8 @@ public class CustInfoDB extends RosiesSalon
 		String[] address = data.getAddr(subtype - 1);
 		ResultSet result;
 		
-		CustDBaccess CustInfoDBaccess = new CustDBaccess();
+		//CustDBaccess CustInfoDBaccess = new CustDBaccess();
 		
-        try
-		{
-			if (!CustInfoDBaccess.ConnectToDB(TransactionApp.CredentialsFile))
-   			{
-   				System.out.println("Can not connect to DB for CustInfo DB, Bye.");	
-   				return cinfoIDs;
-   			} 
-		}
-        catch (FileNotFoundException ex)
-        {
-            System.out.println(ex.getMessage());
-            System.out.println("Got a File Not Found exception!");
-        }	
-        catch (SQLException ex)
-        {
-            System.out.println(ex.getMessage());
-            System.out.println("Got a SQL exception!");
-        }		
-
-
 		for (int i = 0; i < 5; i++)
 		{
 			if (address[i] == null)
@@ -511,7 +389,7 @@ public class CustInfoDB extends RosiesSalon
 			sqlcmd += " AND InfoSubType = " + subtype;
 			sqlcmd += " AND Validity <> 0 ";
 			
-			result = CustInfoDBaccess.doCmd(sqlcmd); 
+			result = doCmd(sqlcmd); 
 			if (result != null)
 			{
 				if (!result.next())
@@ -532,8 +410,6 @@ public class CustInfoDB extends RosiesSalon
 			} 
 		
 		}  // End of for loop	
-		
-		CustInfoDBaccess.DisconnectFromDB();
 		
 		return cinfoIDs;		
 		
@@ -662,114 +538,6 @@ public class CustInfoDB extends RosiesSalon
 		return rvalue;		
 	} // End of deactivateCustInfoPhone()
 
-
-	
-	
-// Don't seem to be using the rest of these 
-   
-	
-	public boolean updateCustomerAddress(CustData data,int index) 
-		throws SQLException, FileNotFoundException 
-	{ 
-		boolean rvalue = true;
-		int which;
-		switch (index)
-		{
-			case 0:
-				which = SubTypePrimary;
-				break;
-			case 1:
-				which = SubTypeSecondary;
-				break;				
-			case 2:
-				which = SubTypeTertiary;
-				break;
-			case 3:
-				which = SubTypeFourth;
-				break;
-			case 4:
-				which = SubTypeFifth;
-				break;
-			default:
-				return false;
-		}
-		int key = findCustInfoRecord(DtypeAddress, which, data);	
-		if (key > 0)	
-			rvalue = deactivateCustInfoRecord(key);
-		if (data.getAddr(index) != null)	
-			return addCustInfoRecord(DtypeAddress, which, data);
-		
-		return rvalue;		
-	}
-	
-	public boolean updateCustInfoPhone(CustData data, int index) 
-		throws SQLException, FileNotFoundException 
-	{ 
-		boolean rvalue = true;		
-		int which;
-		switch (index)
-		{
-			case 0:
-				which = SubTypePrimary;
-				break;
-			case 1:
-				which = SubTypeSecondary;
-				break;				
-			case 2:
-				which = SubTypeTertiary;
-				break;
-			case 3:
-				which = SubTypeFourth;
-				break;
-			case 4:
-				which = SubTypeFifth;
-				break;
-			default:
-				return false;
-		}
-		int key = findCustInfoRecord(DtypePhone, which, data);	
-		if (key > 0)	
-			rvalue = deactivateCustInfoRecord(key);
-		if (data.getPhone(index) != null)	
-			return addCustInfoRecord(DtypePhone, which, data);
-			
-		return rvalue;							
-	}
-	
-	public boolean updateCustInfoEmail(CustData data,int index) 
-		throws SQLException, FileNotFoundException 
-	{ 
-		boolean rvalue = true;		
-		int which;
-		
-		switch (index)
-		{
-			case 0:
-				which = SubTypePrimary;
-				break;
-			case 1:
-				which = SubTypeSecondary;
-				break;				
-			case 2:
-				which = SubTypeTertiary;
-				break;
-			case 3:
-				which = SubTypeFourth;
-				break;
-			case 4:
-				which = SubTypeFifth;
-				break;
-			default:
-				return false;
-		}
-		int key = findCustInfoRecord(DtypeEmail, which, data);	
-		if (key > 0)	
-			rvalue = deactivateCustInfoRecord(key);	
-		if (data.getEmail(index) != null)	
-			return addCustInfoRecord(DtypeEmail, which, data);
-			
-		return rvalue;					
-	}
 						
 }  // End of class
 

@@ -49,6 +49,7 @@ public class TransactionApp extends Application
 	protected static String CredentialsFile = null;
 	protected static EmpDBaccess EmployeeDBaccess = new EmpDBaccess();
 	protected static CustDBaccess CustomerDBaccess = new CustDBaccess();
+	protected static CustInfoDB custinfoDB = new CustInfoDB();
 	protected static Button dbconnectButton = new Button("DB connect");
 	protected static Button dbdisconnectButton = new Button("DB disconnect");
 	protected static Button signinButton = new Button("Submit");
@@ -140,7 +141,7 @@ public class TransactionApp extends Application
 
 			try
 			{	
-   				connectToDB(); 
+   				connectToDB();	// local method
    				CredentialsFile = TransactionApp.dbcredentialsfile;				
 			}
         	catch (SQLException ex)
@@ -500,6 +501,12 @@ public class TransactionApp extends Application
 				dbconnected = false; 
    			}  	
  			if (!CustomerDBaccess.ConnectToDB(dbcredentialsfile))
+   			{
+   				System.out.println("Can not connect to Customer I/F to DB.");
+   				dbcredentialsfile = "NotConnected";
+				dbconnected = false; 
+   			} 
+ 			if (!custinfoDB.ConnectToDB(dbcredentialsfile))
    			{
    				System.out.println("Can not connect to Customer I/F to DB.");
    				dbcredentialsfile = "NotConnected";

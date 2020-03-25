@@ -11,77 +11,6 @@ public class CustDBaccess extends RosiesSalon
 { 
 	
 	
-	
-/** 	
-	searchCustomerByFullName method
-	Searches for any Customr infomation based on information available in 
-	the CustData object.
-	If a match is found, CustID is updated in the CustData and 1 is returned.
-	If multiple matches found, CustID is updated with first match but -1 is returned.
-	that is VERY unusual?!
-	Else, when no match found, 0 is returned and CustID is left untouched.
-	
-	@param data CustData object 
-	@throws SQLException if there is an error with some SQL command
-	@return Returns an integer 1, 0, or -1 and may update CustID in CustData object
-*/
-	public int searchCustomerByFullName(CustData data) throws SQLException 
-	{
-		String fname = data.getFname();
-		String lname = data.getLname();
-		String minit = data.getMinit();
-		String sqlcmd;
-		ResultSet result;
-		int rvalue = 0; 
-
-		System.out.println("searchCustomerByFullName() - values = " +
-			fname + " " + minit + " " + lname);
-
-		if ((lname == null) || (fname == null) || (minit == null))
-		{
-			throw new SQLException("Attempting full name search of DB and " + 
-				"not all of first, last and middle initial names supplied");
-		}
-		
-		sqlcmd = "SELECT CustID, UserID, CreateTime, UpdateTime, ";
-		sqlcmd += "phone, email ";
-		sqlcmd += "FROM Customer WHERE Lname = '" + lname + "' AND Fname = '";
-		sqlcmd += fname + "' AND Minit = '" + minit + "'";
-									
-		result = doCmd(sqlcmd);
-			
-		if (result == null) 
-		{ 
-			System.out.println("searchCustomer() - can not find customer in DB");
-			return 0;
-		} 	
-					
-		if (result.next())
-		{
-			data.setCustID(result.getInt("CustID"));
-			data.setCreateTime(result.getString("CreateTime"));
-			data.setUpdateTime(result.getString("UpdateTime"));
-			data.setPrimaryPhone(result.getString("phone"));
-			data.setPrimaryEmail(result.getString("email"));
-			
-						
-			if (result.next())	// at least 2 matches! THis should be very rare.
-				rvalue = -1;
-			else					// just 1 match :-)
-				return 1;
-		}
-				
-		else
-		{
-			System.out.println("Failed to find any match when using " + 
-				"user's Fname, Lname, and Minit.");
-			return 0;
-		} 
-			 		
-		return rvalue;
-	}  // End of searchCustomerByFullName
-	
-
 /** 	
 	addNewCustomer method
 	Expects a completed CustData class as input
@@ -319,6 +248,76 @@ public class CustDBaccess extends RosiesSalon
 		
 	} // End of fetchAllCustomerInfo()
 
+
+
+/** 	
+	searchCustomerByFullName method
+	Searches for any Customr infomation based on information available in 
+	the CustData object.
+	If a match is found, CustID is updated in the CustData and 1 is returned.
+	If multiple matches found, CustID is updated with first match but -1 is returned.
+	that is VERY unusual?!
+	Else, when no match found, 0 is returned and CustID is left untouched.
+	
+	@param data CustData object 
+	@throws SQLException if there is an error with some SQL command
+	@return Returns an integer 1, 0, or -1 and may update CustID in CustData object
+*/
+	public int searchCustomerByFullName(CustData data) throws SQLException 
+	{
+		String fname = data.getFname();
+		String lname = data.getLname();
+		String minit = data.getMinit();
+		String sqlcmd;
+		ResultSet result;
+		int rvalue = 0; 
+
+		System.out.println("searchCustomerByFullName() - values = " +
+			fname + " " + minit + " " + lname);
+
+		if ((lname == null) || (fname == null) || (minit == null))
+		{
+			throw new SQLException("Attempting full name search of DB and " + 
+				"not all of first, last and middle initial names supplied");
+		}
+		
+		sqlcmd = "SELECT CustID, UserID, CreateTime, UpdateTime, ";
+		sqlcmd += "phone, email ";
+		sqlcmd += "FROM Customer WHERE Lname = '" + lname + "' AND Fname = '";
+		sqlcmd += fname + "' AND Minit = '" + minit + "'";
+									
+		result = doCmd(sqlcmd);
+			
+		if (result == null) 
+		{ 
+			System.out.println("searchCustomer() - can not find customer in DB");
+			return 0;
+		} 	
+					
+		if (result.next())
+		{
+			data.setCustID(result.getInt("CustID"));
+			data.setCreateTime(result.getString("CreateTime"));
+			data.setUpdateTime(result.getString("UpdateTime"));
+			data.setPrimaryPhone(result.getString("phone"));
+			data.setPrimaryEmail(result.getString("email"));
+			
+						
+			if (result.next())	// at least 2 matches! THis should be very rare.
+				rvalue = -1;
+			else					// just 1 match :-)
+				return 1;
+		}
+				
+		else
+		{
+			System.out.println("Failed to find any match when using " + 
+				"user's Fname, Lname, and Minit.");
+			return 0;
+		} 
+			 		
+		return rvalue;
+	}  // End of searchCustomerByFullName
  
  
  
@@ -389,7 +388,7 @@ public class CustDBaccess extends RosiesSalon
 	{ 
 		int custid = data.getCustID();
 		int user = data.getUserID();
-		CustInfoDB custinfo = new CustInfoDB();
+		
 		int cinfoid;
 		int Nbr1Parm;
 		double Nbr2Parm;
@@ -472,94 +471,108 @@ public class CustDBaccess extends RosiesSalon
 	public boolean updateCustomerPrimaryPhone(CustData data, String oldprimary) 
 		throws SQLException, FileNotFoundException 
 	{ 
-		CustInfoDB custinfo = new CustInfoDB();
+		//CustInfoDB TransactionApp.custinfoDB = new CustInfoDB();
+		
+		System.out.println("updateCustomerPrimaryPhone - entry");
 		
 		int cinfoid = 0;
 		// slide these numbers
 		
-		cinfoid = custinfo.findCustInfoRecord(DtypePhone,SubTypeFifth,data);
+		cinfoid = 
+			TransactionApp.custinfoDB.findCustInfoRecord(DtypePhone,SubTypeFifth,data);
 		if (cinfoid > 0)
 		{
-			custinfo.deactivateCustInfoRecord(cinfoid);
+			TransactionApp.custinfoDB.deactivateCustInfoRecord(cinfoid);
 		}
 		
-		cinfoid = custinfo.findCustInfoRecord(DtypePhone,SubTypeFourth,data);
+		cinfoid = 
+			TransactionApp.custinfoDB.findCustInfoRecord(DtypePhone,SubTypeFourth,data);
 		if (cinfoid > 0)
 		{
-			custinfo.changeSubTypeCustInfoRecord(cinfoid, SubTypeFifth);
+			TransactionApp.custinfoDB.changeSubTypeCustInfoRecord(cinfoid, SubTypeFifth);
 		}
 		
-		cinfoid = custinfo.findCustInfoRecord(DtypePhone,SubTypeTertiary,data);
+		cinfoid = 
+			TransactionApp.custinfoDB.findCustInfoRecord
+			(DtypePhone,SubTypeTertiary,data);
 		if (cinfoid > 0)
 		{
-			custinfo.changeSubTypeCustInfoRecord(cinfoid, SubTypeFourth);
+			TransactionApp.custinfoDB.changeSubTypeCustInfoRecord
+				(cinfoid, SubTypeFourth);
 		}
 		
-		cinfoid = custinfo.findCustInfoRecord(DtypePhone,SubTypeSecondary,data);
+		cinfoid = 
+			TransactionApp.custinfoDB.findCustInfoRecord
+			(DtypePhone,SubTypeSecondary,data);
 		if (cinfoid > 0)
 		{
-			custinfo.changeSubTypeCustInfoRecord(cinfoid, SubTypeTertiary);
+			TransactionApp.custinfoDB.changeSubTypeCustInfoRecord
+			(cinfoid, SubTypeTertiary);
 		}		
 		
-		cinfoid = custinfo.findCustInfoRecord(DtypePhone,SubTypePrimary,data);
+		cinfoid = 
+			TransactionApp.custinfoDB.findCustInfoRecord
+			(DtypePhone,SubTypePrimary,data);
 		if (cinfoid > 0)
 		{
-			custinfo.changeSubTypeCustInfoRecord(cinfoid, SubTypeSecondary);
+			TransactionApp.custinfoDB.changeSubTypeCustInfoRecord
+			(cinfoid, SubTypeSecondary);
 		}	
 		
 		if (oldprimary != null)
 		{
 			CustData olddata = data.Replicate();
 			olddata.setPhone(oldprimary,0);
-			custinfo.addCustInfoRecord(DtypePhone, SubTypePrimary, olddata);
+			TransactionApp.custinfoDB.addCustInfoRecord(DtypePhone, SubTypePrimary, olddata);
 		}			
 						
+		System.out.println("updateCustomerPrimaryPhone - exit");
 		return updateCustomer(SubTypePrimaryPhone,data);	
 	}
 	
 	public boolean updateCustomerPrimaryEmail(CustData data, String oldprimary) 
 		throws SQLException, FileNotFoundException  
 	{ 
-		CustInfoDB custinfo = new CustInfoDB();
+		//CustInfoDB custinfo = new CustInfoDB();
 		
 		int cinfoid = 0;
 		// slide these email addrss
 		
-		cinfoid = custinfo.findCustInfoRecord(DtypeEmail,SubTypeFifth,data);
+		cinfoid = TransactionApp.custinfoDB.findCustInfoRecord(DtypeEmail,SubTypeFifth,data);
 		if (cinfoid > 0)
 		{
-			custinfo.deactivateCustInfoRecord(cinfoid);
+			TransactionApp.custinfoDB.deactivateCustInfoRecord(cinfoid);
 		}
 		
-		cinfoid = custinfo.findCustInfoRecord(DtypeEmail,SubTypeFourth,data);
+		cinfoid = TransactionApp.custinfoDB.findCustInfoRecord(DtypeEmail,SubTypeFourth,data);
 		if (cinfoid > 0)
 		{
-			custinfo.changeSubTypeCustInfoRecord(cinfoid, SubTypeFifth);
+			TransactionApp.custinfoDB.changeSubTypeCustInfoRecord(cinfoid, SubTypeFifth);
 		}
 		
-		cinfoid = custinfo.findCustInfoRecord(DtypeEmail,SubTypeTertiary,data);
+		cinfoid = TransactionApp.custinfoDB.findCustInfoRecord(DtypeEmail,SubTypeTertiary,data);
 		if (cinfoid > 0)
 		{
-			custinfo.changeSubTypeCustInfoRecord(cinfoid, SubTypeFourth);
+			TransactionApp.custinfoDB.changeSubTypeCustInfoRecord(cinfoid, SubTypeFourth);
 		}
 		
-		cinfoid = custinfo.findCustInfoRecord(DtypeEmail,SubTypeSecondary,data);
+		cinfoid = TransactionApp.custinfoDB.findCustInfoRecord(DtypeEmail,SubTypeSecondary,data);
 		if (cinfoid > 0)
 		{
-			custinfo.changeSubTypeCustInfoRecord(cinfoid, SubTypeTertiary);
+			TransactionApp.custinfoDB.changeSubTypeCustInfoRecord(cinfoid, SubTypeTertiary);
 		}		
 		
-		cinfoid = custinfo.findCustInfoRecord(DtypeEmail,SubTypePrimary,data);
+		cinfoid = TransactionApp.custinfoDB.findCustInfoRecord(DtypeEmail,SubTypePrimary,data);
 		if (cinfoid > 0)
 		{
-			custinfo.changeSubTypeCustInfoRecord(cinfoid, SubTypeSecondary);
+			TransactionApp.custinfoDB.changeSubTypeCustInfoRecord(cinfoid, SubTypeSecondary);
 		}	
 		
 		if (oldprimary != null)
 		{
 			CustData olddata = data.Replicate();
 			olddata.setEmail(oldprimary,0);
-			custinfo.addCustInfoRecord(DtypeEmail, SubTypePrimary, olddata);
+			TransactionApp.custinfoDB.addCustInfoRecord(DtypeEmail, SubTypePrimary, olddata);
 		}
 		
 		return updateCustomer(SubTypePrimaryEmail,data);			
@@ -568,31 +581,31 @@ public class CustDBaccess extends RosiesSalon
 	public boolean updateCustomerBalanceDue(CustData data) 
 		throws SQLException, FileNotFoundException 
 	{ 
-		CustInfoDB custinfo = new CustInfoDB();
-		int key = custinfo.findCustInfoRecord(DtypePersonal, SubTypeBalance, data);	
+		//CustInfoDB TransactionApp.custinfoDB = new CustInfoDB();
+		int key = TransactionApp.custinfoDB.findCustInfoRecord(DtypePersonal, SubTypeBalance, data);	
 		if (key > 0)	
-			custinfo.deactivateCustInfoRecord(key);	
+			TransactionApp.custinfoDB.deactivateCustInfoRecord(key);	
 		boolean rvalue = true;
-		rvalue = custinfo.addCustInfoRecord(DtypePersonal,SubTypeBalance,data);
+		rvalue = TransactionApp.custinfoDB.addCustInfoRecord(DtypePersonal,SubTypeBalance,data);
 		return rvalue;	
 	}
 		
 	public boolean updateCustomerDob(CustData data) 
 		throws SQLException, FileNotFoundException 
 	{ 
-		CustInfoDB custinfo = new CustInfoDB();
-		int key = custinfo.findCustInfoRecord(DtypePersonal, SubTypeDob, data);	
+		//CustInfoDB TransactionApp.custinfoDB = new CustInfoDB();
+		int key = TransactionApp.custinfoDB.findCustInfoRecord(DtypePersonal, SubTypeDob, data);	
 		if (key > 0)	
-			custinfo.deactivateCustInfoRecord(key);	
+			TransactionApp.custinfoDB.deactivateCustInfoRecord(key);	
 		boolean rvalue = true;
-		rvalue = custinfo.addCustInfoRecord(DtypePersonal,SubTypeDob,data);	
+		rvalue = TransactionApp.custinfoDB.addCustInfoRecord(DtypePersonal,SubTypeDob,data);	
 		return rvalue;
 	}
 	
 	public boolean updateCustomerAddress(CustData data,int index) 
 		throws SQLException, FileNotFoundException 
 	{ 
-		CustInfoDB custinfo = new CustInfoDB();
+		//CustInfoDB TransactionApp.custinfoDB = new CustInfoDB();
 		boolean rvalue = true;
 		int which;
 		int[] keys;
@@ -621,14 +634,14 @@ public class CustDBaccess extends RosiesSalon
 		}
 		
 		System.out.println("updateCustomerAddress() - find any/all addresses");
-		keys = custinfo.findCustInfoAddress(SubTypePrimary, data);
+		keys = TransactionApp.custinfoDB.findCustInfoAddress(SubTypePrimary, data);
 		for ( int key : keys )
 		{
 			if (key > 0)
 			{
 				System.out.println("updateCustomerAddress() - " +
 					"found an address to deactivate at key: "+ key);		
-				rvalue = custinfo.deactivateCustInfoRecord(key);
+				rvalue = TransactionApp.custinfoDB.deactivateCustInfoRecord(key);
 			}
 		}	
 
@@ -637,7 +650,7 @@ public class CustDBaccess extends RosiesSalon
 		if (addressLines[0] != null)
 		{
 			System.out.println("updateCustomerAddress() - add addresses");
-			rvalue = custinfo.addCustInfoAddress(SubTypePrimary, data);
+			rvalue = TransactionApp.custinfoDB.addCustInfoAddress(SubTypePrimary, data);
 		}
 		
 		return rvalue;		
@@ -646,7 +659,7 @@ public class CustDBaccess extends RosiesSalon
 	public boolean updateCustomerPhone(CustData data, int index) 
 		throws SQLException, FileNotFoundException 
 	{ 
-		CustInfoDB custinfo = new CustInfoDB();
+		//CustInfoDB TransactionApp.custinfoDB = new CustInfoDB();
 		boolean rvalue = true;		
 		int which;
 		switch (index)
@@ -670,11 +683,11 @@ public class CustDBaccess extends RosiesSalon
 			default:
 				return false;
 		}
-		int key = custinfo.findCustInfoRecord(DtypePhone, which, data);	
+		int key = TransactionApp.custinfoDB.findCustInfoRecord(DtypePhone, which, data);	
 		if (key > 0)	
-			rvalue = custinfo.deactivateCustInfoRecord(key);
+			rvalue = TransactionApp.custinfoDB.deactivateCustInfoRecord(key);
 		if (data.getPhone(index) != null)	
-			return custinfo.addCustInfoRecord(DtypePhone, which, data);
+			return TransactionApp.custinfoDB.addCustInfoRecord(DtypePhone, which, data);
 			
 		return rvalue;							
 	}
@@ -682,7 +695,7 @@ public class CustDBaccess extends RosiesSalon
 	public boolean updateCustomerEmail(CustData data,int index) 
 		throws SQLException, FileNotFoundException 
 	{ 
-		CustInfoDB custinfo = new CustInfoDB();
+		//CustInfoDB TransactionApp.custinfoDB = new CustInfoDB();
 		boolean rvalue = true;		
 		int which;
 		
@@ -707,81 +720,14 @@ public class CustDBaccess extends RosiesSalon
 			default:
 				return false;
 		}
-		int key = custinfo.findCustInfoRecord(DtypeEmail, which, data);	
+		int key = TransactionApp.custinfoDB.findCustInfoRecord(DtypeEmail, which, data);	
 		if (key > 0)	
-			rvalue = custinfo.deactivateCustInfoRecord(key);	
+			rvalue = TransactionApp.custinfoDB.deactivateCustInfoRecord(key);	
 		if (data.getEmail(index) != null)	
-			return custinfo.addCustInfoRecord(DtypeEmail, which, data);
+			return TransactionApp.custinfoDB.addCustInfoRecord(DtypeEmail, which, data);
 			
 		return rvalue;					
 	}
-
-
-
-	
-	/** 	
-		addCustInfoAddress method
-		Expects a completed CustData class as input
-			THIS WAS AN experiment to replace addCustInfoAddress() in
-			CustInfoDB.java - but no improvement
-	
-		@param data CustData object 
-		@throws SQLException if there is an error with some SQL command
-		@return Returns a boolean true for success, else false
-	*/
-	public boolean addCustomerAddress(int subtype, CustData data) 
-		throws SQLException, FileNotFoundException 
-	{
-		int cinfoid = data.getCustID();
-		int userid = data.getUserID();
-		String[] address = data.getAddr(subtype - 1);
-		int rows;	
-		String updatetime = readfullDateTime();
-		ResultSet result;
-		String sqlcmd;
-		boolean returnValue = false;
-		
-		for (int i = 0; i < 5; i++)
-		{
-			if (address[i] == null)
-			{
-				i = 5;
-				continue;
-			}
-			System.out.println("addCustInfoAddress() - Nbr1Parm index = " + i);
-			
-			sqlcmd = "INSERT INTO CustInfo (CustID, UserID";
-			sqlcmd += ", UpdateTime";
-			sqlcmd += ", InfoType";
-			sqlcmd += ", InfoSubType";
-			sqlcmd += ", Validity";
-			sqlcmd += ", Nbr1Parm";
-			sqlcmd += ", CharBig)";
-			sqlcmd += " VALUES (";
-			sqlcmd += cinfoid;
-			sqlcmd += ", " + userid;
-			sqlcmd += ", '" + updatetime + "'";
-			sqlcmd += ", " + DtypeAddress;
-			sqlcmd += ", " + subtype;
-			sqlcmd += ", " + (ValidInfo1 + ValidInfo3);
-			sqlcmd += ", " + i;			
-			sqlcmd += ", '" + address[i] + "'";		
-			sqlcmd += ")";
-					
-			rows = doRowsCmd(sqlcmd);		
-		
-			if (rows != 0)
-			{
-				return false;		
-			}
-			
-			System.out.println("addCustInfoAddress after insert loop index = " + i);
-		} // End of for loop
-				
-		return true;
-				
-	} // End of addCustInfoAddress()
-		
-						
+								
 }  // End of class
 
