@@ -386,7 +386,7 @@ public class CustDBaccess extends RosiesSalon
 			TransactionApp.custinfoDB.deactivateCustInfoRecord(cinfoid);
 		}
 
-		for (int i = SubTypeFourth; i < 0; i--)
+		for (int i = SubTypeFourth; i > 0; i--)
 		{
 			cinfoid = 
 				TransactionApp.custinfoDB.findCustInfoRecord
