@@ -79,23 +79,39 @@ public class DoTransaction
 		strProdItems = new String[products.size()];
 		for (ProductData Pdata : products)
 		{
-			tempStr = new String();
-			tempStr.format("%s $%.0f", Pdata.Pname, Pdata.Price);
+			//tempStr = new String();
+			//System.out.println("Pdata.Pname = " + Pdata.Pname +
+			//	" Pdata.Price = " + Pdata.Price);
+			tempStr = String.format("%s $%.02f", Pdata.Pname, Pdata.Price);
+			//System.out.println("Product adding " + tempStr );
 			strProdItems[i++] = tempStr;
 		}
 		prodList.getItems().addAll(strProdItems);
+		//prodList.setTextSize(18);
+		//prodList.setFont(Font.font("Ariel",18));
 
 		i = 0;
 		strServItems = new String[services.size()];
 		for (ServiceData Sdata : services)
 		{
-			tempStr = new String();
-			tempStr.format("%s $%.0f", Sdata.Sname, Sdata.Price);
+			//tempStr = new String();
+			//System.out.println("Sdata.Sname = " + Sdata.Sname +
+			//	" Sdata.Price = " + Sdata.Price);
+			tempStr = String.format("%s $%.02f", Sdata.Sname, Sdata.Price);
+			//System.out.println("Service adding " + tempStr );
 			strServItems[i++] = tempStr;
 		}
 		servList.getItems().addAll(strServItems);
+		//servList.setTextSize(18);
+		//servList.setFont(Font.font("Ariel",18));
 		
+		/*
+		Typeface custom_font = 
+			Typeface.createFromAsset(getAssets(), "fonts/font name.ttf");
 
+		textView.setTypeface(custom_font);
+		*/
+		
 		String fname = null;
 		String mname = null;
 		String lname = null;
@@ -238,6 +254,8 @@ public class DoTransaction
  								
 	}
 
+
+
 				
 	/**		     	
 		This method is for 
@@ -261,18 +279,16 @@ public class DoTransaction
 			strTransDetails = new String[transDetails.size()];
 			for (TransDetailData TDdata : transDetails)
 			{
-				tempStr = new String();
-				tempStr.format("%s $%.0f", TDdata.CharBig, TDdata.Nbr2Parm);
+				//tempStr = new String();
+				tempStr = String.format("%s $%.0f", TDdata.CharBig, TDdata.Nbr2Parm);
+				System.out.println("TransDetail adding " + tempStr );
 				strTransDetails[i++] = tempStr;
-			}		
-		}
-		else
-		{
-			strTransDetails = new String[1];
-			strTransDetails[i++] = "empty";
+			}
+			itemList.getItems().addAll(strTransDetails);		
 		}
 
-		itemList.getItems().addAll(strTransDetails);
+		//itemList.setTextSize(18);
+		//itemList.setFont(Font.font("Ariel",18));
 		        
 		//ComboBox productsComboBox = new ComboBox();
         //productsComboBox.getItems().addAll(strTransDetails);        
@@ -287,83 +303,12 @@ public class DoTransaction
 		
 		Label selectServiceLabel = new Label("Select a Service");
 		Button getServiceButton = new Button("Add Service to Transaction");
-		getServiceButton.setOnAction(e ->
-		{
-			String lambdaStr;
-			lambdaStr = servList.getSelectionModel().getSelectedItem();
-			selectServiceLabel.setText(lambdaStr);
-			itemList.getItems().addAll(lambdaStr);
-			
-			try
-			{
-				this.transactionScreen(myStage);
-			}
-			catch (SQLException ex)
-			{
-				System.out.println(ex.getMessage());
-            	System.out.println("Got a SQL exception!");
-			}
-        	catch (FileNotFoundException ex)
-        	{
-            	System.out.println(ex.getMessage());
-            	System.out.println("Got a File Not Found exception!");
-        	}				
-						
-		});		
 	
 		Label selectProductLabel = new Label("Select a Product");
 		Button getProductButton = new Button("Add Product to Transaction");
-		getProductButton.setOnAction(e ->
-		{
-			String lambdaStr;
-			lambdaStr = prodList.getSelectionModel().getSelectedItem();
-			selectProductLabel.setText(lambdaStr);
-			itemList.getItems().addAll(lambdaStr);
-			
-			try
-			{
-				this.transactionScreen(myStage);
-			}
-			catch (SQLException ex)
-			{
-				System.out.println(ex.getMessage());
-            	System.out.println("Got a SQL exception!");
-			}
-        	catch (FileNotFoundException ex)
-        	{
-            	System.out.println(ex.getMessage());
-            	System.out.println("Got a File Not Found exception!");
-        	}			
-							
-		});		
 
 		Label selectItemLabel = new Label("Select to Remove an Item");
 		Button removeItemButton = new Button("Remove");
-		removeItemButton.setOnAction(e ->
-		{
-			int index;	
-			index = itemList.getSelectionModel().getSelectedIndex();
-			if (index >= 0) {
-    			itemList.getItems().remove(index);
-			}
-			
-			try
-			{
-				this.transactionScreen(myStage);
-			}
-			catch (SQLException ex)
-			{
-				System.out.println(ex.getMessage());
-            	System.out.println("Got a SQL exception!");
-			}
-        	catch (FileNotFoundException ex)
-        	{
-            	System.out.println(ex.getMessage());
-            	System.out.println("Got a File Not Found exception!");
-        	}				
-							
-		});		
-
 
 		VBox servicesVbox = 
 			new VBox(10, servList, selectServiceLabel, getServiceButton);
@@ -395,7 +340,77 @@ public class DoTransaction
 		exitButtonHbox.setAlignment(Pos.CENTER_LEFT);
 		
 		// Button Handling
-		
+
+		getServiceButton.setOnAction(e ->
+		{
+			String lambdaStr;
+			lambdaStr = servList.getSelectionModel().getSelectedItem();
+			selectServiceLabel.setText(lambdaStr);
+			itemList.getItems().addAll(lambdaStr);
+			
+			try
+			{
+				this.transactionScreen(myStage);
+			}
+			catch (SQLException ex)
+			{
+				System.out.println(ex.getMessage());
+            	System.out.println("Got a SQL exception!");
+			}
+        	catch (FileNotFoundException ex)
+        	{
+            	System.out.println(ex.getMessage());
+            	System.out.println("Got a File Not Found exception!");
+        	}							
+		});	
+
+		getProductButton.setOnAction(e ->
+		{
+			String lambdaStr;
+			lambdaStr = prodList.getSelectionModel().getSelectedItem();
+			selectProductLabel.setText(lambdaStr);
+			itemList.getItems().addAll(lambdaStr);
+			
+			try
+			{
+				this.transactionScreen(myStage);
+			}
+			catch (SQLException ex)
+			{
+				System.out.println(ex.getMessage());
+            	System.out.println("Got a SQL exception!");
+			}
+        	catch (FileNotFoundException ex)
+        	{
+            	System.out.println(ex.getMessage());
+            	System.out.println("Got a File Not Found exception!");
+        	}							
+		});		
+
+		removeItemButton.setOnAction(e ->
+		{
+			int index;	
+			index = itemList.getSelectionModel().getSelectedIndex();
+			if (index >= 0) {
+    			itemList.getItems().remove(index);
+			}
+			
+			try
+			{
+				this.transactionScreen(myStage);
+			}
+			catch (SQLException ex)
+			{
+				System.out.println(ex.getMessage());
+            	System.out.println("Got a SQL exception!");
+			}
+        	catch (FileNotFoundException ex)
+        	{
+            	System.out.println(ex.getMessage());
+            	System.out.println("Got a File Not Found exception!");
+        	}								
+		});		
+	
 		backButton.setOnAction(event ->
 		{
 			try
@@ -424,6 +439,7 @@ public class DoTransaction
             }    
         	System.exit(0);		
 		});
+	
 																	
 		GridPane grid = new GridPane();
 		grid.add(bannerHbox, 1, 0, 2, 1);
