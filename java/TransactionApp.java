@@ -49,6 +49,8 @@ public class TransactionApp extends Application
 	protected static String CredentialsFile = null;
 	protected static EmpDBaccess EmployeeDBaccess = new EmpDBaccess();
 	protected static CustDBaccess CustomerDBaccess = new CustDBaccess();
+	protected static TransDBaccess TransactionDBaccess = new TransDBaccess();
+	
 	protected static CustInfoDB custinfoDB = new CustInfoDB();
 	protected static Button dbconnectButton = new Button("DB connect");
 	protected static Button dbdisconnectButton = new Button("DB disconnect");
@@ -316,7 +318,8 @@ public class TransactionApp extends Application
 		String username = null;				
 		username = usernameText.getText();
 		FindCustomer findcustomer = new FindCustomer();
-		AddCustomer addcustomer = new AddCustomer();		
+		AddCustomer addcustomer = new AddCustomer();
+		DoTransaction doTransaction = new DoTransaction();		
 		
 		Label topbanner = new Label("Rosie's Salon");
 		Label bottombanner = new Label("UserName: " + username);
@@ -387,7 +390,19 @@ public class TransactionApp extends Application
 		
 		Label newTransPrompt = new Label("     New Transaction");
 		Button bNewTrans = new Button("Go");
-		bNewTrans.setOnAction(new ButtonClickHandler());
+		bNewTrans.setOnAction(event ->
+		{
+			try
+			{
+				doTransaction.beginTransaction(mainStage);	
+			}
+            catch (SQLException ex)
+            {
+            	System.out.println(ex.getMessage());
+            	System.out.println("Got a SQL exception!");
+            }							
+		});				
+		
 		HBox newTransHbox = new HBox(10, newTransPrompt, bNewTrans);
 		
 		Label findTransPrompt = new Label("    Find Transaction");
@@ -512,6 +527,12 @@ public class TransactionApp extends Application
    				dbcredentialsfile = "NotConnected";
 				dbconnected = false; 
    			} 
+ 			if (!TransactionDBaccess.ConnectToDB(dbcredentialsfile))
+   			{
+   				System.out.println("Can not connect Transaction I/F to DB.");
+   				dbcredentialsfile = "NotConnected";
+				dbconnected = false; 
+   			}    			
    			
    			dbconnected = true;  
    			handlelogin(mainStage);		

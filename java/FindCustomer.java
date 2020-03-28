@@ -585,6 +585,7 @@ public class FindCustomer
             }
             catch (SQLException ex)
             {
+            	System.out.println(ex.getMessage());
             	System.out.println("Got a SQL exception!");
             }    
         	System.exit(0);		

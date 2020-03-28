@@ -320,6 +320,57 @@ public abstract class RosiesSalon
 	} // End of doRowsCmd()
  		
 
+	
+/** 	
+	getLastAutoIncrement method
+	Executes SQL command - does the detail processing
+	
+	@param sqlcmd a string object containing SQL Command
+	@throws SQLException if there is an error with some SQL command
+	@return Returns an integer of number of rows inserted
+*/	
+	
+	public int getLastAutoIncrement() throws SQLException 
+	{ 
+		int rvalue = 0;
+		
+		if (!DBconnected()) 
+		{
+			throw new SQLException("Not connected to Database!");
+		}
+		
+		Statement statement = dbConnection.createStatement();
+					
+		System.out.println("get last Auto Increment value");
+									  
+		try 
+		{
+			ResultSet generatedKeys = statement.getGeneratedKeys();
+        	if (generatedKeys.next()) 
+        	{
+        		long id = generatedKeys.getLong(1);
+        		rvalue = (int)id;
+        		System.out.println("auto Key = " + id);
+        	}
+        	else 
+        	{
+            	throw new SQLException("Creating transaction failed, no TransID obtained.");
+        	}
+			
+			return rvalue; 
+		}
+		
+		catch (SQLException ex) 
+		{ 
+			System.out.println("An error occurred with SQL command");
+			ex.printStackTrace();
+			return 0;
+		} // End of outer try-catch		
+		
+	} // End of doRowsCmd()
+ 		
+
+
 
 
 } 
