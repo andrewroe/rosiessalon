@@ -268,33 +268,13 @@ public class DoTransaction
 		throws SQLException, FileNotFoundException
 	{
 		int i = 0;
+		double subTotal = 0;
 		String tempStr;
 		
 		System.out.println("transactionScreen() - enter");
 	
-		i = 0;
-		
-		if (transDetails.size() > 0)
-		{
-			strTransDetails = new String[transDetails.size()];
-			for (TransDetailData TDdata : transDetails)
-			{
-				//tempStr = new String();
-				tempStr = String.format("%s $%.0f", TDdata.CharBig, TDdata.Nbr2Parm);
-				System.out.println("TransDetail adding " + tempStr );
-				strTransDetails[i++] = tempStr;
-			}
-			itemList.getItems().addAll(strTransDetails);		
-		}
-
-		//itemList.setTextSize(18);
-		//itemList.setFont(Font.font("Ariel",18));
-		        
-		//ComboBox productsComboBox = new ComboBox();
-        //productsComboBox.getItems().addAll(strTransDetails);        
- 	
-		prodList.setPrefSize(300,200);
-		servList.setPrefSize(300,200);						
+		prodList.setPrefSize(300,100);
+		servList.setPrefSize(300,100);						
 		itemList.setPrefSize(600,400); 
  	 	
 		Label banner = new Label("Transaction");
@@ -311,19 +291,25 @@ public class DoTransaction
 		Button removeItemButton = new Button("Remove");
 
 		VBox servicesVbox = 
-			new VBox(10, servList, selectServiceLabel, getServiceButton);
+			new VBox(10, servList, getServiceButton);
 		servicesVbox.setPadding(new Insets(10));
 		servicesVbox.setAlignment(Pos.CENTER);	
 		
 		VBox productsVbox = 
-			new VBox(10, prodList, selectProductLabel, getProductButton);
+			new VBox(10, prodList, getProductButton);
 		productsVbox.setPadding(new Insets(10));
 		productsVbox.setAlignment(Pos.CENTER);	
 		
+		Label subTotalLabel = new Label("Sub-Total");
+		subTotalLabel.setFont(Font.font("Ariel",18));	
+		Label subTotalValue = new Label("0.00");
+		subTotalValue.setFont(Font.font("Ariel",18));
+		HBox subTotalHbox = new HBox(10,subTotalLabel,subTotalValue);
+		
 		VBox itemsVbox = 
-			new VBox(10, itemList, selectItemLabel, removeItemButton);
+			new VBox(10, itemList, subTotalHbox, removeItemButton);
 		itemsVbox.setPadding(new Insets(10));
-		itemsVbox.setAlignment(Pos.CENTER);	
+		itemsVbox.setAlignment(Pos.CENTER);				
 											
 		Label backPrompt = new Label("Back to Menu");
 		backPrompt.setFont(Font.font("Ariel",18));	
@@ -343,10 +329,24 @@ public class DoTransaction
 
 		getServiceButton.setOnAction(e ->
 		{
-			String lambdaStr;
-			lambdaStr = servList.getSelectionModel().getSelectedItem();
-			selectServiceLabel.setText(lambdaStr);
-			itemList.getItems().addAll(lambdaStr);
+			int index;	
+			index = servList.getSelectionModel().getSelectedIndex();
+			if (index >= 0) 
+			{
+  				String lambdaStr;
+				lambdaStr = servList.getSelectionModel().getSelectedItem();
+				selectServiceLabel.setText(lambdaStr);
+				itemList.getItems().addAll(lambdaStr);  			
+    			
+    			//Need to add entire TDdata into ?
+    			ServiceData Sdata = new ServiceData();
+    			Sdata = services.get(index);
+    			TransDetailData TDdata = new TransDetailData();
+    			
+    			TDdata.Nbr2Parm = Sdata.Price;
+    			TDdata.CharBig = Sdata.Sname;
+    			transDetails.add(TDdata);	
+			}
 			
 			try
 			{
@@ -366,10 +366,24 @@ public class DoTransaction
 
 		getProductButton.setOnAction(e ->
 		{
-			String lambdaStr;
-			lambdaStr = prodList.getSelectionModel().getSelectedItem();
-			selectProductLabel.setText(lambdaStr);
-			itemList.getItems().addAll(lambdaStr);
+			int index;	
+			index = prodList.getSelectionModel().getSelectedIndex();
+			if (index >= 0) 
+			{			
+				String lambdaStr;
+				lambdaStr = prodList.getSelectionModel().getSelectedItem();
+				selectProductLabel.setText(lambdaStr);
+				itemList.getItems().addAll(lambdaStr);
+				
+    			//Need to add entire TDdata into ?
+    			ProductData Pdata = new ProductData();
+    			Pdata = products.get(index);
+    			TransDetailData TDdata = new TransDetailData();
+    			
+    			TDdata.Nbr2Parm = Pdata.Price;
+    			TDdata.CharBig = Pdata.Pname;
+    			transDetails.add(TDdata);	
+			}
 			
 			try
 			{
@@ -393,6 +407,7 @@ public class DoTransaction
 			index = itemList.getSelectionModel().getSelectedIndex();
 			if (index >= 0) {
     			itemList.getItems().remove(index);
+    			transDetails.remove(index);	
 			}
 			
 			try
@@ -439,7 +454,23 @@ public class DoTransaction
             }    
         	System.exit(0);		
 		});
-	
+
+		subTotal = 0.0;
+		i = 0;
+		if (transDetails.size() > 0)
+		{
+			strTransDetails = new String[transDetails.size()];
+			for (TransDetailData TDdata : transDetails)
+			{
+				subTotal += TDdata.Nbr2Parm; // accumulate sub-total
+			}
+			// itemList.getItems().addAll(strTransDetails);
+			subTotalValue.setText(String.format("%.02f",subTotal));		
+		}
+
+		//itemList.setTextSize(18);
+		//itemList.setFont(Font.font("Ariel",18));
+		        
 																	
 		GridPane grid = new GridPane();
 		grid.add(bannerHbox, 1, 0, 2, 1);
