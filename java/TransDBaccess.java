@@ -22,8 +22,6 @@ public class TransDBaccess extends RosiesSalon
 */
 	public boolean addTransaction(TransData Tdata) throws SQLException 
 	{
-		int rows;
-	
 		String createtime = readfullDateTime();
 		String updatetime = createtime;
 
@@ -32,34 +30,30 @@ public class TransDBaccess extends RosiesSalon
 			
 		System.out.println("addTransaction() - userid = " + Tdata.UserID);
 
-		String sqlcmd = "INSERT INTO Transaction (UserID, CustID)";
-		sqlcmd += ", CreateTime, UpdateTime)";
-		sqlcmd += " VALUES (";
+		String sqlcmd = "INSERT INTO Transaction (UserID, CustID";
+		sqlcmd += ", CreateTime";
+		sqlcmd += ", UpdateTime";
+		sqlcmd += ", Method";
+		sqlcmd += ", amount";
+		sqlcmd += ") VALUES (";
 		sqlcmd += Tdata.UserID;
 		sqlcmd += ", " + Tdata.CustID;
 		sqlcmd += ", '" + createtime + "'";
 		sqlcmd += ", '" + updatetime + "'";
+		sqlcmd += ", " + Tdata.Method;
+		sqlcmd += ", " + Tdata.amount;
 		sqlcmd += " )";
 				
-		rows = doRowsCmd(sqlcmd);		
+		Tdata.TransID = doRowsAutoIncrement(sqlcmd);		
 								
-		if (rows == 0)
+		if (Tdata.TransID == 0)
 		{
-			System.out.println("addTransaction() - returned 0 rows added!");
-			return false;
+			throw new SQLException("Creating transaction failed, no TransID obtained.");
 		}
 		
-        Tdata.TransID = getLastAutoIncrement();
         System.out.println("Transaction PK = " + Tdata.TransID);
 		
-        if (Tdata.TransID > 0) 
-        {
-        	return true;
-        }
-        else 
-        {
-            throw new SQLException("Creating transaction failed, no TransID obtained.");
-        }
+        return true;
         
 	} // End of addTransaction()
  
@@ -74,12 +68,22 @@ public class TransDBaccess extends RosiesSalon
 	@throws SQLException if there is an error with some SQL command
 	@return Returns boolean of success and the TransID is updated else 0
 */
-	public boolean addTransDetail(TransDetailData TDdata) throws SQLException 
+	public boolean addTransDetail(TransDetailData TDdata, int subtype) throws SQLException 
 	{
-		int rows;
-	
 		String createtime = readfullDateTime();
 		String updatetime = createtime;
+		
+		TDdata.InfoType = DtypeTransaction;
+		
+		if (subtype == 1)
+    		TDdata.InfoSubType = SubTypeService;
+    	else if (subtype == 2)
+    		TDdata.InfoSubType = SubTypeProduct;
+    	else
+    		TDdata.InfoSubType = SubTypeUnkown;
+    		
+		TDdata.Validity = ValidInfo2 + ValidInfo3;
+		TDdata.Nbr1Parm = 0;
 
 		ResultSet result;
 		boolean returnValue = false;
@@ -87,19 +91,17 @@ public class TransDBaccess extends RosiesSalon
 		System.out.println("addTransDetail() - UserID = " + 
 			TDdata.UserID + " TransID = " + TDdata.TransID);
 
-		String sqlcmd = "INSERT INTO TransactionDetails (UserID, TransID)";
-		sqlcmd += ", CreateTime, UpdateTime";
+		String sqlcmd = "INSERT INTO TransactionDetails (UserID, TransID";
+		sqlcmd += ", UpdateTime";
 		sqlcmd += ", InfoType";
 		sqlcmd += ", InfoSubType";
 		sqlcmd += ", Validity";
 		sqlcmd += ", Nbr1Parm";
 		sqlcmd += ", Nbr2Parm";
 		sqlcmd += ", CharBig";
-		sqlcmd += " )";
-		sqlcmd += " VALUES (";
+		sqlcmd += " )VALUES (";
 		sqlcmd += TDdata.UserID;
 		sqlcmd += ", " + TDdata.TransID;
-		sqlcmd += ", '" + createtime + "'";
 		sqlcmd += ", '" + updatetime + "'";
 		sqlcmd += ", " + TDdata.InfoType;
 		sqlcmd += ", " + TDdata.InfoSubType;
@@ -109,26 +111,16 @@ public class TransDBaccess extends RosiesSalon
 		sqlcmd += ", '" + TDdata.CharBig + "'";
 		sqlcmd += " )";
 				
-		rows = doRowsCmd(sqlcmd);		
+		TDdata.TinfoID = doRowsAutoIncrement(sqlcmd);		
 								
-		if (rows == 0)
+		if (TDdata.TinfoID == 0)
 		{
-			System.out.println("addTransaction() - returned 0 rows added!");
-			return false;
+			throw new SQLException("Creating transaction failed, no TinfoID obtained.");
 		}
-		
-        TDdata.TinfoID = getLastAutoIncrement();
+				
         System.out.println("Transaction Detail PK = " + TDdata.TinfoID);
 		
-        if (TDdata.TinfoID > 0) 
-        {
-        	return true;
-        }
-        else 
-        {
-            throw new SQLException("Creating transaction detail failed, no TinfoID obtained.");
-        }
-        
+        return true;
 	} // End of addTransaction()
  
 

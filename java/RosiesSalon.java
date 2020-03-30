@@ -22,6 +22,7 @@ public abstract class RosiesSalon
 	final int DtypeAddress = 3;
 	final int DtypeTimeCard = 4;
 	final int DtypePersonal = 5;
+	final int DtypeTransaction = 6;
 
 	final int SubTypeUserName = 0;
 	final int SubTypePassword = 1;
@@ -51,6 +52,10 @@ public abstract class RosiesSalon
 	final int SubTypePrimaryPhone = 8;
 	final int SubTypePrimaryEmail = 9;
 	final int SubTypeBalance = 10;
+	
+	final int SubTypeUnkown = 0;
+	final int SubTypeService = 1;
+	final int SubTypeProduct = 2;	
 	
 	final int ValidInfo1 = 1;
 	final int ValidInfo2 = 2;
@@ -330,7 +335,7 @@ public abstract class RosiesSalon
 	@return Returns an integer of number of rows inserted
 */	
 	
-	public int getLastAutoIncrement() throws SQLException 
+	public int doRowsAutoIncrement(String sqlcmd) throws SQLException 
 	{ 
 		int rvalue = 0;
 		
@@ -342,20 +347,51 @@ public abstract class RosiesSalon
 		Statement statement = dbConnection.createStatement();
 					
 		System.out.println("get last Auto Increment value");
+
+		System.out.println("SQL statement:");
+		System.out.println(sqlcmd);
+		
+		/*
+		Statement stmt = conn.createStatement();
+		stmt.executeUpdate(sql,Statement.RETURN_GENERATED_KEYS);
+		
+		or 
+		
+		conn.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
+		*/
 									  
 		try 
 		{
-			ResultSet generatedKeys = statement.getGeneratedKeys();
+			statement.executeUpdate(sqlcmd,statement.RETURN_GENERATED_KEYS);
+			
+			ResultSet generatedKeys = statement.executeQuery("SELECT LAST_INSERT_ID()");
+			
         	if (generatedKeys.next()) 
         	{
-        		long id = generatedKeys.getLong(1);
+        		rvalue = generatedKeys.getInt(1);      
+        		System.out.println("auto Key was = " + rvalue);
+        	}
+        	else 
+        	{
+            	throw new SQLException("Update with auto insert failed, " +
+            		"no auto value obtained.");
+        	}   		
+						
+			/*	
+			ResultSet generatedKeys = statement.getGeneratedKeys();
+			Statement.RETURN_GENERATED_KEYS
+			
+        	if (generatedKeys.next()) 
+        	{
+        		rvalue = generatedKeys.getLong(1);
         		rvalue = (int)id;
-        		System.out.println("auto Key = " + id);
+        		System.out.println("auto Key = " + rvalue);
         	}
         	else 
         	{
             	throw new SQLException("Creating transaction failed, no TransID obtained.");
         	}
+			*/
 			
 			return rvalue; 
 		}

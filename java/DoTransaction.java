@@ -42,6 +42,8 @@ public class DoTransaction
 	protected Stage myStage;
 	protected CustData Cdata = new CustData();
 	protected CustInfoDB custinfo = new CustInfoDB();
+	protected double subTotal = 0.0;
+	
 	protected Label banner = new Label("Transaction");
 	
 	protected ArrayList<ProductData> products = new ArrayList<>();
@@ -79,11 +81,7 @@ public class DoTransaction
 		strProdItems = new String[products.size()];
 		for (ProductData Pdata : products)
 		{
-			//tempStr = new String();
-			//System.out.println("Pdata.Pname = " + Pdata.Pname +
-			//	" Pdata.Price = " + Pdata.Price);
 			tempStr = String.format("%s $%.02f", Pdata.Pname, Pdata.Price);
-			//System.out.println("Product adding " + tempStr );
 			strProdItems[i++] = tempStr;
 		}
 		prodList.getItems().addAll(strProdItems);
@@ -94,11 +92,7 @@ public class DoTransaction
 		strServItems = new String[services.size()];
 		for (ServiceData Sdata : services)
 		{
-			//tempStr = new String();
-			//System.out.println("Sdata.Sname = " + Sdata.Sname +
-			//	" Sdata.Price = " + Sdata.Price);
 			tempStr = String.format("%s $%.02f", Sdata.Sname, Sdata.Price);
-			//System.out.println("Service adding " + tempStr );
 			strServItems[i++] = tempStr;
 		}
 		servList.getItems().addAll(strServItems);
@@ -268,7 +262,6 @@ public class DoTransaction
 		throws SQLException, FileNotFoundException
 	{
 		int i = 0;
-		double subTotal = 0;
 		String tempStr;
 		
 		System.out.println("transactionScreen() - enter");
@@ -288,7 +281,12 @@ public class DoTransaction
 		Button getProductButton = new Button("Add Product to Transaction");
 
 		Label selectItemLabel = new Label("Select to Remove an Item");
+		selectItemLabel.setFont(Font.font("Ariel",18));
 		Button removeItemButton = new Button("Remove");
+		removeItemButton.setFont(Font.font("Ariel",18));
+		HBox removeHbox = new HBox(10,selectItemLabel,removeItemButton);
+		
+		removeHbox.setAlignment(Pos.CENTER_LEFT);
 
 		VBox servicesVbox = 
 			new VBox(10, servList, getServiceButton);
@@ -305,19 +303,26 @@ public class DoTransaction
 		Label subTotalValue = new Label("0.00");
 		subTotalValue.setFont(Font.font("Ariel",18));
 		HBox subTotalHbox = new HBox(10,subTotalLabel,subTotalValue);
-		
+			
 		VBox itemsVbox = 
-			new VBox(10, itemList, subTotalHbox, removeItemButton);
+			new VBox(10, itemList, subTotalHbox, removeHbox);
 		itemsVbox.setPadding(new Insets(10));
 		itemsVbox.setAlignment(Pos.CENTER);				
 											
+		Label submitPrompt = new Label("Finalize Transaciton");
+		submitPrompt.setFont(Font.font("Ariel",18));	
+		Button submitButton = new Button("Submit");
+		submitButton.setFont(Font.font("Ariel",18));
+		HBox submitButtonHbox = new HBox(10, submitPrompt, submitButton);
+		submitButtonHbox.setAlignment(Pos.CENTER_LEFT);
+										
 		Label backPrompt = new Label("Back to Menu");
 		backPrompt.setFont(Font.font("Ariel",18));	
 		Button backButton = new Button("Back to Main");
 		backButton.setFont(Font.font("Ariel",18));
 		HBox backButtonHbox = new HBox(10, backButton);
 		backButtonHbox.setAlignment(Pos.CENTER_LEFT);
-				
+								
 		Label exitPrompt = new Label("Click this Button to exit");
 		exitPrompt.setFont(Font.font("Ariel",18));	
 		Button exitButton = new Button("Exit");
@@ -326,7 +331,6 @@ public class DoTransaction
 		exitButtonHbox.setAlignment(Pos.CENTER_LEFT);
 		
 		// Button Handling
-
 		getServiceButton.setOnAction(e ->
 		{
 			int index;	
@@ -338,13 +342,15 @@ public class DoTransaction
 				selectServiceLabel.setText(lambdaStr);
 				itemList.getItems().addAll(lambdaStr);  			
     			
-    			//Need to add entire TDdata into ?
     			ServiceData Sdata = new ServiceData();
     			Sdata = services.get(index);
     			TransDetailData TDdata = new TransDetailData();
-    			
+    				
+    			TDdata.InfoSubType = 1;  // THIS is overriden !!
+				TDdata.Nbr1Parm = 0;    			
     			TDdata.Nbr2Parm = Sdata.Price;
     			TDdata.CharBig = Sdata.Sname;
+    			
     			transDetails.add(TDdata);	
 			}
 			
@@ -380,8 +386,11 @@ public class DoTransaction
     			Pdata = products.get(index);
     			TransDetailData TDdata = new TransDetailData();
     			
+    			TDdata.InfoSubType = 2; // THIS is overriden !!
+				TDdata.Nbr1Parm = 0;    			
     			TDdata.Nbr2Parm = Pdata.Price;
     			TDdata.CharBig = Pdata.Pname;
+    			
     			transDetails.add(TDdata);	
 			}
 			
@@ -425,7 +434,26 @@ public class DoTransaction
             	System.out.println("Got a File Not Found exception!");
         	}								
 		});		
-	
+
+		submitButton.setOnAction(event ->
+		{
+			System.out.println("transaction submit action occurred");
+			try
+			{
+				this.endTransactionScreen(myStage);
+			}
+			catch (SQLException ex)
+			{
+				System.out.println(ex.getMessage());
+            	System.out.println("Got a SQL exception!");
+			}
+        	catch (FileNotFoundException ex)
+        	{
+            	System.out.println(ex.getMessage());
+            	System.out.println("Got a File Not Found exception!");
+        	}				
+		});
+		
 		backButton.setOnAction(event ->
 		{
 			try
@@ -470,15 +498,15 @@ public class DoTransaction
 
 		//itemList.setTextSize(18);
 		//itemList.setFont(Font.font("Ariel",18));
-		        
-																	
+		        															
 		GridPane grid = new GridPane();
 		grid.add(bannerHbox, 1, 0, 2, 1);
 		grid.add(servicesVbox, 0, 1, 2, 1);
 		grid.add(productsVbox, 2, 1, 2, 1);
 		grid.add(itemsVbox, 0, 2, 4, 1);
-		grid.add(backButtonHbox, 0, 3);
-		grid.add(exitButtonHbox, 0, 4);	
+		grid.add(submitButtonHbox, 0, 3);
+		grid.add(backButtonHbox, 0, 4);
+		grid.add(exitButtonHbox, 0, 5);	
 				
 		Scene transactionScene = new Scene(grid,800,800);
 
@@ -487,6 +515,55 @@ public class DoTransaction
  		stage.show();						
 	}
 
+
+
+				
+	/**		     	
+		This method is for 
+		
+   		@param primaryStage which is 
+   		@throws SQLException if there is an error with some SQL command			
+	*/
+		  
+	public void endTransactionScreen(Stage stage) 
+		throws SQLException, FileNotFoundException
+	{
+		TransData Tdata = new TransData();
+		//TransDetailData TDdata = new TransDetailData();
+		
+		int subtype;  // since not descended from abstract RosiesSalon class
+		
+		System.out.println("endTransactionScreen() - enter");
+
+		//TransID = 0;	// filled in when added to DB	
+		Tdata.UserID = TransactionApp.userid;		
+		Tdata.CustID = Cdata.getCustID();			
+		Tdata.Method = 1;   // !! change to some enum for cash = 1	
+		Tdata.CreditInfo = null;	
+		Tdata.amount = subTotal;
+
+		System.out.println("Tdata contents are:" + 
+			"\nUserID = " + Tdata.UserID + 
+			"\nCustID = " + Tdata.CustID +
+			"\nMethod = " + Tdata.Method +
+			"\namount = " + Tdata.amount);
+			
+		TransactionApp.TransactionDBaccess.addTransaction(Tdata);
+		//transid = Tdata.TransID;
+		
+		for (TransDetailData TDdata : transDetails)
+		{
+			//TinfoID = 0;  // gets filled in by DB access
+			TDdata.UserID = Tdata.UserID;
+			TDdata.TransID = Tdata.TransID;
+			
+			subtype = TDdata.InfoSubType;
+			TDdata.InfoSubType = 0;   // Over-kill for thefakery
+			TransactionApp.TransactionDBaccess.addTransDetail(TDdata,subtype);		
+		}
+		
+	}		
+		
 }
 
 		
