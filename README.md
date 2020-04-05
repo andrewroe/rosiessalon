@@ -1,7 +1,7 @@
-#rosiessalon
+# rosiessalon
 **This repo is for the SQL project for TeamMAR**
 
-##Overview:
+## Overview:
 This readme includes 5 sections -
   **repository layout**
   **installation**
@@ -15,7 +15,7 @@ This readme includes 5 sections -
     testing details
   **to do or current problems**
 
-##repository layout:
+## repository layout:
 at https://github.com/andrewroe/rosiessalon
 there are 4 catagories of *.java (class) files -
   1) DB interface classes, which meant to have the "how" to get and put data from/to the rosiessalon DB
@@ -27,9 +27,12 @@ The purpose of the code layout was to keep the "how" (DB I/F) away from the "wha
 This is partly because the underlying DB tool, Oradle, MySQL, etc. could change and also for structure of code
 organization. 
 
-  **<repo>/<documents>** 
-    a number of files, the RosieSalonDataModel.pptx is a DB model of rosiessalon database
-  **<repo>/java/**
+**<repo>/<documents>** 
+    
+a number of files, the RosieSalonDataModel.pptx is a DB model of rosiessalon database
+
+**<repo>/java/**
+    
     1)       /CustDBaccess.java - DB I/F helper, for accessing Customer table
              /CustInfoDB.java - DB I/F helper, for accessing CustInfo table
              /EmpDBaccess.java - DB I/F helper, for accessing Employee (and EmpInfo) table
@@ -47,7 +50,7 @@ organization.
     4)       /stylesheet.css  (I don't remember why this is here and probably should be deleted)
              /Transaction.css  (tried to add usage of style sheets to TransactionApp.java, didn't seem to work well)
 
-  **<repo>/scripts/**
+**<repo>/scripts/**
                 /
                 /mysql/alter.sql
                 /mysql/create.sql
@@ -60,7 +63,8 @@ organization.
                 /oracle/ApexInitAdmin.sql
                 /oracle/ApexLoad.sql
 
-##installation:
+## installation:
+
 **Java**
 
 I don't recall installing java, but it wasn't much as I recall.
@@ -261,20 +265,23 @@ show grants;
 
 ---- end of mysql setup and install --------
 
-##DB setup:
+## DB setup:
 
 After creating a database, run the scripts from the repository. e.g. the ones from ../scripts/mysql/ for mysql DB.
 The ../scripts/oracle/ are for testing with Apex, which creates an Oracle DB for the Apex user.
 
-##testing:
+## testing:
 
 For running the SQL set up scripts against my 'rosiessalon' DB
 batch -
+
 *mysql -p <scripts/get_dbs.sql >/tmp/output.txt*. 
 
 or just
+
 *mysql -p <scripts/create.sql*
- etc.
+
+etc.
 
 Now with a database 'rosiessalon' one can run the setup scripts (see above repo notes)
 to create the 'rosiessalon' DB.
@@ -284,14 +291,16 @@ and run with
 java <whatever>
 
 Initially the only "App" to update the rosiessalon DB was
+
 *java UserApp*
+
 and respond to the prompts
 
 This was used for all of the additional Employee users of "Rosie's Salon"
 
 for the rest of the database the goal is to run a GUI App "TransactionApp".
-Thus
-several *.java files need to be compiled and then to run the TransactionApp
+Thus several *.java files need to be compiled and then to run the TransactionApp
 one needs to (at least for now) run
+
 *java StartTransaction*
 
