@@ -174,7 +174,7 @@ public class CustInfoDB extends RosiesSalon
 	public boolean addCustInfoAddress(int subtype, CustData data) 
 		throws SQLException, FileNotFoundException 
 	{
-		int cinfoid = data.getCustID();
+		int custid = data.getCustID();
 		int userid = data.getUserID();
 		String[] address = data.getAddr(subtype - 1);
 		int rows;	
@@ -207,7 +207,7 @@ public class CustInfoDB extends RosiesSalon
 			sqlcmd += ", Nbr1Parm";
 			sqlcmd += ", CharBig)";
 			sqlcmd += " VALUES (";
-			sqlcmd += cinfoid;
+			sqlcmd += custid;
 			sqlcmd += ", " + userid;
 			sqlcmd += ", '" + updatetime + "'";
 			sqlcmd += ", " + DtypeAddress;
@@ -413,7 +413,7 @@ public class CustInfoDB extends RosiesSalon
 		
 		return cinfoIDs;		
 		
-	} // End of findCustInfoRecord()
+	} // End of findCustInfoAddress()
 
 						
 }  // End of class

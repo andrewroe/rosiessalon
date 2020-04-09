@@ -14,71 +14,6 @@ import java.io.*;
 public class EmpDBaccess extends RosiesSalon
 { 
 	
-/** 	
-	searchEmployeeByFullName method
-	Searches for any Employee infomation based on information available in 
-	the EmpData object.
-	If a match is found, EmpID is updated in the EmpData and 1 is returned.
-	If multiple matches found, EmpID is updated with first match but -1 is returned.
-	that is VERY unusual?!
-	Else, when no match found, 0 is returned and EmpID is left untouched.
-	
-	@param data EmpData object 
-	@throws SQLException if there is an error with some SQL command
-	@return Returns an integer 1, 0, or -1 and may update EmpID in EmpData object
-*/
-	public int searchEmployeeByFullName(EmpData data) throws SQLException 
-	{
-		String fname = data.getFname();
-		String lname = data.getLname();
-		String minit = data.getMinit();
-		ResultSet result;
-		int rvalue = 0; 
-
-		if ((lname == null) || (fname == null) || (minit == null))
-		{
-			throw new SQLException("Attempting full name search of DB and " + 
-				"not all of first, last and middle initial names supplied");
-		}
-		
-		String sqlcmd = "SELECT EmpID, UserID, job, salary, commission " +
-			"FROM Employee WHERE Lname = '" + lname + "' AND Fname = '" + 
-			fname + "' AND Minit = '" + minit + "'";
-			
-		//System.out.println("searchEmployee() - search DB using user's " + 
-		//	"Fname, Lname, and Minit.");
-						
-		result = doCmd(sqlcmd);
-			
-		if (result == null) 
-		{ 
-			System.out.println("searchEmployee() - can not find employee in DB");
-			return 0;
-		} 	
-					
-		if (result.next())
-		{
-			//System.out.println("searchEmployee() - it should get here");
-			data.setEmpID(result.getInt("EmpID"));
-			data.setJob(result.getString("job"));
-			data.setSalary(result.getDouble("Salary"));
-			data.setCommission(result.getDouble("Commission"));
-						
-			if (result.next())	// at least 2 matches! THis should be very rare.
-				rvalue = -1;
-			else					// just 1 match :-)
-				return 1;
-		}
-				
-		else
-		{
-			System.out.println("Failed to find any match when using " + 
-				"user's Fname, Lname, and Minit.");
-			return 0;
-		} 
-			 		
-		return rvalue;
-	}  // End of searchEmployeeByFullName
 	
 
 /** 	
@@ -209,7 +144,7 @@ public class EmpDBaccess extends RosiesSalon
 	} // End of addEmpPhone()
 
  /** 	
-	addEmpPhone method
+	addEmpInfoRecord method
 	Expects a completed EmpData class as input
 	
 	@param data EmpData object 
@@ -392,6 +327,77 @@ public class EmpDBaccess extends RosiesSalon
 				
 	} // End of addEmpInfoRecord()
 
+ 
+	/** 	
+		addEmpInfoAddress method
+		Expects a completed CustData class as input
+	
+		@param data EmpData object 
+		@throws SQLException if there is an error with some SQL command
+		@return Returns a boolean true for success, else false
+	*/
+	public boolean addEmpInfoAddress(int subtype, EmpData data) 
+		throws SQLException, FileNotFoundException 
+	{
+		int empid = data.getEmpID();
+		int userid = data.getUserID();
+		String[] address = data.getAddr(subtype - 1); // need to sync with CustInfo!!
+		int rows;	
+		String updatetime = readfullDateTime();
+		ResultSet result;
+		String sqlcmd;
+		boolean returnValue = false;
+		
+		System.out.println("addEmpInfoAddress() - entry");
+
+		System.out.println("addEmpInfoAddress input address is: " +
+			address[0] + "-" +address[1] + "-" +
+			address[2] + "-" + address[3] + "-" + address[4]);
+		
+		for (int i = 0; i < 5; i++)
+		{
+			if ((address[i] == null) || address[i].equals(""))
+			{
+				// i = 5;
+				continue;
+			}
+			System.out.println("addEmpInfoAddress() - Nbr1Parm index = " + i);
+			
+			sqlcmd = "INSERT INTO EmpInfo (EmpID, UserID";
+			sqlcmd += ", UpdateTime";
+			sqlcmd += ", InfoType";
+			sqlcmd += ", InfoSubType";
+			sqlcmd += ", Validity";
+			sqlcmd += ", Nbr1Parm";
+			sqlcmd += ", CharBig)";
+			sqlcmd += " VALUES (";
+			sqlcmd += empid;
+			sqlcmd += ", " + userid;
+			sqlcmd += ", '" + updatetime + "'";
+			sqlcmd += ", " + DtypeAddress;
+			sqlcmd += ", " + subtype;
+			sqlcmd += ", " + (ValidInfo1 + ValidInfo3);
+			sqlcmd += ", " + i;			
+			sqlcmd += ", '" + address[i] + "'";		
+			sqlcmd += ")";
+					
+			rows = doRowsCmd(sqlcmd);
+			
+			System.out.println("addEmpInfoAddress after insert loop index = " + i);		
+		
+			if (rows != 1)
+			{
+				return false;		
+			}
+			
+			System.out.println("addEmpInfoAddress after rows check loop index = " + i);
+		} // End of for loop
+				
+		return true;
+				
+	} // End of addEmpInfoAddress()
+ 
+ 
  
  /** 	
 	deactivateEmpInfoRecord method
@@ -612,25 +618,9 @@ public class EmpDBaccess extends RosiesSalon
 
 			// Address		
 			else if ((infotype == DtypeAddress) && (infosubtype == SubTypePrimary) &&
-				(validity == ValidInfo3))		
-				data.setAddr(charparm,0);
-					
-			else if ((infotype == DtypeAddress) && (infosubtype == SubTypeSecondary) &&
-				(validity == ValidInfo3))
-				data.setAddr(charparm,1);	
-									
-			else if ((infotype == DtypeAddress) && (infosubtype == SubTypeTertiary) &&
-				(validity == ValidInfo3))
-				data.setAddr(charparm,2);	
-	
-			else if ((infotype == DtypeAddress) && (infosubtype == SubTypeFourth) &&
-				(validity == ValidInfo3))
-				data.setAddr(charparm,3);
-				
-			else if ((infotype == DtypeAddress) && (infosubtype == SubTypeFifth) &&
-				(validity == ValidInfo3))
-				data.setAddr(charparm,4);
-																
+				(validity == ValidInfo1+ValidInfo3))		
+				data.setAddr(charparm,nbr1parm);
+																		
 			else
 				// System.out.println("encountered unknown EmpInfo record??!");	
 				continue;					
@@ -722,6 +712,169 @@ public class EmpDBaccess extends RosiesSalon
 	} // End of fetchPassword()
  
  
+	
+	
+	/** 	
+	findEmpInfoRecord method
+	Expects an user name, e.g. admin, or joe@myemail.com, etc.
+	
+	@param dtype Data Type
+	@param subtype Data Sub Tupe
+	@param data EmpData object reference
+	@throws SQLException if there is an error with some SQL command 
+	@return Returns a integer of EmpID if successful, else 0 
+	 
+*/
+	public int findEmpInfoRecord(int dtype, int subtype, EmpData data) throws SQLException 
+	{ 
+		int empid = data.getEmpID();
+		int einfoid = 0;
+		ResultSet result;
+						
+		String sqlcmd = "SELECT EinfoID, EmpID, InfoType, InfoSubType, Validity ";
+		sqlcmd += "FROM EmpInfo ";
+		sqlcmd += "WHERE EmpID = " + empid;
+		sqlcmd += " AND InfoType = " + dtype;
+		sqlcmd += " AND InfoSubType = " + subtype;
+		sqlcmd += " AND Validity <> 0 ";
+			
+		result = doCmd(sqlcmd); 
+		if (result != null)
+		{
+			if (!result.next())
+				return 0; // not found	
+					
+			einfoid = Integer.parseInt(result.getString("EinfoID"));
+			return einfoid;
+		}
+		
+		else
+		{ 
+			System.out.println("Can not find EmpInfo record");
+			return 0;
+		} 	
+		
+	} // End of findEmpInfoRecord()
+
+
+	/** 	
+	findEmpInfoAddress method
+	Expects an user name, e.g. admin, or joe@myemail.com, etc.
+	
+	@param subtype Data Sub Tupe (will point to Primary, Secondary, etc.)
+	@param data CustData object reference
+	@throws SQLException if there is an error with some SQL command 
+	@return Returns an integer string of up to 5 einfoid records 
+	 
+	*/
+	public ArrayList<Integer> findEmpInfoAddress(int subtype, EmpData data) 
+		throws SQLException, FileNotFoundException 
+	{ 
+		int empid = data.getEmpID();
+		int einfoid = 0;
+		int i;
+		// int[] einfoIDs = new int[]{0,0,0,0,0};
+		ArrayList<Integer> einfoIDs = new ArrayList<>();
+		String[] address = data.getAddr(subtype - 1);
+		ResultSet result;
+		
+		System.out.println("findEmpInfoAddress - entry");
+		 						
+		String sqlcmd = "SELECT EinfoID, EmpID, InfoType, InfoSubType, Validity ";
+		sqlcmd += "FROM EmpInfo ";
+		sqlcmd += "WHERE EmpID = " + empid;
+		sqlcmd += " AND InfoType = " + DtypeAddress;
+		sqlcmd += " AND InfoSubType = " + subtype;
+		sqlcmd += " AND Validity <> 0 ";
+			
+		result = doCmd(sqlcmd); 
+
+		i = 0;
+		while (result.next())
+		{
+			einfoid = Integer.parseInt(result.getString("EinfoID"));
+			einfoIDs.add(einfoid);
+			System.out.println("findEmpInfoAddress - einfoID " 
+				+ i + "= " + einfoid);
+			i++;
+		}  // End of while loop	
+		
+		return einfoIDs;		
+		
+	} // End of findEmpInfoAddress()
+
+
+
+
+/** 	
+	searchEmployeeByFullName method
+	Searches for any Employee infomation based on information available in 
+	the EmpData object.
+	If a match is found, EmpID is updated in the EmpData and 1 is returned.
+	If multiple matches found, EmpID is updated with first match but -1 is returned.
+	that is VERY unusual?!
+	Else, when no match found, 0 is returned and EmpID is left untouched.
+	
+	@param data EmpData object 
+	@throws SQLException if there is an error with some SQL command
+	@return Returns an integer 1, 0, or -1 and may update EmpID in EmpData object
+*/
+	public int searchEmployeeByFullName(EmpData data) throws SQLException 
+	{
+		String fname = data.getFname();
+		String lname = data.getLname();
+		String minit = data.getMinit();
+		ResultSet result;
+		int rvalue = 0; 
+
+		if ((lname == null) || (fname == null) || (minit == null))
+		{
+			throw new SQLException("Attempting full name search of DB and " + 
+				"not all of first, last and middle initial names supplied");
+		}
+		
+		String sqlcmd = "SELECT EmpID, UserID, job, salary, commission " +
+			"FROM Employee WHERE Lname = '" + lname + "' AND Fname = '" + 
+			fname + "' AND Minit = '" + minit + "'";
+			
+		//System.out.println("searchEmployee() - search DB using user's " + 
+		//	"Fname, Lname, and Minit.");
+						
+		result = doCmd(sqlcmd);
+			
+		if (result == null) 
+		{ 
+			System.out.println("searchEmployee() - can not find employee in DB");
+			return 0;
+		} 	
+					
+		if (result.next())
+		{
+			//System.out.println("searchEmployee() - it should get here");
+			data.setEmpID(result.getInt("EmpID"));
+			data.setJob(result.getString("job"));
+			data.setSalary(result.getDouble("Salary"));
+			data.setCommission(result.getDouble("Commission"));
+						
+			if (result.next())	// at least 2 matches! THis should be very rare.
+				rvalue = -1;
+			else					// just 1 match :-)
+				return 1;
+		}
+				
+		else
+		{
+			System.out.println("Failed to find any match when using " + 
+				"user's Fname, Lname, and Minit.");
+			return 0;
+		} 
+			 		
+		return rvalue;
+	}  // End of searchEmployeeByFullName
+
+
+ 
+
  /** 	
 	searchEmployeeByLastName method
 	Searches for any Employee infomation based only on the last name information 
@@ -776,50 +929,7 @@ public class EmpDBaccess extends RosiesSalon
 		*/
 			
 	}  // End of searchEmployeeByLastName
-	
-	
-	/** 	
-	findEmpInfoRecord method
-	Expects an user name, e.g. admin, or joe@myemail.com, etc.
-	
-	@param dtype Data Type
-	@param subtype Data Sub Tupe
-	@param data EmpData object reference
-	@throws SQLException if there is an error with some SQL command 
-	@return Returns a integer of EmpID if successful, else 0 
-	 
-*/
-	public int findEmpInfoRecord(int dtype, int subtype, EmpData data) throws SQLException 
-	{ 
-		int empid = data.getEmpID();
-		int einfoid = 0;
-		ResultSet result;
-						
-		String sqlcmd = "SELECT EinfoID, EmpID, InfoType, InfoSubType, Validity ";
-		sqlcmd += "FROM EmpInfo ";
-		sqlcmd += "WHERE EmpID = " + empid;
-		sqlcmd += " AND InfoType = " + dtype;
-		sqlcmd += " AND InfoSubType = " + subtype;
-		sqlcmd += " AND Validity <> 0 ";
-			
-		result = doCmd(sqlcmd); 
-		if (result != null)
-		{
-			if (!result.next())
-				return 0; // not found	
-					
-			einfoid = Integer.parseInt(result.getString("EinfoID"));
-			return einfoid;
-		}
-		
-		else
-		{ 
-			System.out.println("Can not find EmpInfo record");
-			return 0;
-		} 	
-		
-	} // End of findEmpInfoRecord()
- 
+
 	 
   
 /** 	
@@ -980,10 +1090,13 @@ public class EmpDBaccess extends RosiesSalon
 	}
 	
 	public boolean updateEmployeeAddress(EmpData data,int index) 
-		throws SQLException 
+		throws SQLException, FileNotFoundException  
 	{ 
 		boolean rvalue = true;
 		int which;
+		ArrayList<Integer> keys;
+		String[] addressLines;
+		
 		switch (index)
 		{
 			case 0:
@@ -1004,12 +1117,28 @@ public class EmpDBaccess extends RosiesSalon
 			default:
 				return false;
 		}
-		int key = findEmpInfoRecord(DtypeAddress, which, data);	
-		if (key > 0)	
-			rvalue = deactivateEmpInfoRecord(key);
-		if (data.getAddr(index) != null)	
-			return addEmpInfoRecord(DtypeAddress, which, data);
-		
+
+		System.out.println("updateEmployeeAddress() - find any/all addresses");
+		keys = findEmpInfoAddress(SubTypePrimary, data);
+		for ( int key : keys )
+		{
+			System.out.println("updateEmployeeAddress() next key = " + key);
+			if (key > 0)
+			{
+				System.out.println("updateEmployeeAddress() - " +
+					"found an address to deactivate at key: "+ key);		
+				rvalue = deactivateEmpInfoRecord(key);
+			}
+		}	
+
+		System.out.println("updateEmployeeAddress() - add addresses");
+		addressLines = data.getAddr(index);
+		if (addressLines[0] != null)
+		{
+			System.out.println("updateEmployeeAddress() - add addresses");
+			rvalue = addEmpInfoAddress(SubTypePrimary, data);
+		}
+				
 		return rvalue;		
 	}
 	

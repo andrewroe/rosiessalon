@@ -1,29 +1,31 @@
 import java.util.Scanner; 
 import javax.swing.JOptionPane; 
 import java.sql.*;
-import java.io.*; 	
+import java.io.*; 
+
 import javafx.application.Application;
 import javafx.stage.Stage;
-// import javafx.scene.control.*;
+
+//import javafx.event.*;
+import javafx.event.EventHandler;
+import javafx.event.ActionEvent;
+import javafx.geometry.Pos;
+import javafx.geometry.Insets;
+	
 import javafx.scene.Scene;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import javafx.scene.layout.BorderPane;
+// import javafx.scene.control.*;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.text.TextAlignment;
-import javafx.scene.text.Font;
-import javafx.geometry.Pos;
-import javafx.geometry.Insets;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.event.EventHandler;
-import javafx.event.ActionEvent;
-
-//import javafx.event.*;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.text.TextAlignment;
+import javafx.scene.text.Font;
 
 
 /**		     	
@@ -72,18 +74,12 @@ public class TransactionApp extends Application
 	@Override
 	public void start(Stage primaryStage) 
 			throws SQLException, FileNotFoundException
-	{
-		//UsersChoice choice = UsersChoice.invalidChoice;	// The user's choice      
-        //int empid = 0;		// the employee's EmpID
-        //EmpData userData = new EmpData();
-        //EmpData employeeData = new EmpData();
-     
+	{     
      	mainStage = primaryStage;
         // Stage title
  		mainStage.setTitle("Rosie Salon Transaction GUI Application");  	
 	    
 	    promptForConnectToDB(mainStage);   
-        // handlelogin(mainStage);
  
 	}  // End of start()
 	
@@ -150,14 +146,12 @@ public class TransactionApp extends Application
         	{
             	System.out.println(ex.getMessage());
             	System.out.println("Got a SQL exception!");
-            	//TransactionApp.dbcredentialsfile="NotConnected";
             	dbcredentialsfile = "NotConnected";
         	}			
         	catch (FileNotFoundException ex)
         	{
             	System.out.println(ex.getMessage());
             	System.out.println("Got a File Not Found exception!");
-            	//TransactionApp.dbcredentialsfile="NotConnected";
             	dbcredentialsfile = "NotConnected";
         	}
         	   					
@@ -317,8 +311,13 @@ public class TransactionApp extends Application
 		int empid = 0;
 		String username = null;				
 		username = usernameText.getText();
-		FindCustomer findcustomer = new FindCustomer();
+		
 		AddCustomer addcustomer = new AddCustomer();
+		FindCustomer findcustomer = new FindCustomer();
+		
+		AddEmployee addemployee = new AddEmployee();
+		FindEmployee findemployee = new FindEmployee();
+		
 		DoTransaction doTransaction = new DoTransaction();		
 		
 		Label topbanner = new Label("Rosie's Salon");
@@ -348,24 +347,7 @@ public class TransactionApp extends Application
 		
 		HBox mainHbox = new HBox(10, mainPrompt, bMain);
 		
-		Label findCustPrompt = new Label("        Find Customer");
-		Button bFindCust = new Button("Go");
-		
-		bFindCust.setOnAction(event ->
-		{
-			try
-			{
-				findcustomer.findCustomer(mainStage);	
-			}
-            catch (SQLException ex)
-            {
-            	System.out.println(ex.getMessage());
-            	System.out.println("Got a SQL exception!");
-            }							
-		});		
-		
-		HBox findCustHbox = new HBox(10, findCustPrompt, bFindCust);
-		
+
 		Label addCustPrompt = new Label("         Add Customer");
 		Button bAddCust = new Button("Go");
 		bAddCust.setOnAction(event ->
@@ -383,11 +365,65 @@ public class TransactionApp extends Application
 		
 		HBox addCustHbox = new HBox(10, addCustPrompt, bAddCust);
 		
+		Label findCustPrompt = new Label("        Find Customer");
+		Button bFindCust = new Button("Go");
+		
+		bFindCust.setOnAction(event ->
+		{
+			try
+			{
+				findcustomer.findCustomer(mainStage);	
+			}
+            catch (SQLException ex)
+            {
+            	System.out.println(ex.getMessage());
+            	System.out.println("Got a SQL exception!");
+            }							
+		});		
+		
+		HBox findCustHbox = new HBox(10, findCustPrompt, bFindCust);
+				
+// remove
 		Label updateCustPrompt = new Label("      Update Customer");
 		Button bUpdateCust = new Button("Go");
 		bUpdateCust.setOnAction(new ButtonClickHandler());
 		HBox updateCustHbox = new HBox(10, updateCustPrompt, bUpdateCust);
+// to here
+	
+		Label addEmpPrompt = new Label("         Add Employee");
+		Button bAddEmp = new Button("Go");
+		bAddEmp.setOnAction(event ->
+		{
+			try
+			{
+				addemployee.addEmployee(mainStage);	
+			}
+            catch (SQLException ex)
+            {
+            	System.out.println(ex.getMessage());
+            	System.out.println("Got a SQL exception!");
+            }							
+		});				
+		HBox addEmpHbox = new HBox(10, addEmpPrompt, bAddEmp);
+
+		Label findEmpPrompt = new Label("        Find Employee");
+		Button bFindEmp = new Button("Go");
 		
+		bFindEmp.setOnAction(event ->
+		{
+			try
+			{
+				findemployee.findEmployee(mainStage);	
+			}
+            catch (SQLException ex)
+            {
+            	System.out.println(ex.getMessage());
+            	System.out.println("Got a SQL exception!");
+            }							
+		});		
+				
+		HBox findEmpHbox = new HBox(10, findEmpPrompt, bFindEmp);
+					
 		Label newTransPrompt = new Label("     New Transaction");
 		Button bNewTrans = new Button("Go");
 		bNewTrans.setOnAction(event ->
@@ -459,10 +495,9 @@ public class TransactionApp extends Application
 		});
 		
 		HBox exitHbox = new HBox(10, exitPrompt, bExit);
-		
- 				
+				
 		VBox actionVbox = 
-			new VBox(20,mainHbox,findCustHbox,addCustHbox,updateCustHbox,
+			new VBox(20,mainHbox,addCustHbox,findCustHbox,addEmpHbox,findEmpHbox,
 			newTransHbox,findTransHbox,updateTransHbox,signOutHbox,exitHbox);
 					
 		ImageView imageview = new ImageView();
@@ -485,7 +520,6 @@ public class TransactionApp extends Application
 		BorderPane borderPane = new BorderPane();
 		borderPane.setTop(bannerHbox);
 		borderPane.setBottom(footerHbox);
-		//borderPane.setLeft(leftVbox);
 		borderPane.setLeft(actionVbox);
 		borderPane.setCenter(imageview);	
 		borderPane.setRight(rightVbox);

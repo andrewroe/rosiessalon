@@ -28,101 +28,443 @@ public class EmpData
 
 
 /*
-	Constructor.
-
-
-	public EmpData()
-	{
-		this.EmpIDData = 0;
-		this.UserIDData = 0;
-		this.DateTimeData = null;
-		this.FnameData = null;
-		this.MinitData = null;
-		this.LnameData = null;
-		this.DobData = null;
-		this.Job = null;
-		this.Salary = 0.0;
-		this.Commission = 0.0;
-		this.PhoneData[0] = null;
-		this.PhoneData[1] = null;
-		this.PhoneData[2] = null;
-		this.PhoneData[3] = null;
-		this.PhoneData[4] = null;
-		this.EmailData[0] = null;
-		this.EmailData[1] = null;
-		this.EmailData[2] = null;
-		this.EmailData[3] = null;
-		this.EmailData[4] = null;
-		this.AddrData[0] = null;
-		this.AddrData[1] = null;
-		this.AddrData[2] = null;
-		this.AddrData[3] = null;
-		this.AddrData[4] = null;
-		this.UserName = null;
-		this.Password = null;
-	}
+	All the clear data field's methods.
 */
+
+	public boolean clearAll()
+	{
+		if (!setEmpID(0)) return(false);
+		if (!setUserID(0)) return(false);
+		if (!setDateTime(null)) return(false);
+		if (!setFname(null)) return(false);
+		if (!setLname(null)) return(false);
+		if (!setMinit(null)) return(false);
+		if (!setJob(null)) return(false);
+		if (!setSalary(0.0)) return(false);
+		if (!setCommission(0.0)) return(false);
+		if (!setDob(null)) return(false);
+		if (!setUname(null)) return(false);
+		if (!setPassword(null)) return(false);
+		
+		if (!setEmail(null,0)) return(false);
+		if (!setEmail(null,1)) return(false);
+		if (!setEmail(null,2)) return(false);
+		if (!setEmail(null,3)) return(false);
+		if (!setEmail(null,4)) return(false);
+		
+		if (!setPhone(null,0)) return(false);
+		if (!setPhone(null,1)) return(false);
+		if (!setPhone(null,2)) return(false);
+		if (!setPhone(null,3)) return(false);
+		if (!setPhone(null,4)) return(false);
+		
+		if (!setAddr(null,0)) return(false);
+		if (!setAddr(null,1)) return(false);
+		if (!setAddr(null,2)) return(false);
+		if (!setAddr(null,3)) return(false);
+		if (!setAddr(null,4)) return(false);
+
+		return true;
+	}
+
 
 /*
-	Copy Constructor.
-
-	// @Override
-	public EmpData(EmpData object)
-	{
-		this.EmpIDData = object.EmpIDData;
-		this.UserIDData = object.UserIDData;
-		if (object.DateTimeData != null)
-			this.DateTimeData = new String(object.DateTimeData);
-		if (object.FnameData != null)
-			this.FnameData = new String(object.FnameData);
-		if (object.MinitData != null)
-			this.MinitData = new String(object.MinitData);
-		if (object.LnameData != null)
-			this.LnameData = new String(object.LnameData);
-		if (object.DobData != null)
-			this.DobData = new String(object.DobData);
-		if (object.Job != null)
-			this.Job = new String(object.Job);
-		this.Salary = object.Salary;
-		this.Commission = object.Commission;
-		
-		if (object.PhoneData[0] != null)
-			this.PhoneData[0] = new String(object.PhoneData[0]);
-		if (object.PhoneData[1] != null)
-			this.PhoneData[1] = new String(object.PhoneData[1]);
-		if (object.PhoneData[2] != null)
-			this.PhoneData[2] = new String(object.PhoneData[2]);
-		if (object.PhoneData[3] != null)
-			this.PhoneData[3] = new String(object.PhoneData[3]);
-		if (object.PhoneData[4] != null)
-			this.PhoneData[4] = new String(object.PhoneData[4]);
-			
-		if (object.EmailData[0] != null)
-			this.EmailData[0] = new String(object.EmailData[0]);
-		if (object.PhoneData[1] != null)
-			this.EmailData[1] = new String(object.EmailData[1]);
-		if (object.PhoneData[2] != null)
-			this.EmailData[2] = new String(object.EmailData[2]);
-		if (object.PhoneData[3] != null)
-			this.EmailData[3] = new String(object.EmailData[3]);
-		if (object.PhoneData[4] != null)
-			this.EmailData[4] = new String(object.EmailData[4]);
-			
-		if (object.AddrData[0] != null)
-			this.AddrData[0] = new String(object.AddrData[0]);
-		if (object.PhoneData[1] != null)
-			this.AddrData[1] = new String(object.AddrData[1]);
-		if (object.PhoneData[2] != null)
-			this.AddrData[2] = new String(object.AddrData[2]);
-		if (object.PhoneData[3] != null)
-			this.AddrData[3] = new String(object.AddrData[3]);
-		if (object.PhoneData[4] != null)
-			this.AddrData[4] = new String(object.AddrData[4]);
-			
-		this.UserName = null;
-		this.Password = null;
-	}
+	All of the equals data field's methods.
 */
+
+	public boolean equalsEmpID(EmpData other)
+	{
+		return this.EmpIDData == other.EmpIDData;
+	}
+
+	public boolean equalsUserID(CustData other)
+	{
+		return this.UserIDData == other.UserIDData;
+	}
+
+	public boolean equalsCreateTime(EmpData other)
+	{
+		if ( this.DateTimeData != null)
+		{
+			if ( other.DateTimeData != null
+				&& DateTimeData.equals(other.DateTimeData) )
+				return true;
+			else
+				return false;		
+		}
+		else
+		{
+			if (other.DateTimeData == null)
+				return true;
+			else
+				return false;
+		} 
+	}
+
+	public boolean equalsUpdateTime(EmpData other)
+	{
+		if ( this.DateTimeData != null)
+		{
+			if ( other.DateTimeData != null
+				&& DateTimeData.equals(other.DateTimeData) )
+				return true;
+			else
+				return false;		
+		}
+		else
+		{
+			if (other.DateTimeData == null)
+				return true;
+			else
+				return false;
+		} 
+	}
+
+	public boolean equalsFname(EmpData other)
+	{
+		if ( this.FnameData != null)
+		{
+			if ( other.FnameData != null
+				&& FnameData.equals(other.FnameData) )
+				return true;
+			else
+				return false;		
+		}
+		else
+		{
+			if (other.FnameData == null)
+				return true;
+			else
+				return false;
+		} 		
+	}
+
+	public boolean equalsLname(EmpData other)
+	{
+		if ( this.LnameData != null)
+		{
+			if ( other.LnameData != null
+				&& LnameData.equals(other.LnameData) )
+				return true;
+			else
+				return false;		
+		}
+		else
+		{
+			if (other.LnameData == null)
+				return true;
+			else
+				return false;
+		} 				
+	}
+
+	public boolean equalsMinit(EmpData other)
+	{
+		if ( this.MinitData != null)
+		{
+			if ( other.MinitData != null
+				&& MinitData.equals(other.MinitData) )
+				return true;
+			else
+				return false;		
+		}
+		else
+		{
+			if (other.MinitData == null)
+				return true;
+			else
+				return false;
+		} 				
+	}
+
+
+	public boolean equalsJob(EmpData other)
+	{
+		if ( this.Job != null)
+		{
+			if ( other.Job != null
+				&& Job.equals(other.Job) )
+				return true;
+			else
+				return false;		
+		}
+		else
+		{
+			if (other.Job == null)
+				return true;
+			else
+				return false;
+		} 				
+	}
+
+
+	public boolean equalsPrimaryPhone(EmpData other)
+	{
+		if ( this.PhoneData[0] != null)
+		{
+			if ( other.PhoneData[0] != null
+				&& PhoneData[0].equals(other.PhoneData[0]) )
+				return true;
+			else
+				return false;		
+		}
+		else
+		{
+			if (other.PhoneData[0] == null)
+				return true;
+			else
+				return false;
+		} 				
+	}
+	
+	public boolean equalsPrimaryEmail(EmpData other)
+	{
+		if ( this.EmailData[0] != null)
+		{
+			if ( other.EmailData[0] != null
+				&& EmailData[0].equals(other.EmailData[0]) )
+				return true;
+			else
+				return false;		
+		}
+		else
+		{
+			if (other.EmailData[0] == null)
+				return true;
+			else
+				return false;
+		} 				
+	}
+				
+	public boolean equalsSalary(EmpData other)
+	{
+		return this.Salary == other.Salary;
+	}
+				
+	public boolean equalsCommission(EmpData other)
+	{
+		return this.Commission == other.Commission;
+	}
+	
+	public boolean equalsDob(EmpData other)
+	{
+		if ( this.DobData != null)
+		{
+			if ( other.DobData != null
+				&& DobData.equals(other.DobData) )
+				return true;
+			else
+				return false;		
+		}
+		else
+		{
+			if (other.DobData == null)
+				return true;
+			else
+				return false;
+		} 				
+		
+	}
+
+	public boolean equalsPhone(EmpData other,int index)
+	{
+		if (index > 4)
+		{
+			System.out.println("equalsPhone() - can't read past the maximum index!");
+			return true;  // !!!!!
+		}
+		
+		if ( this.PhoneData[index] != null)
+		{
+			if ( other.PhoneData[index] != null
+				&& PhoneData[index].equals(other.PhoneData[index]) )
+				return true;
+			else
+				return false;		
+		}
+		else
+		{
+			if (other.PhoneData[index] == null)
+				return true;
+			else
+				return false;
+		} 				
+	}
+
+	public boolean equalsEmail(EmpData other,int index)
+	{
+		if (index > 4)
+		{
+			System.out.println("equalsEmail() - can't read past the maximum index!");
+			return true;
+		}
+		
+		if ( this.EmailData[index] != null)
+		{
+			if ( other.EmailData[index] != null
+				&& EmailData[index].equals(other.EmailData[index]) )
+				return true;
+			else
+				return false;		
+		}
+		else
+		{
+			if (other.EmailData[index] == null)
+				return true;
+			else
+				return false;
+		} 	
+	}
+
+	public boolean equalsAddr(EmpData other,int index)
+	{		
+		if (index > 0)
+		{
+			System.out.println("equalsAddr() - can't read past the maximum index!");
+			return true;
+		}
+		
+		for (int row = 0; row < 5; row++)
+		{
+			if (!equalsAddrRow(other, row))
+				return false;	
+		}
+		
+		return true;		
+	}
+
+	public boolean equalsAddrRow(EmpData other, int row)
+	{	
+		if ( this.AddrData[row] != null)
+		{
+			if ( other.AddrData[row] != null
+				&& AddrData[row].equals(other.AddrData[row]) )
+				return true;
+			else
+				return false;		
+		}
+		else
+		{
+			if (other.AddrData[row] == null)
+				return true;
+			else
+				return false;
+		} 	
+	}
+
+
+
+
+/*
+	All of the get data field's methods.
+*/
+
+	public int getEmpID()
+	{
+		return(this.EmpIDData);
+	}
+
+	public int getUserID()
+	{
+		return(this.UserIDData);
+	}
+
+	public String getDateTime()
+	{
+		return(this.DateTimeData);
+	}
+
+	public String getFname()
+	{
+		return(this.FnameData);
+	}
+
+	public String getLname()
+	{
+		return(this.LnameData);
+	}
+
+	public String getMinit()
+	{
+		return(this.MinitData);
+	}
+		
+	public String getJob()
+	{
+		return Job;
+	}
+	
+	public double getSalary()
+	{
+		return Salary;
+	}
+	
+	public double getCommission()
+	{
+		return Commission;
+	}
+
+	public String getDob()
+	{
+		return(this.DobData);
+	}
+
+	public String getPhone(int index)
+	{
+		// System.out.println("getPhone() - entry, index = " + index);
+		if (index > 4)
+		{
+			System.out.println("getPhone() - can't read past the maximum phone index!");
+			return(null);
+		}
+		
+		//System.out.println("getPhone() - exit, phone # = " + 
+		//		PhoneData[index] + " at index = " + index);
+		return(PhoneData[index]);
+		
+	}
+
+	public String getEmail(int index)
+	{
+		if (index > 4)
+		{
+			System.out.println("getEmail() - can't read past the maximum Email index!");
+			return(null);
+		}
+		else
+		{
+			return(this.EmailData[index]);
+		}
+	}
+
+	public String[] getAddr(int row)
+	{
+		String[] address = new String[5];
+		if (row > 4)
+		{
+			System.out.println("getAddr() - can't read past the maximum Address index!");
+			return(null);
+		}
+		else
+		{
+			for (int col = 0; col < 5; col++)
+				//address[col] = this.AddrData[row][col];
+				address[col] = this.AddrData[col];
+			return address;
+		}	
+	}
+
+	
+	public String getUname()
+	{
+		return UserName;
+	}
+
+	public String getPassword()
+	{
+		return Password;
+	}
+	
 
 /*
 	Replicate Constructor.
@@ -191,6 +533,8 @@ public class EmpData
 	}
 
 
+
+	
 /*
 	All the set data field's methods.
 */
@@ -306,149 +650,5 @@ public class EmpData
 		return true;
 	}
 
-/*
-	All of the get data field's methods.
-*/
-
-	public int getEmpID()
-	{
-		return(this.EmpIDData);
-	}
-
-	public int getUserID()
-	{
-		return(this.UserIDData);
-	}
-
-	public String getDateTime()
-	{
-		return(this.DateTimeData);
-	}
-
-	public String getFname()
-	{
-		return(this.FnameData);
-	}
-
-	public String getLname()
-	{
-		return(this.LnameData);
-	}
-
-	public String getMinit()
-	{
-		return(this.MinitData);
-	}
-		
-	public String getJob()
-	{
-		return Job;
-	}
-	
-	public double getSalary()
-	{
-		return Salary;
-	}
-	
-	public double getCommission()
-	{
-		return Commission;
-	}
-
-	public String getDob()
-	{
-		return(this.DobData);
-	}
-
-	public String getPhone(int index)
-	{
-		// System.out.println("getPhone() - entry, index = " + index);
-		if (index > 4)
-		{
-			System.out.println("getPhone() - can't read past the maximum phone index!");
-			return(null);
-		}
-		
-		//System.out.println("getPhone() - exit, phone # = " + 
-		//		PhoneData[index] + " at index = " + index);
-		return(PhoneData[index]);
-		
-	}
-
-	public String getEmail(int index)
-	{
-		if (index > 4)
-		{
-			System.out.println("getEmail() - can't read past the maximum Email index!");
-			return(null);
-		}
-		else
-		{
-			return(this.EmailData[index]);
-		}
-	}
-
-	public String getAddr(int index)
-	{
-		if (index > 4)
-		{
-			System.out.println("getAddr() - can't read past the maximum Address index!");
-			return(null);
-		}
-		else
-		{
-			return(this.AddrData[index]);
-		}
-	}
-	
-	public String getUname()
-	{
-		return UserName;
-	}
-
-	public String getPassword()
-	{
-		return Password;
-	}
-	
-/*
-	All the clear data field's methods.
-*/
-
-	public boolean clearAll()
-	{
-		if (!setEmpID(0)) return(false);
-		if (!setUserID(0)) return(false);
-		if (!setDateTime(null)) return(false);
-		if (!setFname(null)) return(false);
-		if (!setLname(null)) return(false);
-		if (!setMinit(null)) return(false);
-		if (!setJob(null)) return(false);
-		if (!setSalary(0.0)) return(false);
-		if (!setCommission(0.0)) return(false);
-		if (!setDob(null)) return(false);
-		if (!setUname(null)) return(false);
-		if (!setPassword(null)) return(false);
-		
-		if (!setEmail(null,0)) return(false);
-		if (!setEmail(null,1)) return(false);
-		if (!setEmail(null,2)) return(false);
-		if (!setEmail(null,3)) return(false);
-		if (!setEmail(null,4)) return(false);
-		
-		if (!setPhone(null,0)) return(false);
-		if (!setPhone(null,1)) return(false);
-		if (!setPhone(null,2)) return(false);
-		if (!setPhone(null,3)) return(false);
-		if (!setPhone(null,4)) return(false);
-		
-		if (!setAddr(null,0)) return(false);
-		if (!setAddr(null,1)) return(false);
-		if (!setAddr(null,2)) return(false);
-		if (!setAddr(null,3)) return(false);
-		if (!setAddr(null,4)) return(false);
-
-		return true;
-	}
 	
 } 

@@ -562,6 +562,7 @@ public class DoTransaction
 			TransactionApp.TransactionDBaccess.addTransDetail(TDdata,subtype);		
 		}
 		
+		beginTransaction(myStage);
 	}		
 		
 }
