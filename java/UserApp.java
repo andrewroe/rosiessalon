@@ -97,7 +97,7 @@ public class UserApp
         			System.exit(0);
 					break;
 				case createEmp:
-					// NEED TO check for admin or manager, which means findEmployee()
+					// NEED TO check for admin or manager, ... findEmployee()
 					employeeData.clearAll();
 					employeeData.setUserID(userid);
 					validEmployeeData = createEmployee(employeeData);
@@ -124,8 +124,8 @@ public class UserApp
 					break;
 				default:
 					System.out.println("This program's menu method is broken!");
-					System.out.println("Some day in the future this would throw " +
-						"an Exception.");
+					System.out.println("Some day in the future this " + 
+						"would throw an Exception.");
 					System.exit(0);
 			}
 			
@@ -160,11 +160,12 @@ public class UserApp
 			System.out.println("10. Find a transaction");
 			System.out.println("11. Update a transaction");
 			System.out.println("12. Void a transaction");
-			userchoice = keyboard.nextInt(); // this may not be int, need checking!!
+			userchoice = keyboard.nextInt(); // may not be int, need checking!!
 				
 			if ((userchoice < 0) || (userchoice > 12))
 			{
-				System.out.println("You must enter a number from 0 through 12.");
+				System.out.println("You must enter a number from " + 
+					"0 through 12.");
 				System.out.println("So please!");
 			}
 			
@@ -187,15 +188,14 @@ public class UserApp
 				return UsersChoice.invalidChoice;
 		
 		}
-		
 	}
 	
 	
 	/**		     	
 		This method is for login handling of the user.
 		
-   		@param user which is an EmpData object to be updated when user successfully
-   		can be found in the Database.
+   		@param user which is an EmpData object to be updated when 
+   		user successfully can be found in the Database.
    		@throws SQLException if there is an error with some SQL command
    		@return UserID of user or 0, if not found.  		
 	*/
@@ -244,8 +244,8 @@ public class UserApp
 	/**		     	
 		This method is for create new employee.
 		
-   		@param data which is an EmpData object to be updated when employee successfully
-   		added to the Database.
+   		@param data which is an EmpData object to be updated when 
+   		employee successfully added to the Database.
    		@throws SQLException if there is an error with some SQL command
    		@return boolean of either success or failure.  		
 	*/
@@ -300,8 +300,8 @@ public class UserApp
 		dob = keyboard.nextLine();
 		data.setDob(dob);
 
-		System.out.print("Phone # (ccaaalllnnn - cc = country code, aaa = area code," +
-				" lll = local exchange, etc.): ");
+		System.out.print("Phone # (ccaaalllnnn - cc = country code, " + 
+			"aaa = area code, lll = local exchange, etc.): ");
 		phone = keyboard.nextLine();
 		data.setPhone(phone,0);
 		
@@ -322,8 +322,8 @@ public class UserApp
 	/**		     	
 		This method is for finding an existing employee.
 		
-   		@param data which is an EmpData object to be updated when employee successfully
-   		found in the Database.
+   		@param data which is an EmpData object to be updated when 
+   		employee successfully found in the Database.
    		@throws SQLException if there is an error with some SQL command
    		@return boolean of either success or failure.  		
 	*/
@@ -406,7 +406,8 @@ public class UserApp
 		}
 		else if (gotback == -1)
 		{
-			System.out.println("Found multiple possible maytches for employee!");
+			System.out.println("Found multiple possible maytches " + 
+				"for employee!");
 			System.out.println("That is VERY unusual!");
 			return false;
 		}
@@ -427,8 +428,8 @@ public class UserApp
 	/**		     	
 		This method is for updating an existing employee.
 		
-   		@param data which is an EmpData object to be updated when employee successfully
-   		updated in the Database.
+   		@param data which is an EmpData object to be updated 
+   		when employee successfully updated in the Database.
    		@throws SQLException if there is an error with some SQL command
    		@return boolean of either success or failure.  		
 	*/
@@ -470,7 +471,8 @@ public class UserApp
 		}
 		else if (gotback == -1)
 		{
-			System.out.println("Found multiple possible maytches for employee!");
+			System.out.println("Found multiple possible maytches " + 
+				"for employee!");
 			System.out.println("That is VERY unusual!");
 			return false;
 		}
@@ -488,12 +490,13 @@ public class UserApp
 			
 			if (!rvalue)
 			{
-				System.out.println("Not good, could not fetchAllEmployeeInfo()");
+				System.out.println
+					("Not good, could not fetchAllEmployeeInfo()");
 				return false;
 			}
 			
-			System.out.println("Did you want to update one of the name fields " +
-				"(y or n)?");
+			System.out.println("Did you want to update one of the " + 
+				"name fields (y or n)?");
 			userresponse = keyboard.nextLine();
 			if ((userresponse.length() > 0) &&
 				(userresponse.charAt(0) == 'Y') || 
@@ -502,8 +505,8 @@ public class UserApp
 				rvalue = setNewNameEmpInfo(data, originalData);							
 			} // End of change name fields
 			
-			System.out.println("Did you want to update job, salary, or commission " +
-				"(y or n)?");
+			System.out.println("Did you want to update job, salary, " + 
+				"or commission (y or n)?");
 			userresponse = keyboard.nextLine();
 			if ((userresponse.length() > 0) &&
 				(userresponse.charAt(0) == 'Y') || 
@@ -590,7 +593,8 @@ public class UserApp
 
 		{
 			System.out.println("Look for Middle name pop-up");
-			response = JOptionPane.showInputDialog("new Middle name or initial?");
+			response = JOptionPane.showInputDialog
+				("new Middle name or initial?");
 			data.setMinit(response);
 			rvalue = dbaccess.updateEmployeeMinit(data);
 		}
@@ -604,7 +608,8 @@ public class UserApp
 
 		{
 			System.out.println("Look for last name pop-up");
-			response = JOptionPane.showInputDialog("new Middle name or initial?");
+			response = JOptionPane.showInputDialog
+				("new Middle name or initial?");
 			data.setLname(response);
 			rvalue = dbaccess.updateEmployeeLname(data);
 		}
@@ -614,7 +619,8 @@ public class UserApp
 	
 	
 	/**		     	
-		This method is a helper for updating an existing employee professional info.
+		This method is a helper for updating an existing employee 
+		professional info.
 		
    		@param data an EmpData object to be updated
    		@param originalData an EmpData object of existing Employee
@@ -622,7 +628,8 @@ public class UserApp
    		@return boolean of either success or failure.  		
 	*/
 		  
-	public static boolean setNewProfessionalEmpInfo(EmpData data, EmpData originalData) 
+	public static boolean setNewProfessionalEmpInfo(EmpData data, 
+			EmpData originalData) 
 		throws SQLException
 	{		
 		boolean rvalue = false;
@@ -681,7 +688,8 @@ public class UserApp
    		@return boolean of either success or failure.  		
 	*/
 		  
-	public static boolean setNewEmailEmpInfo(EmpData data, EmpData originalData) 
+	public static boolean setNewEmailEmpInfo(EmpData data, 
+			EmpData originalData) 
 		throws SQLException
 	{		
 		boolean rvalue = true;
@@ -699,17 +707,20 @@ public class UserApp
 			name = originalData.getEmail(i);
 			if (name != null)
 			{
-				System.out.println("Current Email at index " + i + " is " + name);
+				System.out.println("Current Email at index " + 
+					i + " is " + name);
 			}
 			else
 			{
-				System.out.println("Current Email at index " + i + " is blank");
+				System.out.println("Current Email at index " + 
+					i + " is blank");
 			}
 			
 			name = JOptionPane.showInputDialog("New Email address?" +
 				" Enter nothing to leave as is." +
 				" Enter 'quit' to stop making Email changes.");
-			if (name.equals("Quit") || name.equals("quit") || name.equals("QUIT"))
+			if (name.equals("Quit") || name.equals("quit") || 
+				name.equals("QUIT"))
 			{
 				do // clear the rest out
 				{
@@ -740,7 +751,8 @@ public class UserApp
    		@return boolean of either success or failure.  		
 	*/
 		  
-	public static boolean setNewPhoneEmpInfo(EmpData data, EmpData originalData) 
+	public static boolean setNewPhoneEmpInfo(EmpData data, 
+			EmpData originalData) 
 		throws SQLException
 	{		
 		boolean rvalue = true;
@@ -758,19 +770,22 @@ public class UserApp
 			name = originalData.getPhone(i);
 			if (name != null)
 			{
-				System.out.println("Current Phone at index " + i + " is " + name);
+				System.out.println("Current Phone at index " + 
+					i + " is " + name);
 
 			}
 			else
 			{
-				System.out.println("Current Phone at index " + i + " is blank");
+				System.out.println("Current Phone at index " + 
+					i + " is blank");
 			}			
 			
 			name = JOptionPane.showInputDialog("New Phone address?" +
 				" Enter nothing to leave as is." +
 				" Enter 'Quit' to stop making phone changes.");
 				
-			if (name.equals("Quit") || name.equals("quit") || name.equals("QUIT"))
+			if (name.equals("Quit") || name.equals("quit") || 
+				name.equals("QUIT"))
 			{
 				do // clear the rest out
 				{
@@ -793,7 +808,8 @@ public class UserApp
 
 
 	/**		     	
-		This method is a helper for updating an existing employee Address info.
+		This method is a helper for updating an existing employee 
+		Address info.
 		
    		@param data an EmpData object to be updated
    		@param originalData an EmpData object of existing Employee
@@ -812,42 +828,57 @@ public class UserApp
 		System.out.println("\nYou can update up to 5 lines of address," +
 			" starting with the new 1st line, etc." +			
 			" Watch for Pop-up prompts.");
-		
-		i = 0;
-		do
-		{			
-			name = originalData.getAddr(i);
-			if (name != null)
-			{
-				System.out.println("Current Address at index " + i + " is " + name);
 
-			}
-			else
-			{
-				System.out.println("Current Address at index " + i + " is blank");
-			}			
-			
-			name = JOptionPane.showInputDialog("New address line?" +
-				" Enter nothing to leave as is." +
-				" Enter 'Quit' to stop making address changes.");
-				
-			if (name.equals("Quit") || name.equals("quit") || name.equals("QUIT"))
-			{
-				do // clear the rest out
+        try
+		{   
+			i = 0;
+			do
+			{			
+				name = originalData.getAddr(0)[i];
+				if (name != null)
 				{
-					data.setEmail(null,i);
-					rvalue = dbaccess.updateEmployeeAddress(data,i);	
-				} while (++i < 5);
-				return rvalue; 
-			}
+					System.out.println("Current Address at index " + 
+						i + " is " + name);
+				}
+				else
+				{
+					System.out.println("Current Address at index " + 
+						i + " is blank");
+				}			
+			
+				name = JOptionPane.showInputDialog("New address line?" +
+					" Enter nothing to leave as is." +
+					" Enter 'Quit' to stop making address changes.");
 				
-			if (name.length() > 0)
-			{
-				data.setAddr(name,i);
-				rvalue = dbaccess.updateEmployeeAddress(data,i);	
-			}
-
-		} while (++i < 5);
+				if (name.equals("Quit") || 
+					name.equals("quit") || name.equals("QUIT"))
+				{
+					do // clear the rest out
+					{
+						data.setAddr(null,i);
+						rvalue = dbaccess.updateEmployeeAddress(data,i);	
+					} while (++i < 5);
+					return rvalue; 
+				}
+				
+				if (name.length() > 0)
+				{
+					data.setAddr(name,i);
+					rvalue = dbaccess.updateEmployeeAddress(data,i);	
+				}
+			} while (++i < 5);
+		}
+		
+        catch (FileNotFoundException ex)
+        {
+            System.out.println(ex.getMessage());
+            System.out.println("Got a File Not Found exception!");
+        }	
+        catch (SQLException ex)
+        {
+            System.out.println(ex.getMessage());
+            System.out.println("Got a SQL exception!");
+        }	
 			
 		return rvalue;	
 	} // End of setNewAddrEmpInfo

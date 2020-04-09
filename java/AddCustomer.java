@@ -1,6 +1,7 @@
 import java.util.Scanner; 
 import javax.swing.JOptionPane; 
-import java.sql.*;  	
+import java.sql.*;
+import java.io.*;
 import javafx.application.Application;
 import javafx.stage.Stage;
 // import javafx.scene.control.*;
@@ -108,14 +109,16 @@ public class AddCustomer
 						"added new Customer base info"));
 					if (addressArray[0] != null)
 					{
-						if (TransactionApp.CustomerDBaccess.searchCustomerByFullName
+						if (TransactionApp.
+							CustomerDBaccess.searchCustomerByFullName
 						(data) == 1)
 						{
 							// data.getCustID() now filled in												
 							if (custinfoDB.addCustInfoAddress
 								(custinfoDB.SubTypePrimary,data))
 							{
-								successLabel.setText(String.format("Successfully " +
+								successLabel.setText(String.format
+									("Successfully " +
 									"added new Customer all info"));
 							}
 						}	
@@ -123,14 +126,20 @@ public class AddCustomer
 				}
 				else
 				{
-					successLabel.setText(String.format("Failed to add new Customer!"));						
-				}		
+					successLabel.setText(String.format
+						("Failed to add new Customer!"));						
+				}
             }
             catch (SQLException ex)
             {
             	System.out.println(ex.getMessage());
             	System.out.println("Got a SQL exception!");
             }    
+         	catch (FileNotFoundException ex)
+        	{
+            	System.out.println(ex.getMessage());
+            	System.out.println("Got a File Not Found exception!");
+        	}
         		
 		});	
 		
@@ -218,7 +227,6 @@ public class AddCustomer
  		stage.show();
  								
 	}
-
 
 }
 
