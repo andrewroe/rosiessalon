@@ -8,7 +8,7 @@ INSERT INTO Employee (EmpID, UserID, CreateTime, UpdateTime, Fname, Minit, Lname
 	VALUES  (EmpID_Seq.nextval, 1, '20200102000001', '20200102000001', 'Andrew', 'L', 'Roe', 
 	'DataEngineer', 200.00, 1000000.00);
 INSERT INTO Employee (EmpID, UserID, CreateTime, UpdateTime, Fname, Minit, Lname, job, salary, commission)
-	VALUES  (EmpID_Seq.nextval, 1, '20200102000001', '20200102000001', 'Kheit', 'A', 'Nguyan', 
+	VALUES  (EmpID_Seq.nextval, 1, '20200102000001', '20200102000001', 'Khiet', 'A', 'Nguyan', 
 	'Receptionist', 10.00, 1000.00);
 
 INSERT INTO EmpInfo (EinfoID, EmpID, UserID, UpdateTime, InfoType, InfoSubType, Validity, CharBig)
@@ -40,12 +40,12 @@ INSERT INTO EmpInfo (EinfoID, EmpID, UserID, UpdateTime, InfoType, InfoSubType, 
 
 INSERT INTO EmpInfo (EinfoID, EmpID, UserID, UpdateTime, InfoType, InfoSubType, Validity, CharBig)
 	VALUES  (EinfoID_Seq.nextval, 
-             (SELECT EmpID FROM Employee WHERE FNAME='Kheit' AND MINIT='A' AND LNAME='Nguyan'), 
-             1, '20200102000001', 0, 0, 4, 'kheit');  
+             (SELECT EmpID FROM Employee WHERE FNAME='Khiet' AND MINIT='A' AND LNAME='Nguyan'), 
+             1, '20200102000001', 0, 0, 4, 'khiet');  
 INSERT INTO EmpInfo (EinfoID, EmpID, UserID, UpdateTime, InfoType, InfoSubType, Validity, CharBig)
 	VALUES  (EinfoID_Seq.nextval, 
-             (SELECT EmpID FROM Employee WHERE FNAME='Kheit' AND MINIT='A' AND LNAME='Nguyan'), 
-             1, '20200102000001', 0, 1, 4, 'kheitpwd');  
+             (SELECT EmpID FROM Employee WHERE FNAME='Khiet' AND MINIT='A' AND LNAME='Nguyan'), 
+             1, '20200102000001', 0, 1, 4, 'khietpwd');  
 
 INSERT INTO Customer (CustID, UserID, CreateTime, UpdateTime, Fname, Minit, Lname, phone, email)
 	VALUES  (CustID_Seq.nextval, 1, '20200102000001', '20200102000001', 'Jane', 'D', 'Doe', 

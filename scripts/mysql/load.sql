@@ -9,7 +9,7 @@ INSERT INTO Employee (UserID, CreateTime, UpdateTime, Fname, Minit, Lname, job, 
 	VALUES  (1, '20200102000001', '20200102000001', 'Andrew', 'L', 'Roe', 
 	'DataEngineer', 200.00, 1000000.00);
 INSERT INTO Employee (UserID, CreateTime, UpdateTime, Fname, Minit, Lname, job, salary, commission)
-	VALUES  (1, '20200102000001', '20200102000001', 'Kheit', 'A', 'Nguyan', 
+	VALUES  (1, '20200102000001', '20200102000001', 'Khiet', 'A', 'Nguyan', 
 	'Receptionist', 10.00, 1000.00);
 
 INSERT INTO EmpInfo (EmpID, UserID, UpdateTime, InfoType, InfoSubType, Validity, CharBig)
@@ -25,9 +25,9 @@ INSERT INTO EmpInfo (EmpID, UserID, UpdateTime, InfoType, InfoSubType, Validity,
 INSERT INTO EmpInfo (EmpID, UserID, UpdateTime, InfoType, InfoSubType, Validity, CharBig)
 	VALUES  (4, 1, '20200102000001', 0, 1, 4, 'andypwd');
 INSERT INTO EmpInfo (EmpID, UserID, UpdateTime, InfoType, InfoSubType, Validity, CharBig)
-	VALUES  (5, 1, '20200102000001', 0, 0, 4, 'kheit');
+	VALUES  (5, 1, '20200102000001', 0, 0, 4, 'khiet');
 INSERT INTO EmpInfo (EmpID, UserID, UpdateTime, InfoType, InfoSubType, Validity, CharBig)
-	VALUES  (5, 1, '20200102000001', 0, 1, 4, 'kheitpwd');
+	VALUES  (5, 1, '20200102000001', 0, 1, 4, 'khietpwd');
 
 select * from Employee;
 select * from EmpInfo;
