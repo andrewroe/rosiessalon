@@ -1,6 +1,3 @@
-import java.util.Scanner; 
-import javax.swing.JOptionPane; 
-import java.sql.*;  	
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -12,17 +9,13 @@ import javafx.stage.Stage;
 */
 public final class StartTransaction
 {
-	private StartTransaction()
-	{
-	
-	}
-	
+
 	public static void main(final String[] args)
 	{
 		/*
-		* Non-modular applications must specify the application class explicitly rather
-		* than allowing the launcher to use reflection to try to instantiate and start
-		* an application.
+		* Non-modular applications must specify the application class 
+		* explicitly rather than allowing the launcher to use reflection 
+		* to try to instantiate and start an application.
 		*/
 
 		Application.launch(TransactionApp.class, args);

@@ -47,7 +47,6 @@ public class TransactionApp extends Application
 		invalidChoice
 	}
 	
-	// protected static String CredentialsFile = "/Users/andrewroe/temp/credentials.txt";
 	protected static String CredentialsFile = null;
 	protected static EmpDBaccess EmployeeDBaccess = new EmpDBaccess();
 	protected static CustDBaccess CustomerDBaccess = new CustDBaccess();
@@ -130,12 +129,14 @@ public class TransactionApp extends Application
 		exitHbox.setAlignment(Pos.CENTER);
 		
 		VBox dbconnectVbox = 
-			new VBox(20,doorHbox, dbscreenHbox, credHbox, connectHbox, exitHbox);
+			new VBox(20,doorHbox, dbscreenHbox, credHbox, 
+				connectHbox, exitHbox);
 		dbconnectVbox.setAlignment(Pos.CENTER);
 				
 		dbconnectButton.setOnAction(event ->
 		{
-			TransactionApp.dbcredentialsfile = TransactionApp.dbcredfileText.getText();
+			TransactionApp.dbcredentialsfile = 
+				TransactionApp.dbcredfileText.getText();
 
 			try
 			{	
@@ -497,8 +498,9 @@ public class TransactionApp extends Application
 		HBox exitHbox = new HBox(10, exitPrompt, bExit);
 				
 		VBox actionVbox = 
-			new VBox(20,mainHbox,addCustHbox,findCustHbox,addEmpHbox,findEmpHbox,
-			newTransHbox,findTransHbox,updateTransHbox,signOutHbox,exitHbox);
+			new VBox(20,mainHbox,addCustHbox,findCustHbox,addEmpHbox,
+				findEmpHbox,newTransHbox,findTransHbox,updateTransHbox,
+				signOutHbox,exitHbox);
 					
 		ImageView imageview = new ImageView();
 		Image yogaDoor = new Image("file:yogadoor.jpg");
@@ -636,7 +638,8 @@ class ButtonClickHandler implements EventHandler<ActionEvent>
                 userid = TransactionApp.EmployeeDBaccess.fetchUser(username);
                 if (userid != 0)
                 {
-                    passwordInDB = TransactionApp.EmployeeDBaccess.fetchPassword(userid);
+                    passwordInDB = 
+                    	TransactionApp.EmployeeDBaccess.fetchPassword(userid);
 
                     if (userpassword.compareTo(passwordInDB) == 0)
                     {
